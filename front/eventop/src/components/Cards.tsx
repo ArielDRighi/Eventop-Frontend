@@ -18,15 +18,10 @@ const EventCard: React.FC<{ event: IEvents }> = ({ event }) => (
           src={event.imageUrl}
           alt={event.name}
           loading="lazy"
-          width={500}  
+          width={500}
           height={224}
         />
       ) : (
-<<<<<<< Updated upstream
-        <div className="w-full h-56 bg-gray-700 flex items-center justify-center text-gray-400">
-          Sin imagen
-        </div>
-=======
         <Image
           className="w-full h-56 object-cover object-center"
           src="https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"
@@ -35,7 +30,6 @@ const EventCard: React.FC<{ event: IEvents }> = ({ event }) => (
           width={500}
           height={224}
         />
->>>>>>> Stashed changes
       )}
       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out">
         <Link
