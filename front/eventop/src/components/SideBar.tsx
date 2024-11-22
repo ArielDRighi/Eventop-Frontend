@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Cookies from "js-cookie";
-import { DeleteIcon, LayoutDashboard, LogOut, MenuIcon, Ticket, User } from "lucide-react";
+import { ArrowLeftCircleIcon, LayoutDashboard, LogOut, MenuIcon, Ticket, User } from "lucide-react";
 
 const SideBar = () => {
   const router = useRouter();
@@ -21,24 +21,24 @@ const SideBar = () => {
   return (
     <div>
       <button onClick={toggleSidebar} className="p-1 text-white bg-purple-500 rounded-md m-2">
-        <MenuIcon />
+       <MenuIcon/>
       </button>
       <aside
         id="default-sidebar"
-        className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform transform ${
+        className={`fixed top-0 left->0 z-40 w-64 h-screen transition-transform transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         aria-label="Sidebar"
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-800 ">
           <button onClick={toggleSidebar} className="absolute top-4 right-4 p-1 text-white hover:text-white  ">
-            <DeleteIcon/>
+            <ArrowLeftCircleIcon />
           </button>
 
           <ul className="space-y-2 text-white font-medium mt-10">
             <li>
               <Link href="#" className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group">
-              <LayoutDashboard/>
+                <LayoutDashboard />
                 <span className="ms-3">Dashboard</span>
               </Link>
             </li>
@@ -49,9 +49,8 @@ const SideBar = () => {
               </Link>
             </li>
             <li>
-              <div  className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group">
+              <div className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group">
                 <Ticket />
-          
                 <details className="dropdown">
                   <summary className="cursor-pointer border-none list-none px-2">Events</summary>
                   <ul className="menu dropdown-content  bg-gray-700 rounded-box z-[1] w-52 p-2 shadow">
