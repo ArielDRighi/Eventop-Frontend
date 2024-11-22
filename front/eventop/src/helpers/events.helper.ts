@@ -25,7 +25,7 @@ export const createEvent = async (data: IEventsCreate, token: any, image: File |
       body: formData
     });
     const res = await response.json();
-    if (res.status === 201) {
+    if (res.message === "Evento creado exitosamente") {
       Swal.fire({
         title: "Evento creado",
         text: "Gracias por unirte a nosotros",
@@ -41,7 +41,19 @@ export const createEvent = async (data: IEventsCreate, token: any, image: File |
     }
     return res;
   } catch (error: any) {
-    throw new Error(error);
+    Swal.fire({
+      title: "Error",
+      text: error.message || "Hubo un problema al crear el evento. Por favor, inténtalo de nuevo.",
+      icon: "error",
+      customClass: {
+        popup: "bg-white shadow-lg rounded-lg p-6",
+        title: "text-2xl font-semibold text-gray-800",
+        confirmButton:
+          "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded",
+      },
+      buttonsStyling: false,
+    });
+    throw new Error(error.message || "Error al crear el evento");
   }
 };
 
