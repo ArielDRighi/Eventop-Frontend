@@ -246,7 +246,7 @@ export const EncontraEventos = () => {
           {filteredEvents.length === 0 && (
             <div className="text-center py-12">
               <p className="text-2xl text-gray-400 mb-4">
-                No se encontraron ebentos que coincidan con tu búsqueda.
+                No se encontraron eventos que coincidan con tu búsqueda.
               </p>
               <button
                 onClick={() => {
