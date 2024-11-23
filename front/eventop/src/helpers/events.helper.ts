@@ -205,8 +205,7 @@ export const useEditEvent = async (id: number, data: IEventsCreate, token: any) 
       body: JSON.stringify(data),
     });
     const res = await response.json();
-    console.log(res);
-    if (res.message) {
+    if (res.message === undefined) {
       Swal.fire({
         title: "Evento actualizado",
         text: "El evento ha sido actualizado exitosamente.",
@@ -219,8 +218,8 @@ export const useEditEvent = async (id: number, data: IEventsCreate, token: any) 
         },
         buttonsStyling: false,
       });
+      return res;
     }
-    return res;
   }
   catch (error: any) {
     Swal.fire({
