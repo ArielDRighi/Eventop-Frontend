@@ -69,32 +69,34 @@ export const EncontraEventos = () => {
   }, [locationsData, categoriesData, locationsError, categoriesError]);
 
   useEffect(() => {
+      
     const filtered = events.filter((evento: IEvents) => {
       const matchesCategory =
         selectedCategory === "" ||
         (evento.category_id &&
           evento.category_id.categoryId === parseInt(selectedCategory));
       const matchesLocation =
-        selectedLocation === "" ||
-        (evento.location_id &&
-          evento.location_id.locationId === parseInt(selectedLocation));
-      const matchesSearch =
-        searchTerm === "" ||
-        evento.name.toLowerCase().includes(searchTerm.toLowerCase());
-
+        selectedLocation === "" || (evento.location_id && evento.location_id.locationId === parseInt(selectedLocation));
+      const matchesSearch = searchTerm === "" || evento.name.toLowerCase().includes(searchTerm.toLowerCase());
+  
+      const price = evento.price;  
+  
+      const priceFilterNumber = priceFilter === "0" ? 0 : parseInt(priceFilter);
+  
+      
       const matchesPrice =
-        priceFilter === "" ||
-        (priceFilter === "free" && evento.price === 0) ||
-        (priceFilter !== "free" &&
-          evento.price > 0 &&
-          evento.price <= parseInt(priceFilter));
-
-      return (
-        matchesCategory && matchesLocation && matchesSearch && matchesPrice
-      );
+        priceFilter === "" || 
+        (priceFilter === "0" && price == 0) || 
+        (priceFilter !== "0" && price > 0 && price <= priceFilterNumber);
+  
+      return matchesCategory && matchesLocation && matchesSearch && matchesPrice;
     });
+  
     setFilteredEvents(filtered);
   }, [selectedCategory, selectedLocation, searchTerm, events, priceFilter]);
+  
+  
+  
 
   return (
     <div>
@@ -245,9 +247,7 @@ export const EncontraEventos = () => {
 
           {filteredEvents.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-2xl text-gray-400 mb-4">
-                No se encontraron eventos que coincidan con tu búsqueda.
-              </p>
+              <p className="text-2xl text-gray-400 mb-4">No se encontraron eventos que coincidan con tu búsqueda.</p>
               <button
                 onClick={() => {
                   setSearchTerm("");

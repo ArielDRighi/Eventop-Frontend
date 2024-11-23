@@ -1,5 +1,13 @@
 'use client'
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'df-messenger': any;
+    }
+  }
+}
+
 import React, { useEffect, useState } from 'react'
 
 export default function EnhancedDialogflowChatbot() {

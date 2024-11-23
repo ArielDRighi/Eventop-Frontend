@@ -44,8 +44,8 @@ const NavBar = () => {
               </Link>
             </li>
             <li>
-              <Link href={"/cart"}>
-                Carrito
+              <Link href={"/ayuda"}>
+                Ayuda
               </Link>
             </li>
             {isAdmin && (
@@ -100,8 +100,8 @@ const NavBar = () => {
             </Link>
           </li>
           <li>
-            <Link href={"/cart"}>
-              Carrito
+            <Link href={"/ayuda"}>
+              Ayuda
             </Link>
           </li>
           {isAdmin && (

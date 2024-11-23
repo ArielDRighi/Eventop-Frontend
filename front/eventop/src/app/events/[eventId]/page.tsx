@@ -137,6 +137,18 @@ export default function DetallesEvento() {
             </motion.div>
           )}
         </div>
+
+        {showPayment && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mt-12 bg-gray-900"
+            id="payment"
+          >
+            <Payments />
+          </motion.div>
+        )}
       </div>
     </div>
   );

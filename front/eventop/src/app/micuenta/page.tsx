@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import Head from "next/head";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter } from "next/navigation";
+import { Compras } from "@/components/Compras";
 
 const UserDashboard = () => {
   const { user, isLoading } = useUser();
@@ -30,6 +31,9 @@ const UserDashboard = () => {
         <meta name="description" content="Panel de control de usuario" />
       </Head>
       <UserInfo />
+      <div className="w-1/2 mx-auto">
+      <Compras/>
+      </div>
     </>
   );
 };

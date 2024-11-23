@@ -34,7 +34,6 @@ const EventForm: React.FC = () => {
       console.log(response);
     } catch (error) {
       console.error('Error al crear el evento:', error);
-      throw error;
     }
   };
 

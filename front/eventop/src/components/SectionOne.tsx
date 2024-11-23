@@ -61,11 +61,8 @@ const LayoutOne = () => {
                             Encuentra Tickets Donde sea que estes.
                           </p>
                           <p className="max-w-xl mt-4 text-base tracking-tight text-zinc-500">
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Laborum ad vel voluptates. Vitae dicta tempora
-                            nesciunt in laborum. Nostrum quae repudiandae aut
-                            maxime debitis? Autem, ipsum tempore! Doloribus, a
-                            impedit?
+                            
+En nuestra página, podrás descubrir una amplia variedad de eventos adaptados a tus intereses y necesidades. Si estás buscando algo cerca de tu ubicación, tenemos eventos filtrados por diferentes ciudades y lugares, asegurando que puedas disfrutar de actividades sin importar dónde te encuentres. Además, ofrecemos una opción de filtrado por precio, para que encuentres eventos que se ajusten a tu presupuesto. Ya sea que prefieras experiencias gratuitas, como conciertos o festivales, o si deseas asistir a eventos exclusivos con un precio más elevado, tenemos opciones para todos. Explora eventos que van desde actividades gratuitas hasta experiencias de lujo, todo al alcance de un clic.
                           </p>
                         </div>
                         <div className="flex justify-center gap-3 mt-10 lg:justify-start">

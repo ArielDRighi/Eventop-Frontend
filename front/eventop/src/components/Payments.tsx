@@ -5,6 +5,8 @@ import PaymentButton from "./PaymentButton";
 import { texts } from "../helpers/texts";
 import { currencies } from "../helpers/currencies";
 import * as dotenv from "dotenv";
+import { useParams } from "next/navigation";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 dotenv.config({
   path: ".env",
@@ -14,28 +16,55 @@ type Language = "es" | "en" | "pt" | "fr";
 type Currency = "USD" | "EUR" | "ARS" | "BRL";
 
 export default function Payments() {
+  const { user } = useUser();
   const [ticketCount, setTicketCount] = useState(1);
-  const [basePrice, setBasePrice] = useState(50); // Price in USD
-  const [total, setTotal] = useState(50);
+  const [basePrice, setBasePrice] = useState(0); // Inicialmente 0
+  const [total, setTotal] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState<
     "credit_card" | "mercado_pago"
   >("credit_card");
   const [language, setLanguage] = useState<Language>("es");
   const [currency, setCurrency] = useState<Currency>("USD");
-  const [email, setEmail] = useState(""); // Nuevo estado para el correo electrónico
   const [cardNumber, setCardNumber] = useState("");
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCVC, setCardCVC] = useState("");
   const [savePaymentInfo, setSavePaymentInfo] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
-  const eventId = 1; // Replace with the actual event ID
+  const params = useParams();
+
+  const eventId = params.eventId as string;
+  const email = user?.email; // Usa el email del usuario logueado
+  const quantity = ticketCount;
+  console.log("ID del evento", eventId);
+  console.log("Email del usuario", email);
+  console.log("quantity", quantity);
 
   const [errors, setErrors] = useState({
     cardNumber: false,
     cardExpiry: false,
     cardCVC: false,
   });
+
+  // Función para obtener los detalles del evento
+  const fetchEventDetails = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}`
+      );
+      if (!response.ok) {
+        throw new Error("Error al obtener los detalles del evento");
+      }
+      const data = await response.json();
+      setBasePrice(data.price); // Asume que el precio está en data.price
+    } catch (error) {
+      console.error("Error fetching event details:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEventDetails(); // Llama a la función para obtener los detalles del evento
+  }, [eventId]);
 
   useEffect(() => {
     const newTotal = ticketCount * basePrice * currencies[currency].rate;
@@ -46,7 +75,7 @@ export default function Payments() {
   useEffect(() => {
     const createPreference = async () => {
       if (paymentMethod !== "mercado_pago") return;
-      console.log("ID de evento:", eventId);
+      console.log("ID de evento:", eventId, typeof eventId);
       console.log("email:", email);
 
       try {
@@ -57,7 +86,7 @@ export default function Payments() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ eventId, email }), // Incluir el correo electrónico en el cuerpo de la solicitud
+            body: JSON.stringify({ eventId, email, quantity }), // Incluir el correo electrónico en el cuerpo de la solicitud
           }
         );
 
@@ -196,21 +225,6 @@ export default function Payments() {
               ))}
             </select>
           </div>
-
-          {/* <div>
-            <label htmlFor="email" className="block text-sm font-semibold mb-2">
-              Correo Electrónico
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="john.doe@example.com"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-purple-500 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent bg-white transition-colors duration-200 text-gray-800"
-            />
-          </div> */}
         </div>
 
         <div>
@@ -354,7 +368,7 @@ export default function Payments() {
           </p>
         </motion.div>
 
-       <div className="flex justify-center pt-6">
+        <div className="flex justify-center pt-6">
           {paymentMethod === "mercado_pago" && preferenceId ? (
             <PaymentButton preferenceId={preferenceId} />
           ) : (

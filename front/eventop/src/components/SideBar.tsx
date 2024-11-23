@@ -19,17 +19,8 @@ const SideBar = () => {
 
   return (
     <div>
-      <button
-        onClick={toggleSidebar}
-        className="p-1 text-white bg-purple-500 rounded-md m-2"
-      >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+      <button onClick={toggleSidebar} className="p-1 text-white bg-purple-500 rounded-md m-2">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M2 8C2 7.44772 2.44772 7 3 7H21C21.5523 7 22 7.44772 22 8C22 8.55228 21.5523 9 21 9H3C2.44772 9 2 8.55228 2 8Z"
             fill="currentColor"
@@ -52,10 +43,7 @@ const SideBar = () => {
         aria-label="Sidebar"
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-800 ">
-          <button
-            onClick={toggleSidebar}
-            className="absolute top-4 right-4 p-1 text-white hover:text-white  "
-          >
+          <button onClick={toggleSidebar} className="absolute top-4 right-4 p-1 text-white hover:text-white  ">
             <svg
               className="w-6 h-6"
               fill="none"
@@ -63,21 +51,13 @@ const SideBar = () => {
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
 
           <ul className="space-y-2 text-white font-medium mt-10">
             <li>
-              <Link
-                href="#"
-                className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group"
-              >
+              <Link href="#" className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group">
                 <svg
                   className="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   aria-hidden="true"
@@ -92,10 +72,7 @@ const SideBar = () => {
               </Link>
             </li>
             <li>
-              <Link
-                href="/admin/users"
-                className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group"
-              >
+              <Link href="/admin/users" className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group">
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   aria-hidden="true"
@@ -109,10 +86,7 @@ const SideBar = () => {
               </Link>
             </li>
             <li>
-              <div
-                href="/admin/events"
-                className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group"
-              >
+              <div href="/admin/events" className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group">
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   aria-hidden="true"
@@ -123,15 +97,13 @@ const SideBar = () => {
                   <path d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z" />
                 </svg>
                 <details className="dropdown">
-                  <summary className="cursor-pointer border-none list-none px-2">
-                    Events
-                  </summary>
+                  <summary className="cursor-pointer border-none list-none px-2">Events</summary>
                   <ul className="menu dropdown-content  bg-gray-700 rounded-box z-[1] w-52 p-2 shadow">
                     <li>
-                      <Link href="#">Crear</Link>
+                      <Link href="/admin/events/create-event">Crear</Link>
                     </li>
                     <li>
-                      <Link href="#">Editar</Link>
+                      <Link href="/admin/events/edit-event">Editar</Link>
                     </li>
                   </ul>
                 </details>

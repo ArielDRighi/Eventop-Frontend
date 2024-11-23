@@ -1,3 +1,27 @@
+// import React, { useEffect } from "react";
+// import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+
+// interface PaymentButtonProps {
+//   preferenceId: string;
+// }
+
+// const PaymentButton: React.FC<PaymentButtonProps> = ({ preferenceId }) => {
+//   useEffect(() => {
+//     initMercadoPago(process.env.PUBLIC_KEY || 'YOUR_PUBLIC_KEY');
+//   }, []);
+
+//   return (
+//     <div id="wallet_container">
+//       <Wallet
+//         initialization={{ preferenceId }}
+//         customization={{ texts: { valueProp: 'smart_option' } }}
+//       />
+//     </div>
+//   );
+// };
+
+// export default PaymentButton;
+
 import React, { useEffect } from "react";
 
 interface PaymentButtonProps {
@@ -6,10 +30,7 @@ interface PaymentButtonProps {
 
 interface MercadoPagoWindow extends Window {
   MercadoPago: new (publicKey: string, options: { locale: string }) => {
-    checkout: (options: {
-      preference: { id: string };
-      render: { container: string; label: string };
-    }) => void;
+    checkout: (options: { preference: { id: string }; render: { container: string; label: string } }) => void;
   };
 }
 
@@ -25,7 +46,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ preferenceId }) => {
 
       if ((window as unknown as MercadoPagoWindow).MercadoPago) {
         const mp = new (window as unknown as MercadoPagoWindow).MercadoPago(
-          "APP_USR-55cf3037-c59b-4609-bd0c-2becbaf6c258",
+          "APP_USR-4377719d-f2df-48eb-bb8e-bd2ae9b306f8",
           {
             locale: "es-AR",
           }
@@ -50,8 +71,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ preferenceId }) => {
       script.src = "https://sdk.mercadopago.com/js/v2";
       script.async = true;
       script.onload = initializeMercadoPago;
-      script.onerror = () =>
-        console.error("Error al cargar el SDK de MercadoPago.");
+      script.onerror = () => console.error("Error al cargar el SDK de MercadoPago.");
       document.body.appendChild(script);
     } else {
       // Esperar a que el script se cargue completamente antes de inicializar

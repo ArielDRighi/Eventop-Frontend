@@ -117,9 +117,7 @@ const Cards: React.FC = () => {
         ))}
       </section>
     ) : (
-      <div className="text-center text-gray-400">
-        No hay eventos disponibles
-      </div>
+      <div className="text-center text-gray-400">No hay eventos disponibles</div>
     );
   }, [result, loading, error]);
 

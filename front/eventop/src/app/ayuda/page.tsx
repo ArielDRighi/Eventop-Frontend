@@ -1,9 +1,11 @@
 import React from 'react'
-import Cart from "../../components/Cart"
+import Help from '@/components/Help'
+
+
 const page = () => {
   return (
     <div className='bg-gray-900'>
-      <Cart/>
+      <Help/>
     </div>
   )
 }
