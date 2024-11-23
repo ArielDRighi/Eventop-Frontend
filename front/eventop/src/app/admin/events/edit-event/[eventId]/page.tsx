@@ -10,7 +10,6 @@ import Image from "next/image";
 import DeleteButton from "@/components/DeleteButton";
 import Cookies from "js-cookie";
 import { useEditEvent } from "@/helpers/events.helper";
-import Swal from "sweetalert2";
 
 interface IFormInput {
   name: string;
@@ -45,21 +44,22 @@ export default function EditEvent() {
     }
   }, [event, setValue]);
   
-  const confirmEdit = () => {
-    Swal.fire({
-      title: "¿Cambios Listos?",
-      text: "No podrás revertir esta acción",
-      icon: "warning",
-      showCancelButton: true,
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Sí, modificar",
-      cancelButtonText: "Cancelar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        onSubmit();
-      }
-    });
-  };
+  // const confirmDelete = () => {
+  //   Swal.fire({
+  //     title: "¿Estás seguro?",
+  //     text: "No podrás revertir esta acción",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#d33",
+  //     cancelButtonColor: "#3085d6",
+  //     confirmButtonText: "Sí, eliminar",
+  //     cancelButtonText: "Cancelar",
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       handleDelete(eventId);
+  //     }
+  //   });
+  // };
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const token = JSON.parse(Cookies.get("adminToken") || "null");
@@ -114,7 +114,7 @@ export default function EditEvent() {
             />
           </div>
           <div className="md:col-span-2 p-8">
-            <form onSubmit={handleSubmit(confirmEdit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="col-span-1">
                   <label
@@ -280,9 +280,9 @@ export default function EditEvent() {
                 >
                   Guardar Cambios
                 </button>
-                <DeleteButton eventId={event.eventId} />
               </div>
             </form>
+                <DeleteButton eventId={event.eventId} />
           </div>
         </div>
       </div>
