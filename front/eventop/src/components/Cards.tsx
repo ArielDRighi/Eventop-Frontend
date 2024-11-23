@@ -1,16 +1,13 @@
 "use client";
 import React, { useMemo } from "react";
-import { Heart } from "lucide-react";
 import { useGetAllEvents } from "@/helpers/events.helper";
 import { IEvents } from "../interfaces/IEventos";
 import Link from "next/link";
 import Image from "next/image";
 
 const EventCard: React.FC<{ event: IEvents }> = ({ event }) => (
-  <div
-    key={`event-${event.eventId}`}
-    className="bg-gray-900 rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out"
-  >
+  <Link key={`event-${event.eventId}`} href={`/events/${event.eventId}`} className="block">
+  <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
     <div className="relative group">
       {event.imageUrl ? (
         <Image
@@ -32,12 +29,9 @@ const EventCard: React.FC<{ event: IEvents }> = ({ event }) => (
         />
       )}
       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out">
-        <Link
-          href={`/events/${event.eventId}`}
-          className="text-white bg-purple-600 hover:bg-purple-700 font-bold py-2 px-4 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 ease-in-out"
-        >
+        <span className="text-white bg-purple-600 hover:bg-purple-700 font-bold py-2 px-4 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 ease-in-out">
           Ver Detalles
-        </Link>
+        </span>
       </div>
     </div>
     <div className="p-6">
@@ -49,12 +43,10 @@ const EventCard: React.FC<{ event: IEvents }> = ({ event }) => (
         <span className="text-sm text-purple-300 font-medium px-2 py-1 bg-purple-900 rounded-full">
           {event.category_id?.name || "Sin categoría"}
         </span>
-        <button className="text-gray-400 hover:text-pink-500 transition duration-300 ease-in-out">
-          <Heart className="h-6 w-6" />
-        </button>
       </div>
     </div>
   </div>
+</Link>
 );
 
 const Cards: React.FC = () => {
@@ -65,7 +57,11 @@ const Cards: React.FC = () => {
   };
 
   const renderContent = useMemo(() => {
-    if (loading) return <div>Cargando eventos...</div>;
+    if (loading) return <div className="flex items-center justify-center space-x-2">
+    <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+    <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+    <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+  </div>;
     if (error) return <div>Error al cargar los eventos</div>;
 
     return result?.length ? (
@@ -85,7 +81,7 @@ const Cards: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 py-20 px-4 sm:px-6 lg:px-8">
       <main className="max-w-7xl mx-auto">
         <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 text-center mb-12">
-          Eventos Recientes
+          Proximos Eventos
         </h1>
         {renderContent}
       </main>
