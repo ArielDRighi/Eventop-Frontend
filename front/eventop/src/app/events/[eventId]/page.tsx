@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Calendar, Clock, MapPin, Users } from "lucide-react";
+import { Calendar, Clock, MapPin, DollarSign } from "lucide-react";
 import Payments from "@/components/Payments";
 import { useEventById } from "@/helpers/events.helper";
 
@@ -94,8 +94,8 @@ export default function DetallesEvento() {
                       <span className="truncate">{event.location_id.city}</span>
                     </div>
                     <div className="flex items-center text-gray-700">
-                      <Users className="h-5 w-5 mr-2 text-purple-500 flex-shrink-0" />
-                      <span className="truncate">Capacidad</span>
+                      <DollarSign className="h-5 w-5 mr-2 text-purple-500 flex-shrink-0" />
+                      <span className="truncate">{event.price}</span>
                     </div>
                   </div>
                   <motion.div
