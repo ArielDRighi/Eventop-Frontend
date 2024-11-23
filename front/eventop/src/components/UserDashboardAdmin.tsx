@@ -1,69 +1,33 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
-
-const mockUsers: {
-  userId: string;
-  email: string;
-  status: string;
-  password: string;
-  role: string;
-}[] = [
-  {
-    userId: "1",
-    email: "usuario1@example.com",
-    status: "Activo",
-    password: "1234abcd",
-    role: "Administrador",
-  },
-  {
-    userId: "2",
-    email: "usuario2@example.com",
-    status: "Inactivo",
-    password: "5678efgh",
-    role: "Usuario",
-  },
-  {
-    userId: "3",
-    email: "usuario3@example.com",
-    status: "Activo",
-    password: "91011ijkl",
-    role: "Usuario",
-  },
-  {
-    userId: "4",
-    email: "usuario4@example.com",
-    status: "Activo",
-    password: "1213mnop",
-    role: "Usuario",
-  },
-];
+import React, { useEffect, useState } from "react";
+import { IUser } from "@/interfaces/IUser";
+import Cookies from "js-cookie";
+import { useGetAllUsers } from "@/helpers/users.helpers";
 
 const Dashboard = () => {
-  const [users, setUsers] = useState<
-    {
-      userId: string;
-      email: string;
-      status: string;
-      password: string;
-      role: string;
-    }[]
-  >([]);
-
+  const [users, setUsers] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentUserRole, setCurrentUserRole] = useState("Administrador");
-  console.log(setCurrentUserRole);
 
   useEffect(() => {
-    setTimeout(() => {
-      const filteredUsers = mockUsers.filter((user) =>
-        currentUserRole === "Administrador"
-          ? user.role !== "Administrador"
-          : true
-      );
-      setUsers(filteredUsers);
+    const token = JSON.parse(Cookies.get("adminToken") || "null");
+
+    if (token) {
+      const fetchUsers = async () => {
+        try {
+          const users = await useGetAllUsers(token);
+          setUsers(users);
+        } catch (error) {
+          console.error("Error fetching users:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchUsers();
+    } else {
       setLoading(false);
-    }, 1000);
+    }
   }, [currentUserRole]);
 
   if (loading) {
@@ -76,8 +40,8 @@ const Dashboard = () => {
         >
           <div className="flex items-center justify-center m-[10px]">
             <div className="h-5 w-5 border-t-transparent border-solid animate-spin rounded-full border-white border-4"></div>
-            <div className="ml-2">Processing...</div> 
           </div>
+          Cargando...
         </button>
       </div>
     );
@@ -123,20 +87,20 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {users.map((usuario) => (
-                <tr key={usuario.userId}>
+              {users.map((user) => (
+                <tr key={user.userId}>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <div className="flex items-center">
                       <div className="ml-3">
                         <p className="text-gray-900 whitespace-no-wrap">
-                          {usuario.email}
+                          {user.email}
                         </p>
                       </div>
                     </div>
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p className="text-gray-900 whitespace-no-wrap">
-                      {usuario.role}
+                      {user.role}
                     </p>
                   </td>
 
@@ -146,7 +110,7 @@ const Dashboard = () => {
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <span
                       className={`relative inline-block px-3 py-1 font-semibold ${
-                        usuario.status === "Activo"
+                        user.status === "Activo"
                           ? "text-green-900"
                           : "text-red-900"
                       } leading-tight`}
@@ -164,7 +128,7 @@ const Dashboard = () => {
                   </td>
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                     <p className="text-gray-900 whitespace-no-wrap">
-                      {usuario.userId}
+                      {user.userId}
                     </p>
                   </td>
                 </tr>
