@@ -10,7 +10,7 @@ const Dashboard = () => {
   const [currentUserRole, setCurrentUserRole] = useState("Administrador");
 
   useEffect(() => {
-    const token = JSON.parse(Cookies.get("adminToken") || "null");
+    const token = JSON.parse(Cookies.get("adminToken") || "null" );
 
     if (token) {
       const fetchUsers = async () => {
