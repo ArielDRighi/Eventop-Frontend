@@ -3,11 +3,20 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Cookies from "js-cookie";
-import { ArrowLeftCircleIcon, LayoutDashboard, LogOut, MenuIcon, Ticket, User } from "lucide-react";
+import {
+  ArrowLeftCircleIcon,
+  LayoutDashboard,
+  LogOut,
+  MenuIcon,
+  Ticket,
+  User,
+} from "lucide-react";
+import { useAdmin } from "@/context/admincontext";
 
 const SideBar = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const { setIsAdmin } = useAdmin();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -15,13 +24,17 @@ const SideBar = () => {
 
   const handleSingOut = () => {
     Cookies.remove("adminToken");
+    setIsAdmin(false);
     router.push("/");
   };
 
   return (
     <div>
-      <button onClick={toggleSidebar} className="p-1 text-white bg-purple-500 rounded-md m-2">
-       <MenuIcon/>
+      <button
+        onClick={toggleSidebar}
+        className="p-1 text-white bg-purple-500 rounded-md m-2"
+      >
+        <MenuIcon />
       </button>
       <aside
         id="default-sidebar"
@@ -31,20 +44,29 @@ const SideBar = () => {
         aria-label="Sidebar"
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-800 ">
-          <button onClick={toggleSidebar} className="absolute top-4 right-4 p-1 text-white hover:text-white  ">
+          <button
+            onClick={toggleSidebar}
+            className="absolute top-4 right-4 p-1 text-white hover:text-white  "
+          >
             <ArrowLeftCircleIcon />
           </button>
 
           <ul className="space-y-2 text-white font-medium mt-10">
             <li>
-              <Link href="#" className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group">
+              <Link
+                href="/admin"
+                className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group"
+              >
                 <LayoutDashboard />
                 <span className="ms-3">Dashboard</span>
               </Link>
             </li>
             <li>
-              <Link href="/admin/users" className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group">
-               <User />
+              <Link
+                href="/admin/users"
+                className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group"
+              >
+                <User />
                 <span className="flex-1 ms-3 whitespace-nowrap">Users</span>
               </Link>
             </li>
@@ -52,9 +74,11 @@ const SideBar = () => {
               <div className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group">
                 <Ticket />
                 <details className="dropdown">
-                  <summary className="cursor-pointer border-none list-none px-2">Events</summary>
+                  <summary className="cursor-pointer border-none list-none px-2">
+                    Events
+                  </summary>
                   <ul className="menu dropdown-content  bg-gray-700 rounded-box z-[1] w-52 p-2 shadow">
-                  <li>
+                    <li>
                       <Link href="/admin/events">Events</Link>
                     </li>
                     <li>
@@ -72,7 +96,7 @@ const SideBar = () => {
                 onClick={handleSingOut}
                 className="flex items-center p-2 text-white rounded-lg hover:bg-gray-700 group"
               >
-               <LogOut/>
+                <LogOut />
                 <p className="flex-1 ms-3 whitespace-nowrap">Sign Out</p>
               </button>
             </li>

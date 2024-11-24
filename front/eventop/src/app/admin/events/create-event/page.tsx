@@ -4,7 +4,7 @@ import CreateEvent from '@/components/CreateEvent'
 import SideBar from '@/components/SideBar'
 import React from 'react'
 
-export const page = () => {
+ const CreateEventPage  = () => {
   return (
     <section className="flex flex-col gap-2">
         <SideBar/>
@@ -15,4 +15,4 @@ export const page = () => {
   )
 }
 
-export default page
+export default CreateEventPage 

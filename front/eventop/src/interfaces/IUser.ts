@@ -5,6 +5,7 @@ export interface IUser {
   password: string;
   authProvider: string;
   role: string;
+  isBanned: boolean; 
   preferredLanguage: string;
   preferredCurrency: string;
   imageUrl: null;
