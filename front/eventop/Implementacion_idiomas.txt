@@ -1,0 +1,109 @@
+Asegúrate de que tu archivo next.config.js esté configurado para usar next-intl:
+
+// next.config.js
+const withNextIntl = require('next-intl/plugin')('./next-intl.config.js');
+
+module.exports = withNextIntl({
+  // Otras configuraciones de Next.js
+});
+
+-----------------------------------------------------------------------
+
+Ahora puedes usar next-intl en tus componentes. Aquí tienes un ejemplo de cómo hacerlo:
+
+// pages/_app.tsx
+
+// pages/_app.tsx
+import { NextIntlProvider } from 'next-intl';
+import '../styles/globals.css';
+import type { AppProps } from 'next/app';
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <NextIntlProvider messages={pageProps.messages}>
+      <Component {...pageProps} />
+    </NextIntlProvider>
+  );
+}
+
+export default MyApp;
+
+-----------------------------------------------------------------------
+
+// pages/index.tsx
+import { useTranslations } from 'next-intl';
+import type { GetStaticProps } from 'next';
+
+export default function Home() {
+  const t = useTranslations('common');
+
+  return (
+    <div>
+      <h1>{t('welcome')}</h1>
+      <p>{t('description')}</p>
+    </div>
+  );
+}
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  const messages = require(`../public/locales/${locale}/common.json`);
+
+  return {
+    props: {
+      messages,
+    },
+  };
+};
+
+-----------------------------------------------------------------------
+
+Para permitir a los usuarios cambiar de idioma, 
+puedes crear un componente de selector de idioma. Aquí tienes un ejemplo básico:
+
+// components/LanguageSwitcher.tsx
+import { useRouter } from 'next/router';
+
+const LanguageSwitcher = () => {
+  const router = useRouter();
+  const { locales, locale: activeLocale } = router;
+
+  const switchLocale = (locale: string) => {
+    const { pathname, query, asPath } = router;
+    router.push({ pathname, query }, asPath, { locale });
+  };
+
+  return (
+    <div>
+      {locales?.map((locale) => (
+        <button
+          key={locale}
+          onClick={() => switchLocale(locale)}
+          disabled={activeLocale === locale}
+        >
+          {locale}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+export default LanguageSwitcher;
+
+-----------------------------------------------------------------------
+
+Luego, puedes usar este componente en tu aplicación:
+
+// pages/index.tsx
+import LanguageSwitcher from '../components/LanguageSwitcher';
+
+export default function Home() {
+  const t = useTranslations('common');
+
+  return (
+    <div>
+      <LanguageSwitcher />
+      <h1>{t('welcome')}</h1>
+      <p>{t('description')}</p>
+    </div>
+  );
+}
