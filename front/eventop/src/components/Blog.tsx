@@ -32,20 +32,7 @@ const Blog = () => {
                   nuestro sistema seguro, tus datos y pagos están siempre
                   protegidos.
                 </p>
-                <a className="mt-3 text-purple-400 inline-flex items-center">
-                  Saber Más
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-4 h-4 ml-2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7"></path>
-                  </svg>
-                </a>
+                
               </div>
             </div>
 
@@ -73,20 +60,7 @@ const Blog = () => {
                   Encuentra entradas para conciertos, teatro, deportes y mucho
                   más en un solo lugar, siempre actualizados y disponibles.
                 </p>
-                <a className="mt-3 text-purple-400 inline-flex items-center">
-                  Explorar Eventos
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-4 h-4 ml-2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7"></path>
-                  </svg>
-                </a>
+               
               </div>
             </div>
 
@@ -114,20 +88,7 @@ const Blog = () => {
                   asegurando una experiencia de compra impecable y asistencia
                   constante.
                 </p>
-                <a className="mt-3 text-purple-400 inline-flex items-center">
-                  Contactar Soporte
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-4 h-4 ml-2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7"></path>
-                  </svg>
-                </a>
+               
               </div>
             </div>
           </div>

@@ -39,20 +39,14 @@ export const EncontraEventos = () => {
     }
   };
 
-  const getNearbyEvents = async (
-    latitude: number,
-    longitude: number,
-    radius: number
-  ) => {
+  const getNearbyEvents = async (latitude: number, longitude: number, radius: number) => {
     try {
       console.log("Fetching nearby events with:", {
         latitude,
         longitude,
         radius,
       });
-      const res = await fetch(
-        `${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`
-      );
+      const res = await fetch(`${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`);
       if (res.ok) {
         const data = await res.json();
         console.log("Nearby events data:", data);
@@ -66,8 +60,7 @@ export const EncontraEventos = () => {
   };
 
   const { result: locationsData, error: locationsError } = useGetAllLocations();
-  const { result: categoriesData, error: categoriesError } =
-    useGetAllCategories();
+  const { result: categoriesData, error: categoriesError } = useGetAllCategories();
 
   useEffect(() => {
     const loadData = async () => {
@@ -98,16 +91,10 @@ export const EncontraEventos = () => {
   useEffect(() => {
     const filtered = events.filter((evento: IEvents) => {
       const matchesCategory =
-        selectedCategory === "" ||
-        (evento.category_id &&
-          evento.category_id.categoryId === parseInt(selectedCategory));
+        selectedCategory === "" || (evento.category_id && evento.category_id.categoryId === parseInt(selectedCategory));
       const matchesLocation =
-        selectedLocation === "" ||
-        (evento.location_id &&
-          evento.location_id.locationId === parseInt(selectedLocation));
-      const matchesSearch =
-        searchTerm === "" ||
-        evento.name.toLowerCase().includes(searchTerm.toLowerCase());
+        selectedLocation === "" || (evento.location_id && evento.location_id.locationId === parseInt(selectedLocation));
+      const matchesSearch = searchTerm === "" || evento.name.toLowerCase().includes(searchTerm.toLowerCase());
 
       const price = evento.price;
       const priceFilterNumber = priceFilter === "0" ? 0 : parseInt(priceFilter);
@@ -117,9 +104,7 @@ export const EncontraEventos = () => {
         (priceFilter === "0" && price == 0) ||
         (priceFilter !== "0" && price > 0 && price <= priceFilterNumber);
 
-      return (
-        matchesCategory && matchesLocation && matchesSearch && matchesPrice
-      );
+      return matchesCategory && matchesLocation && matchesSearch && matchesPrice;
     });
 
     setFilteredEvents(filtered);
@@ -132,11 +117,7 @@ export const EncontraEventos = () => {
         async (position) => {
           const { latitude, longitude } = position.coords;
           console.log("Geolocation obtained:", { latitude, longitude });
-          const nearbyEvents = await getNearbyEvents(
-            latitude,
-            longitude,
-            selectedRadius
-          );
+          const nearbyEvents = await getNearbyEvents(latitude, longitude, selectedRadius);
           setFilteredEvents(nearbyEvents);
         },
         (error) => {
@@ -157,15 +138,12 @@ export const EncontraEventos = () => {
               Encuentra Eventos
             </h1>
             <p className="text-md text-gray-300 max-w-3xl mx-auto">
-              Descubre los mejores eventos en tu ciudad y vive experiencias
-              inolvidables
+              Descubre los mejores eventos en tu ciudad y vive experiencias inolvidables
             </p>
           </div>
 
           <div className="bg-gray-900 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl p-8 mb-10">
-            <h2 className="text-3xl font-bold mb-6 text-center">
-              Filtrar Eventos
-            </h2>
+            <h2 className="text-3xl font-bold mb-6 text-center">Filtrar Eventos</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="relative">
                 <input
@@ -184,29 +162,21 @@ export const EncontraEventos = () => {
                     className="w-full pl-4 pr-10 py-3 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-white transition duration-300"
                     value={index === 0 ? selectedCategory : selectedLocation}
                     onChange={(e) =>
-                      index === 0
-                        ? setSelectedCategory(e.target.value)
-                        : setSelectedLocation(e.target.value)
+                      index === 0 ? setSelectedCategory(e.target.value) : setSelectedLocation(e.target.value)
                     }
                   >
                     <option value="">{`Todas las ${label.toLowerCase()}s`}</option>
                     {(index === 0 ? categories : locations).map((item: any) => (
                       <option
                         key={item[index === 0 ? "categoryId" : "locationId"]}
-                        value={item[
-                          index === 0 ? "categoryId" : "locationId"
-                        ].toString()}
+                        value={item[index === 0 ? "categoryId" : "locationId"].toString()}
                       >
                         {index === 0 ? item.name : item.city}
                       </option>
                     ))}
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                    <svg
-                      className="fill-current h-4 w-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
+                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                       <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                     </svg>
                   </div>
@@ -227,11 +197,7 @@ export const EncontraEventos = () => {
                   <option value="1000">Hasta 1000</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
+                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                     <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                   </svg>
                 </div>
@@ -291,9 +257,7 @@ export const EncontraEventos = () => {
                       </div>
                     </div>
                     <div className="p-6">
-                      <h3 className="text-2xl font-bold mb-3 line-clamp-2">
-                        {event.name}
-                      </h3>
+                      <h3 className="text-2xl font-bold mb-3 line-clamp-2">{event.name}</h3>
                       <div className="flex items-center text-gray-300 mb-2">
                         <Calendar className="h-5 w-5 mr-2 text-purple-400" />
                         <span>{event.date}</span>
@@ -313,9 +277,7 @@ export const EncontraEventos = () => {
 
             {filteredEvents.length === 0 && (
               <div className="text-center">
-                <p className="text-2xl text-gray-400 mb-4">
-                  No se encontraron eventos que coincidan con tu búsqueda.
-                </p>
+                <p className="text-2xl text-gray-400 mb-4">No se encontraron eventos que coincidan con tu búsqueda.</p>
                 <button
                   onClick={() => {
                     setSearchTerm("");
