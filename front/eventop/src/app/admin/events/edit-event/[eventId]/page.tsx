@@ -8,6 +8,7 @@ import { useEventById } from "@/helpers/events.helper";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import DeleteButton from "@/components/DeleteButton";
+import ApproveButton from "@/components/ApproveButton";
 import Cookies from "js-cookie";
 import { useEditEvent } from "@/helpers/events.helper";
 
@@ -20,7 +21,7 @@ interface IFormInput {
   category_id: number;
 }
 
-export default function EditEvent() {
+const EditEventPage = () => {
   const params = useParams();
   const eventId = params.eventId as string;
   const { event, loading, error } = useEventById(eventId);
@@ -43,7 +44,7 @@ export default function EditEvent() {
       setValue("category_id", event.category_id.categoryId);
     }
   }, [event, setValue]);
-  
+
   // const confirmDelete = () => {
   //   Swal.fire({
   //     title: "¿Estás seguro?",
@@ -282,10 +283,15 @@ export default function EditEvent() {
                 </button>
               </div>
             </form>
-                <DeleteButton eventId={event.eventId} />
+            <div className="flex flex-row gap-2 mt-2">
+            <DeleteButton eventId={event.eventId}  />
+            <ApproveButton eventId={event.eventId} />
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
 }
+
+export default EditEventPage;
