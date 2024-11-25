@@ -22,4 +22,5 @@ export interface IEventsCreate {
      location_id: number;
      currency: string;
      image: string | File;  // El valor será una cadena de base64 o una URL de imagen
+     quantityAvailable: number;
    }
