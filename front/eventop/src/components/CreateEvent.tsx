@@ -63,13 +63,15 @@ const EventForm: React.FC = () => {
   };
 
   return (
-    <form
-  onSubmit={handleSubmit(onSubmit)}
-  className="bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100 mt-8 space-y-8 p-8 border border-gray-700 rounded-xl shadow-2xl max-w-4xl mx-auto"
->
+    <div>
   <h1 className="text-4xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-center">
     Crear Evento
   </h1>
+
+    <form
+  onSubmit={handleSubmit(onSubmit)}
+  className="bg-gradient-to-br from-gray-900 to-gray-900 text-gray-100 mt-8 space-y-8 p-8 border border-gray-900 rounded-xl shadow-2xl max-w-4xl mx-auto"
+>
 
   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
     {/* Nombre */}
@@ -347,6 +349,7 @@ const EventForm: React.FC = () => {
     Crear Evento
   </button>
 </form>
+    </div>
   );
 };
 
