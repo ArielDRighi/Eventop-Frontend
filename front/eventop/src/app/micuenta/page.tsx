@@ -6,6 +6,7 @@ import Head from "next/head";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter } from "next/navigation";
 import { Compras } from "@/components/Compras";
+import { getRole } from "@/helpers/getRole";
 
 const UserDashboard = () => {
   const { user, isLoading } = useUser();
@@ -24,6 +25,19 @@ const UserDashboard = () => {
     return <div>Loading...</div>;
   }
 
+  useEffect(() => {
+    const fetchRole = async () => {
+      try {
+        const userRole = await getRole();
+        console.log(userRole);
+      } catch (error) {
+        console.error("Error fetching role:", error);
+      }
+    };
+
+    fetchRole();
+  }, []);
+
   return (
     <>
       <Head>
@@ -32,7 +46,7 @@ const UserDashboard = () => {
       </Head>
       <UserInfo />
       <div className="w-1/2 mx-auto">
-      <Compras/>
+        <Compras />
       </div>
     </>
   );
