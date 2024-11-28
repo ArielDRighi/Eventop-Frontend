@@ -7,11 +7,13 @@ import { createEvent } from "@/helpers/events.helper";
 import Cookies from "js-cookie";
 import { useGetAllLocations } from "@/helpers/location.helper";
 import { ILocation } from "@/interfaces/ILocations";
-
+import { useRouter } from "next/navigation";
 interface IFormInput extends Omit<IEventsCreate, "date" | "image"> {
   date: string;
   quantityAvailable: number;
 }
+
+
 
 const EventForm: React.FC = () => {
   const {
@@ -24,7 +26,7 @@ const EventForm: React.FC = () => {
 
   // Llamar a la función useGetAllLocations y desestructurar el resultado
   const { result: locations, loading } = useGetAllLocations();
-
+  const router = useRouter();
   // Función para manejar el envío del formulario
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const token = JSON.parse(Cookies.get("adminToken") || "null");
@@ -50,6 +52,7 @@ const EventForm: React.FC = () => {
       // Limpiar el formulario después de enviar los datos
       reset();
       setImage(null);
+      router.push("/admin/events");
     } catch (error) {
       console.error("Error creando el evento:", error);
     }

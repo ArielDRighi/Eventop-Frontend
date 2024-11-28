@@ -11,7 +11,7 @@ import DeleteButton from "@/components/DeleteButton";
 import ApproveButton from "@/components/ApproveButton";
 import Cookies from "js-cookie";
 import { useEditEvent } from "@/helpers/events.helper";
-
+// import { useRouter } from "next/navigation";
 interface IFormInput {
   name: string;
   description: string;
@@ -26,7 +26,7 @@ const EditEventPage = () => {
   const eventId = params.eventId as string;
   const { event, loading, error } = useEventById(eventId);
   const { result: locations, loading: loadingLocations } = useGetAllLocations();
-  
+  // const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -69,6 +69,7 @@ const EditEventPage = () => {
     console.log(data);
     try {
       const res = await useEditEvent(eventId, data, token);
+      // router.push("/admin/events")
       console.log(res);
     } catch (error) {
       console.error("Error actualizando el evento:", error);
@@ -78,9 +79,11 @@ const EditEventPage = () => {
 
   if (loading || loadingLocations) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center text-white">
-        Cargando...
-      </div>
+      <div className="flex items-center justify-center space-x-2">
+          <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+          <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+          <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+        </div>
     );
   }
 
@@ -111,7 +114,7 @@ const EditEventPage = () => {
             <div className="relative group">
               <Image
                 className="h-full w-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
-                src={event.imageUrl || "https://via.placeholder.com/400"}
+                src={event.imageUrl || "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"}
                 alt={event.name}
                 width={500}
                 height={500}
@@ -243,6 +246,8 @@ const EditEventPage = () => {
               <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
                 <button
                   type="submit"
+                  name="action"
+                  value="save"
                   className="group hover:before:duration-500 hover:after:duration-500 after:duration-500 hover:border-purple-600 hover:before:[box-shadow:_20px_20px_20px_30px_#a21caf] duration-500 before:duration-500 hover:duration-500 hover:after:-right-8 hover:before:right-12 hover:before:-bottom-8 hover:before:blur origin-left hover:decoration-2 hover:text-white-50 relative bg-gray-900 h-16 w-full sm:w-38 border text-center p-3 text-white text-base font-bold rounded-lg overflow-hidden before:absolute before:w-12 before:h-12 before:content-[''] before:right-1 before:top-1 before:z-10 before:bg-violet-500 before:rounded-full before:blur-lg after:absolute after:z-10 after:w-20 after:h-20 after:content-[''] after:bg-purple-600 after:right-8 after:top-3 after:rounded-full after:blur-lg"
                 >
                   <svg

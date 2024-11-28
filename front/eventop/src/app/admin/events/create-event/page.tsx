@@ -6,7 +6,7 @@ import React from 'react'
 
  const CreateEventPage  = () => {
   return (
-    <section className="flex flex-col gap-2">
+    <section className="flex flex-col gap-2 mt-10">
         <SideBar/>
       <div>
         <CreateEvent/>

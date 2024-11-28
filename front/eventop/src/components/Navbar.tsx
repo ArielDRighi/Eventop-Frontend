@@ -100,7 +100,7 @@ const NavBar = () => {
             </Link>
           </li>
           <li>
-            <Link href={"/ayuda"}>
+            <Link href={"/contact"}>
               Ayuda
             </Link>
           </li>
