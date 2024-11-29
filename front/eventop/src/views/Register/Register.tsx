@@ -2,13 +2,16 @@
 
 import { IRegisterProps, IRegisterErrors } from "@/interfaces/IRegisterProps";
 import { useEffect, useState } from "react";
-import { redirect } from "next/navigation";
 import Swal from "sweetalert2";
 import validateRegisterForm from "@/helpers/validateRegisterForm";
 import { register } from "@/helpers/auth.helper";
 import { Eye, EyeClosed } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 
 function Register() {
+
+  const router = useRouter();
   const [userData, setUserData] = useState<IRegisterProps>({
     name: "",
     email: "",
@@ -64,7 +67,8 @@ function Register() {
     }
 
     try {
-      await register(userData);
+      const res = await register(userData);
+      console.log(res)
       Swal.fire({
         title: "Registro exitoso",
         icon: "success",
@@ -76,8 +80,9 @@ function Register() {
         },
         buttonsStyling: false,
       });
-      redirect("/login");
+      router.push("/login");
     } catch (error: any) {
+      console.log("Error en el catch:", error);
       Swal.fire({
         title: "Error en el registro",
         text: error.message,

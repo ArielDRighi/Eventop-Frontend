@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
 export const register = async (userData: IRegisterProps) => {
+  console.log(userData);
   try {
     const response = await fetch(`${APIURL}/auth/signup`, {
       method: "POST",
@@ -13,11 +14,13 @@ export const register = async (userData: IRegisterProps) => {
       },
       body: JSON.stringify(userData),
     });
-    if (!response.ok) {
-      console.log("Error en la respuesta del backend:", response.status, await response.text());
-      throw new Error("Fallo el registro");
+    const res = await response.json();
+    if (res.statusCode === 400) {
+      throw new Error(res.message);
+    } else {
+      return res;
     }
-  } catch (error: any) {
+  } catch (error: any) { 
     throw new Error(error);
   }
 };
