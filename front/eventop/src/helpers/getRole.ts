@@ -1,5 +1,5 @@
 
-import { getAccessToken } from '@auth0/nextjs-auth0';
+import {getAccessToken} from '@auth0/nextjs-auth0';
 import jwt from 'jsonwebtoken';
 
 export async function getRole() {

@@ -1,9 +1,9 @@
 "use client"
 import { useEffect, useState } from 'react';
 import DashboardAdminSection from "@/components/DashboardAdminSection";
-import Login from "@/views/Login/Login" // Asegúrate de que este componente esté correctamente importado
 import SideBar from '@/components/SideBar';
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 const AdminPage = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -17,9 +17,11 @@ const AdminPage = () => {
     setCheckedAuth(true); // Indica que se ha verificado la autenticación
   }, []);
 
+  const router = useRouter();
+
   // Muestra el componente de login si el usuario no es admin y ya se verificó la autenticación
   if (checkedAuth && !isAdmin) {
-    return <Login />;
+    router.push("/");
   }
 
   // Muestra un loader mientras se verifica la autenticación (opcional)

@@ -7,11 +7,22 @@ import { useRouter } from "next/navigation";
 import { login } from "@/helpers/auth.helper";
 import Cookies from "js-cookie";
 import { useAdmin } from "@/context/admincontext";
+import { UserSearch } from "lucide-react";
+import { Auth0Client } from "@auth0/auth0-spa-js";
 
+const auth0 = new Auth0Client({
+  domain: process.env.NEXT_PUBLIC_AUTH0_DOMAIN || '',
+  clientId: process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID || '',
+  authorizationParams: {
+    redirect_uri: window.location.origin
+  }
+});
 
 export const Login = () => {
   const router = useRouter();
   const { setIsAdmin } = useAdmin();
+
+  
 
   const [userData, setUserData] = useState<ILoginProps>({
     email: "",
@@ -46,6 +57,17 @@ export const Login = () => {
     });
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      await auth0.loginWithPopup({ connection: 'google-oauth2' });
+      const user = await auth0.getUser();
+      // Manejar el usuario autenticado
+      console.log(user);
+      router.push('/dashboard'); // Redirigir al dashboard o a la página deseada
+    } catch (error) {
+      console.error("Error logging in with Google:", error);
+    }
+  };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const errors = validateLoginForm(userData);
@@ -75,11 +97,11 @@ export const Login = () => {
 
       const { access_token } = response;
       console.log(access_token);
-      
+
       // Almacenar token y datos de usuario en localStorage
-     Cookies.set("adminToken", JSON.stringify({ access_token }));
-     setIsAdmin(true);
-        
+      Cookies.set("adminToken", JSON.stringify({ access_token }));
+      setIsAdmin(true);
+
       // Pop-up de éxito
       Swal.fire({
         title: "¡Éxito!",
@@ -187,7 +209,6 @@ export const Login = () => {
               </div>
 
               <div className="mt-4 flex items-center justify-end gap-x-2">
-                
                 <button
                   className="flex  items-center justify-center font-bold rounded-xl   bg-purple-600 px-4 py-3 text-sm text-white duration-200 hover:bg-purple-700"
                   type="submit"
@@ -196,8 +217,14 @@ export const Login = () => {
                 </button>
               </div>
             </form>
-            <div className="flex items-end justify-end mt-4">
-            </div>
+
+            <div className="flex items-end justify-end mt-4"></div>
+            <button
+              onClick={handleGoogleLogin}
+              className="w-4/5 mx-auto rounded-lg bg-slate-200"
+            >
+              Login with Google <span><UserSearch/></span>
+            </button>
           </div>
         </div>
       </div>

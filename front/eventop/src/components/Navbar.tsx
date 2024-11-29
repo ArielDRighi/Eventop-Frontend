@@ -79,7 +79,7 @@ const NavBar = () => {
               </li>
             ) : (
               <li>
-                <Link href="/api/auth/login">
+                <Link href="/login">
                   Login
                 </Link>
               </li>
@@ -140,7 +140,7 @@ const NavBar = () => {
         ) : (
           <a
             className="btn bg-purple-500 text-white hover:bg-purple-600"
-            href={"/api/auth/login"}
+            href={"/login"}
           >
             Inicia Sesión
           </a>

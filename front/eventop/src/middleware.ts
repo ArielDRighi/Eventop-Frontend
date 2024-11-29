@@ -7,7 +7,7 @@ export function middleware(req: NextRequest) {
   const token = req.cookies.get('adminToken');
   console.log(token)
 
-  if (!token && req.nextUrl.pathname.startsWith('/admin/')) {
+  if (!token && req.nextUrl.pathname.startsWith('/admin')) {
     // Redirige al login si el token no está presente y la ruta es protegida
     return NextResponse.redirect(new URL('/', req.url));
   }
