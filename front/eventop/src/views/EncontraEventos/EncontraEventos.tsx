@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import { Search, Calendar, MapPin, DollarSign } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -24,6 +24,7 @@ export const EncontraEventos = () => {
   const [locations, setLocations] = useState<ILocation[]>([]);
   const [radius, setRadius] = useState<number>(10);
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
@@ -154,6 +155,20 @@ export const EncontraEventos = () => {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <div>
       <section className="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-16 px-4 sm:px-6 lg:px-8 min-h-screen">
@@ -168,12 +183,11 @@ export const EncontraEventos = () => {
             </p>
           </div>
 
-          
-          <div className="bg-gray-900 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl p-8 mb-10">
+          <div className="bg-gray-900 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl p-8 mb-10 relative z-[40]">
             <h2 className="text-3xl font-bold mb-6 text-center">
               Filtrar Eventos
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 relative z-[50]">
               <div className="relative">
                 <input
                   type="text"
@@ -208,15 +222,6 @@ export const EncontraEventos = () => {
                       </option>
                     ))}
                   </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                    <svg
-                      className="fill-current h-4 w-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </div>
                 </div>
               ))}
 
@@ -233,32 +238,39 @@ export const EncontraEventos = () => {
                   <option value="500">Hasta 500</option>
                   <option value="1000">Hasta 1000</option>
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+              </div>
+
+              <div className="relative z-[100]" ref={dropdownRef}>
+                <button
+                  onClick={toggleDropdown}
+                  className="w-full pl-4 pr-10 py-3 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-white transition duration-300 flex justify-between items-center"
+                >
+                  {radius === 10
+                    ? "Eventos cercanos "
+                    : `Eventos en ${radius} km`}
                   <svg
-                    className="fill-current h-4 w-4"
+                    className={`fill-current h-4 w-4 transform ${
+                      isOpen ? "rotate-180" : ""
+                    } transition-transform`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                   >
                     <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                   </svg>
-                </div>
-              </div>
-
-              <div className="relative z-50">
-                <button
-                  onClick={toggleDropdown}
-                  className="w-full pl-4 pr-10 py-3 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-white transition duration-300"
-                >
-                  Eventos cercanos a mi
                 </button>
                 {isOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-10">
+                  <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-[101]">
                     <ul className="py-1">
                       {[5, 10, 15, 20, 50].map((km) => (
                         <li key={km}>
                           <button
-                            onClick={() => handleNearbyEvents(km)}
-                            className="block px-4 py-2 text-white hover:bg-gray-700  w-full text-left"
+                            onClick={() => {
+                              setRadius(km);
+                              handleNearbyEvents(km);
+                            }}
+                            className={`block px-4 py-2 text-white hover:bg-gray-700 w-full text-left ${
+                              radius === km ? "bg-purple-600" : ""
+                            }`}
                           >
                             {km} km
                           </button>
@@ -271,13 +283,11 @@ export const EncontraEventos = () => {
             </div>
           </div>
 
-                
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-[30] ">
             {filteredEvents &&
               filteredEvents.map((event: IEvents) => {
                 if (!event.location_id) {
-                  return null; // O puedes manejarlo de otra manera, como mostrar un mensaje de error
+                  return null;
                 }
                 return (
                   <motion.div
@@ -329,9 +339,9 @@ export const EncontraEventos = () => {
               })}
 
             {filteredEvents.length === 0 && (
-              <div className="text-center">
-                <p className="text-2xl text-gray-400 mb-4">
-                  No se encontraron eventos que coincidan con tu búsqueda.
+              <div className="flex flex-col items-center justify-center space-y-5 p-8 bg-gray-900 rounded-lg shadow-inner">
+                <p className="text-xl font-semibold text-gray-50">
+                  No se encontraron eventos
                 </p>
                 <button
                   onClick={() => {
@@ -339,8 +349,22 @@ export const EncontraEventos = () => {
                     setSelectedCategory("");
                     setSelectedLocation("");
                   }}
-                  className="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+                  className="inline-flex items-center px-6 py-3 bg-purple-600 text-white font-medium text-base rounded-full hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-100 transition-all duration-300 transform hover:scale-105"
                 >
+                  <svg
+                    className="w-5 h-5 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    ></path>
+                  </svg>
                   Limpiar filtros
                 </button>
               </div>
