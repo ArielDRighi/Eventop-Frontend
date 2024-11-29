@@ -23,8 +23,8 @@ const NavBar = () => {
           <span className="text-purple-500">Top</span>
         </Link>
       </div>
-      <div className="navbar-center lg:hidden">
-        <details className="dropdown">
+      <div className="navbar-end lg:hidden">
+        <details className="dropdown dropdown-end">
           <summary className="btn m-1 text-slate-900 focus:outline-none flex items-center">
             {menuOpen ? (
               <XIcon className="w-6 h-6" onClick={toggleMenu} />
@@ -129,17 +129,17 @@ const NavBar = () => {
           </li>
         </ul>
       </div>
-      <div className="navbar-end">
+      <div className="hidden lg:flex lg:navbar-end">
         {user ? (
           <a
-            className="btn bg-purple-500 text-white hover:bg-purple-600"
+            className="btn bg-purple-500 text-white hover:bg-purple-600 hidden lg:flex"
             href={"/micuenta"}
           >
             Mi Cuenta
           </a>
         ) : (
           <a
-            className="btn bg-purple-500 text-white hover:bg-purple-600"
+            className="btn bg-purple-500 text-white hover:bg-purple-600 hidden lg:flex"
             href={"/login"}
           >
             Inicia Sesión

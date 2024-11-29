@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import { useAdmin } from "@/context/admincontext";
 import { UserSearch } from "lucide-react";
 import { Auth0Client } from "@auth0/auth0-spa-js";
+import { Eye, EyeClosed } from "lucide-react";
 
 const auth0 = new Auth0Client({
   domain: process.env.NEXT_PUBLIC_AUTH0_DOMAIN || '',
@@ -39,6 +40,9 @@ export const Login = () => {
     }
   );
 
+  const [showPassword, setShowPassword] = useState(false);
+
+
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
 
@@ -55,6 +59,11 @@ export const Login = () => {
       ...touched,
       [name]: true,
     });
+  };
+
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleGoogleLogin = async () => {
@@ -142,25 +151,26 @@ export const Login = () => {
   }, [userData]);
 
   return (
-    <div className="bg-gray-900  text-white flex  flex-col items-center pt-16 sm:justify-center sm:pt-0">
-      <a href="#">
-        <div className="text-foreground font-semibold text-2xl tracking-tighter mx-auto flex items-center gap-2">
-          EvenTop
-        </div>
-      </a>
-      <div className="relative mt-12 w-full max-w-lg sm:mt-10">
-        <div className="relative -mb-px h-px w-full bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
-        <div className="mx-5 border  border-b-white/20 sm:border-t-white/20 shadow-[20px_0_20px_20px] shadow-slate-500/10  rounded-lg border-white/20 border-l-white/20 border-r-white/20 sm:shadow-sm lg:rounded-xl lg:shadow-none">
+    <section className="flex items-center justify-center min-h-screen bg-gray-900">
+
+      <div className="relative flex flex-col m-6 space-y-8 bg-gray-900 shadow-2xl rounded-2xl md:flex-row md:space-y-0">
+
+
+      <div className="flex flex-col justify-center p-8 md:p-12">
+
           <div className="flex flex-col p-6">
-            <h3 className="text-xl font-semibold leading-6 tracking-tighter">
+            <h3 className="text-xl font-semibold leading-6 tracking-tighter text-slate-200">
               Iniciar Sesion
             </h3>
             <p className="mt-1.5 text-sm font-medium text-white/50">
               Bienvenido de nuevo, ingresa tus credenciales para continuar.
             </p>
           </div>
+
+
           <div className="p-6 pt-0">
             <form onSubmit={handleSubmit}>
+
               <div className="group relative rounded-lg border focus-within:border-sky-200 px-3 pb-1.5 pt-2.5 duration-200 focus-within:ring focus-within:ring-sky-300/30">
                 <div className="flex justify-between">
                   <label className="text-xs font-medium text-muted-foreground group-focus-within:text-white text-gray-400">
@@ -191,7 +201,7 @@ export const Login = () => {
                 </div>
                 <div className="flex items-center">
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     id="password"
                     value={userData.password}
@@ -200,6 +210,13 @@ export const Login = () => {
                     placeholder="Contraseña"
                     className="block w-full border-0 bg-transparent p-0 text-sm placeholder:text-muted-foreground/90 focus:outline-none focus:ring-0 sm:leading-7 text-foreground text-white"
                   />
+                  <button
+            type="button"
+            onClick={toggleShowPassword}
+            className="ml-2 text-sm text-gray-500"
+          >
+            {showPassword ? <Eye/> : <EyeClosed/>}
+          </button>
                 </div>
                 {touched.password && error.password && (
                   <span className="text-red-500 text-sm block">
@@ -208,9 +225,17 @@ export const Login = () => {
                 )}
               </div>
 
-              <div className="mt-4 flex items-center justify-end gap-x-2">
+              <div className="flex justify-between w-full py-4 ">
+                <div>
+                 <input type="checkbox" name="remember" id="remember"  className="mr-2 rounded-lg"/>
+                  <label htmlFor="remember" className="text-sm text-white py-2">Recordarme</label>
+                </div>
+                  <a href="#" className="text-sm text-white">Olvidaste tu contraseña?</a>
+              </div>
+
+              <div className="mt-2 flex items-center justify-end gap-x-2">
                 <button
-                  className="flex  items-center justify-center font-bold rounded-xl   bg-purple-600 px-4 py-3 text-sm text-white duration-200 hover:bg-purple-700"
+                  className="flex  items-center justify-center font-bold rounded-xl  w-full mx-auto bg-purple-600 px-4 py-3 text-sm text-white duration-200 hover:bg-purple-700"
                   type="submit"
                 >
                   Iniciar Sesion
@@ -218,17 +243,30 @@ export const Login = () => {
               </div>
             </form>
 
-            <div className="flex items-end justify-end mt-4"></div>
+            <hr className="text-slate-200 w-full border-2 rounded-lg mt-4 mb-4"/>
+
+            <div className="flex items-end justify-end mt-4 text-gray-900">
             <button
               onClick={handleGoogleLogin}
-              className="w-4/5 mx-auto rounded-lg bg-slate-200"
-            >
-              Login with Google <span><UserSearch/></span>
+              className="w-4/5 mx-auto w-full rounded-lg bg-slate-200 flex flex-row items-center justify-center gap-x-2 px-4 py-3 text-sm duration-200 hover:bg-slate-300"
+              >
+              Inicia Sesion con Google <img src="google.svg" alt="google" className="w-5 h-5"/>
             </button>
           </div>
+
+           <p className="text-center mt-4 text-white">No tienes una cuenta? <a href="/register" className="text-purple-600">Registrate</a></p>
+          </div>
         </div>
+
+        <div className="relative">
+          <img src="window.jpg" alt="login" 
+          className="hidden md:flex rounded-r-2xl w-[400px] h-full object-cover"/>
+        </div>
+
       </div>
-    </div>
+        
+
+    </section>
   );
 };
 
