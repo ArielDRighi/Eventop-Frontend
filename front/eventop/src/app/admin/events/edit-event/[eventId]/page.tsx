@@ -277,6 +277,7 @@ const EditEventPage = () => {
           </div>
         </div>
       </div>
+      
     </section>
   );
 }

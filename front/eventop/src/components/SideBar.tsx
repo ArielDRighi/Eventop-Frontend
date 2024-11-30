@@ -11,8 +11,6 @@ import {
   User,
   ChevronDown,
   Calendar,
-  Bell,
-  Settings,
   HelpCircle,
 } from "lucide-react";
 import { useAdmin } from "@/context/admincontext";
@@ -31,14 +29,10 @@ const SideBar = () => {
       } else {
         setIsLargeScreen(false);
       }
-
-      // if (window.innerWidth >= 1024) {
-      //   setIsOpen(true); // Mantén el sidebar abierto en pantallas grandes
-      // }
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Llama una vez para verificar el tamaño inicial
+    handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -55,7 +49,7 @@ const SideBar = () => {
 
   return (
     <>
-      {!isOpen && ( // Este botón solo aparece cuando el sidebar está cerrado
+      {!isOpen && (
         <button
           onClick={toggleSidebar}
           className="setting-btn fixed top-4 left-4  z-50 p-2 text-white bg-purple-600 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all duration-300 ease-in-out transform hover:scale-105"
@@ -87,8 +81,8 @@ const SideBar = () => {
               href="/admin"
               className="flex items-center space-x-2 text-xl font-semibold"
             >
-              <LayoutDashboard className="w-6 h-6" />
-              <span>Admin Dashboard</span>
+              
+              <span>Even<span className="text-purple-500">Top</span></span>
             </Link>
             <button
               onClick={toggleSidebar}
@@ -104,6 +98,7 @@ const SideBar = () => {
               <li>
                 <Link
                   href="/admin"
+                  target="_blank"
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <LayoutDashboard className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform duration-200" />
@@ -113,6 +108,7 @@ const SideBar = () => {
               <li>
                 <Link
                   href="/admin/users"
+                  target="_blank"
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <User className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-200" />
@@ -139,6 +135,7 @@ const SideBar = () => {
                     <li>
                       <Link
                         href="/admin/events"
+                        target="_blank"
                         className="block py-2 pl-9 pr-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-colors duration-200"
                       >
                         All Events
@@ -147,6 +144,7 @@ const SideBar = () => {
                     <li>
                       <Link
                         href="/admin/events/create-event"
+                        target="_blank"
                         className="block py-2 pl-9 pr-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-colors duration-200"
                       >
                         Create Event
@@ -158,7 +156,8 @@ const SideBar = () => {
               </li>
               <li>
                 <Link
-                  href="/admin/calendar"
+                  href="https://calendar.google.com/calendar/u/0/r?pli=1"
+                  target="_blank"
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <Calendar className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform duration-200" />
@@ -167,29 +166,12 @@ const SideBar = () => {
               </li>
               <li>
                 <Link
-                  href="/admin/notifications"
-                  className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
-                >
-                  <Bell className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-200" />
-                  <span>Notifications</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/admin/settings"
-                  className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
-                >
-                  <Settings className="w-5 h-5 mr-3 group-hover:rotate-90 transition-transform duration-200" />
-                  <span>Settings</span>
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/contact"
+                  target="_blank"
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <HelpCircle className="w-5 h-5 mr-3 group-hover:bounce transition-transform duration-200" />
-                  <span>Help & Support</span>
+                  <span>Help</span>
                 </Link>
               </li>
             </ul>
