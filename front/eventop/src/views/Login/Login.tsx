@@ -1,29 +1,18 @@
 "use client";
 import { ILoginErrors, ILoginProps } from "@/interfaces/ILoginProps";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import validateLoginForm from "@/helpers/validateLoginForm";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { login } from "@/helpers/auth.helper";
 import Cookies from "js-cookie";
 import { useAdmin } from "@/context/admincontext";
-import { UserSearch } from "lucide-react";
-import { Auth0Client } from "@auth0/auth0-spa-js";
 import { Eye, EyeClosed } from "lucide-react";
-
-const auth0 = new Auth0Client({
-  domain: process.env.NEXT_PUBLIC_AUTH0_DOMAIN || '',
-  clientId: process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID || '',
-  authorizationParams: {
-    redirect_uri: window.location.origin
-  }
-});
+import { url } from "inspector";
 
 export const Login = () => {
   const router = useRouter();
   const { setIsAdmin } = useAdmin();
-
-  
 
   const [userData, setUserData] = useState<ILoginProps>({
     email: "",
@@ -41,7 +30,6 @@ export const Login = () => {
   );
 
   const [showPassword, setShowPassword] = useState(false);
-
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
@@ -61,22 +49,24 @@ export const Login = () => {
     });
   };
 
-
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      await auth0.loginWithPopup({ connection: 'google-oauth2' });
-      const user = await auth0.getUser();
-      // Manejar el usuario autenticado
-      console.log(user);
-      router.push('/dashboard'); // Redirigir al dashboard o a la página deseada
-    } catch (error) {
-      console.error("Error logging in with Google:", error);
-    }
+  const handleGoogleLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`;
   };
+
+  useEffect(() => {
+    const URLparams = new URLSearchParams(window.location.search);
+    const token = URLparams.get("token");
+    if (token) {
+      console.log(`Token: ${token}`);
+      Cookies.set("access_token", JSON.stringify({ access_token: token }));
+      router.push("/");
+    }
+  }, []);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const errors = validateLoginForm(userData);
@@ -152,12 +142,8 @@ export const Login = () => {
 
   return (
     <section className="flex items-center justify-center min-h-screen bg-gray-900">
-
       <div className="relative flex flex-col m-6 space-y-8 bg-gray-900 shadow-2xl rounded-2xl md:flex-row md:space-y-0">
-
-
-      <div className="flex flex-col justify-center p-8 md:p-12">
-
+        <div className="flex flex-col justify-center p-8 md:p-12">
           <div className="flex flex-col p-6">
             <h3 className="text-xl font-semibold leading-6 tracking-tighter text-slate-200">
               Iniciar Sesion
@@ -167,10 +153,8 @@ export const Login = () => {
             </p>
           </div>
 
-
           <div className="p-6 pt-0">
             <form onSubmit={handleSubmit}>
-
               <div className="group relative rounded-lg border focus-within:border-sky-200 px-3 pb-1.5 pt-2.5 duration-200 focus-within:ring focus-within:ring-sky-300/30">
                 <div className="flex justify-between">
                   <label className="text-xs font-medium text-muted-foreground group-focus-within:text-white text-gray-400">
@@ -211,12 +195,12 @@ export const Login = () => {
                     className="block w-full border-0 bg-transparent p-0 text-sm placeholder:text-muted-foreground/90 focus:outline-none focus:ring-0 sm:leading-7 text-foreground text-white"
                   />
                   <button
-            type="button"
-            onClick={toggleShowPassword}
-            className="ml-2 text-sm text-gray-500"
-          >
-            {showPassword ? <Eye/> : <EyeClosed/>}
-          </button>
+                    type="button"
+                    onClick={toggleShowPassword}
+                    className="ml-2 text-sm text-gray-500"
+                  >
+                    {showPassword ? <Eye /> : <EyeClosed />}
+                  </button>
                 </div>
                 {touched.password && error.password && (
                   <span className="text-red-500 text-sm block">
@@ -227,10 +211,19 @@ export const Login = () => {
 
               <div className="flex justify-between w-full py-4 ">
                 <div>
-                 <input type="checkbox" name="remember" id="remember"  className="mr-2 rounded-lg"/>
-                  <label htmlFor="remember" className="text-sm text-white py-2">Recordarme</label>
+                  <input
+                    type="checkbox"
+                    name="remember"
+                    id="remember"
+                    className="mr-2 rounded-lg"
+                  />
+                  <label htmlFor="remember" className="text-sm text-white py-2">
+                    Recordarme
+                  </label>
                 </div>
-                  <a href="#" className="text-sm text-white">Olvidaste tu contraseña?</a>
+                <a href="#" className="text-sm text-white">
+                  Olvidaste tu contraseña?
+                </a>
               </div>
 
               <div className="mt-2 flex items-center justify-end gap-x-2">
@@ -243,29 +236,35 @@ export const Login = () => {
               </div>
             </form>
 
-            <hr className="text-slate-200 w-full border-2 rounded-lg mt-4 mb-4"/>
+            <hr className="text-slate-200 w-full border-2 rounded-lg mt-4 mb-4" />
 
             <div className="flex items-end justify-end mt-4 text-gray-900">
-            <button
-              onClick={handleGoogleLogin}
-              className="w-4/5 mx-auto w-full rounded-lg bg-slate-200 flex flex-row items-center justify-center gap-x-2 px-4 py-3 text-sm duration-200 hover:bg-slate-300"
+              <button
+                onClick={handleGoogleLogin}
+                className="w-4/5 mx-auto w-full rounded-lg bg-slate-200 flex flex-row items-center justify-center gap-x-2 px-4 py-3 text-sm duration-200 hover:bg-slate-300"
               >
-              Inicia Sesion con Google <img src="google.svg" alt="google" className="w-5 h-5"/>
-            </button>
-          </div>
+                Inicia Sesion con Google{" "}
+                <img src="google.svg" alt="google" className="w-5 h-5" />
+              </button>
+            </div>
 
-           <p className="text-center mt-4 text-white">No tienes una cuenta? <a href="/register" className="text-purple-600">Registrate</a></p>
+            <p className="text-center mt-4 text-white">
+              No tienes una cuenta?{" "}
+              <a href="/register" className="text-purple-600">
+                Registrate
+              </a>
+            </p>
           </div>
         </div>
 
         <div className="relative">
-          <img src="window.jpg" alt="login" 
-          className="hidden md:flex rounded-r-2xl w-[400px] h-full object-cover"/>
+          <img
+            src="window.jpg"
+            alt="login"
+            className="hidden md:flex rounded-r-2xl w-[400px] h-full object-cover"
+          />
         </div>
-
       </div>
-        
-
     </section>
   );
 };
