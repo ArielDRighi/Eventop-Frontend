@@ -35,9 +35,12 @@ export const UserInfo = () => {
   if (isLoading) {
     return (
       <section>
-        <h1 className="text-3xl text-center font-bold text-slate-200">
-          Loading...
-        </h1>
+        <div className="flex items-center justify-center space-x-2">
+          
+          <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+          <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+          <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+        </div>
         <div className="flex flex-col gap-4 w-1/4 mx-auto">
           {/* Placeholder for a loading state */}
           <img src="#" alt="Loading" />
