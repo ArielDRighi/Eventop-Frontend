@@ -55,10 +55,8 @@ df-message[agent="true"] {
   border-radius: 15px 15px 3px 15px;
   transition: transform 0.2s ease;
 }
-df-message[agent="true"]:hover {
-  transform: scale(1.02);
-}
-/* Estilos para los mensajes del usuario */
+
+/* Mensajes del usuario con gradiente */
 df-message[agent="false"] {
   background-color: #8b5cf6 !important; /* purple-500 */
   color: #ffffff !important;
