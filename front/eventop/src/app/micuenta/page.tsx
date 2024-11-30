@@ -3,56 +3,46 @@
 import { UserInfo } from "@/views/UserDashboard/UserInfo";
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
-import { useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter } from "next/navigation";
 import { Compras } from "@/components/Compras";
-import { getRole } from "@/helpers/getRole";
+import { useUserContext } from "@/context/userContext";
+import Cookies from "js-cookie";
 
 const UserDashboard = () => {
-  const { user, isLoading } = useUser();
   const router = useRouter();
-  const [userRole, setUserRole] = useState(null);
-  const [roleError, setRoleError] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(true);
+  const { userName, role } = useUserContext();
+  
   useEffect(() => {
-    if (!isLoading && user) {
-      const fetchRole = async () => {
-        try {
-          const role = await getRole();
-          setUserRole(role);
-        } catch (error: any) {
-          setRoleError(error.message);
-          console.error("Error fetching role:", error);
-        }
-      };
-
-      fetchRole();
+    console.log(userName);
+    if (userName === null) {
+      // router.push("/login");
+    } else {
+      setIsLoading(false);
     }
-  }, [isLoading, user]);
+  }, []);
 
-  // Redirigir inmediatamente si no hay usuario y no está cargando
-  if (!isLoading && !user) {
-    if (typeof window !== "undefined") {
-      router.push("/api/auth/login");
-    }
-    return <div>Loading...</div>;
-  }
-
-  // Mostrar un indicador de carga mientras se verifica el estado del usuario
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div>
+    <>
       <Head>
         <title>User Dashboard</title>
+        <meta name="description" content="Dashboard personalizado para usuarios registrados." />
       </Head>
-      <UserInfo user={user} />
-      <Compras user={user} />
-      {userRole && <div>Role: {userRole}</div>}
-      {roleError && <div>Error: {roleError}</div>}
-    </div>
+    <section>
+        <h1 className="text-3xl text-center text-slate-200">Hola {userName}</h1>
+      {/* <UserInfo user={userName} role={role} /> */}
+      {/* Descomentar cuando el componente Compras esté listo */}
+      {/* userName && <Compras user={userName} /> */}
+      {role ? <div>Role: {role}</div> : <div>No role assigned</div>}
+      <button 
+      className="bg-slate-200 text-white p-2 rounded-md"
+      onClick={() => Cookies.remove("accessToken")}>Logout</button>
+    </section>
+    </>
   );
 };
 

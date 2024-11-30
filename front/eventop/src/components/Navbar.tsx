@@ -1,15 +1,13 @@
 "use client"
 
-import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
 import React, { useState } from "react";
-import { useAdmin } from "@/context/admincontext";
 import { MenuIcon, XIcon } from "lucide-react";
+import { useUserContext } from "@/context/userContext";
 
 const NavBar = () => {
-  const { user } = useUser();
-  const { isAdmin } = useAdmin();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { role } = useUserContext();
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -48,7 +46,7 @@ const NavBar = () => {
                 Ayuda
               </Link>
             </li>
-            {isAdmin && (
+            {role == "admin" && (
               <li>
                 <Link href={"/admin"}>
                   Admin
@@ -71,7 +69,7 @@ const NavBar = () => {
                 </ul>
               </details>
             </li>
-            {user ? (
+            {role ? (
               <li>
                 <Link href={"/micuenta"}>
                   Mi cuenta
@@ -104,7 +102,7 @@ const NavBar = () => {
               Ayuda
             </Link>
           </li>
-          {isAdmin && (
+          {role == 'admin' && (
             <li>
               <Link href={"/admin"}>
                 Admin
@@ -130,7 +128,7 @@ const NavBar = () => {
         </ul>
       </div>
       <div className="hidden lg:flex lg:navbar-end">
-        {user ? (
+        {role ? (
           <a
             className="btn bg-purple-500 text-white hover:bg-purple-600 hidden lg:flex"
             href={"/micuenta"}

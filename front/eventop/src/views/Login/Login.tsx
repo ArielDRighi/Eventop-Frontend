@@ -1,18 +1,15 @@
 "use client";
 import { ILoginErrors, ILoginProps } from "@/interfaces/ILoginProps";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import validateLoginForm from "@/helpers/validateLoginForm";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { login } from "@/helpers/auth.helper";
 import Cookies from "js-cookie";
-import { useAdmin } from "@/context/admincontext";
 import { Eye, EyeClosed } from "lucide-react";
-import { url } from "inspector";
 
 export const Login = () => {
   const router = useRouter();
-  const { setIsAdmin } = useAdmin();
 
   const [userData, setUserData] = useState<ILoginProps>({
     email: "",
@@ -62,7 +59,7 @@ export const Login = () => {
     const token = URLparams.get("token");
     if (token) {
       console.log(`Token: ${token}`);
-      Cookies.set("access_token", JSON.stringify({ access_token: token }));
+      Cookies.set("access_token", JSON.stringify( token ));
       router.push("/");
     }
   }, []);
@@ -91,15 +88,11 @@ export const Login = () => {
 
     try {
       const response = await login(userData);
-
       console.log(response);
-
       const { access_token } = response;
-      console.log(access_token);
 
       // Almacenar token y datos de usuario en localStorage
-      Cookies.set("adminToken", JSON.stringify({ access_token }));
-      setIsAdmin(true);
+      Cookies.set("accessToken", JSON.stringify( access_token ));
 
       // Pop-up de éxito
       Swal.fire({
@@ -118,7 +111,6 @@ export const Login = () => {
       router.push("/");
     } catch (error) {
       setErrors({ email: "Email o contraseña incorrectos.", password: "" });
-
       // Pop-up de error
       Swal.fire({
         title: "Error",
@@ -241,7 +233,7 @@ export const Login = () => {
             <div className="flex items-end justify-end mt-4 text-gray-900">
               <button
                 onClick={handleGoogleLogin}
-                className="w-4/5 mx-auto w-full rounded-lg bg-slate-200 flex flex-row items-center justify-center gap-x-2 px-4 py-3 text-sm duration-200 hover:bg-slate-300"
+                className="mx-auto w-full rounded-lg bg-slate-200 flex flex-row items-center justify-center gap-x-2 px-4 py-3 text-sm duration-200 hover:bg-slate-300"
               >
                 Inicia Sesion con Google{" "}
                 <img src="google.svg" alt="google" className="w-5 h-5" />

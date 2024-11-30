@@ -35,7 +35,6 @@ export const login = async (userData: ILoginProps) => {
       body: JSON.stringify(userData),
     });
     const res = await response.json();
-    console.log(res);
     if (response.status === 400) {
       Swal.fire({
         title: res.message,
