@@ -20,7 +20,7 @@ export const register = async (userData: IRegisterProps) => {
     } else {
       return res;
     }
-  } catch (error: any) { 
+  } catch (error: any) {
     throw new Error(error);
   }
 };
@@ -48,9 +48,20 @@ export const login = async (userData: ILoginProps) => {
         buttonsStyling: false, // Necesario para desactivar los estilos por defecto de los botones
       });
       throw new Error(res.message);
-    } else {
-      return res;
-    }
+    } else if (response.status === 401) {
+      Swal.fire({
+        title: res.message,
+        icon: "error",
+        customClass: {
+          popup: "bg-white shadow-lg rounded-lg p-6",
+          title: "text-2xl font-semibold text-gray-800",
+          confirmButton:
+            "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded",
+        },
+        buttonsStyling: false,
+      });
+      throw new Error(res.message);
+    } else return res;
   } catch (error: any) {
     throw new Error(error);
   }

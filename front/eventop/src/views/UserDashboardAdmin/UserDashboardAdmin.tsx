@@ -10,7 +10,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = JSON.parse(Cookies.get("adminToken") || "null");
+    const token = JSON.parse(Cookies.get("accessToken") || "null");
 
     if (token) {
       const fetchUsers = async () => {

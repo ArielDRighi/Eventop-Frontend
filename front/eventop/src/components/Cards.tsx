@@ -99,6 +99,8 @@ const Cards: React.FC = () => {
     error: string;
   };
 
+  console.log(result)
+
   const renderContent = useMemo(() => {
     if (loading)
       return (

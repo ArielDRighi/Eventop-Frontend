@@ -23,7 +23,7 @@ interface IFormInput {
 
 const EditEventPage = () => {
   const params = useParams();
-  const eventId = params.eventId as string;
+  const eventId = parseInt(params.eventId as string, 10);
   const { event, loading, error } = useEventById(eventId);
   const { result: locations, loading: loadingLocations } = useGetAllLocations();
 
