@@ -1,41 +1,27 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import SectionOne from "../components/SectionOne";
 import Cards from "@/components/Cards";
 import Blog from "@/components/Blog";
 import BlogTwo from "@/components/BlogTwo";
 import EventsPassed from "@/components/EventsPassed";
 import Opinions from "@/components/Opinions";
-import PaymentButton from "@/components/PaymentButton";
+import { useEffect } from "react";
 
 const Home = () => {
-  const [preferenceId, setPreferenceId] = useState<string | null>(null);
-
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:3000/auth/google/login";
+  };
   useEffect(() => {
-    const createPreference = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/create_preference`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ eventId: 1, email: "test@example.com" }), // Incluye el campo email
-        });
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    console.log("token", token);
 
-        if (!response.ok) {
-          const errorMessage = await response.text();
-          throw new Error(`Error al crear la preferencia de pago: ${errorMessage}`);
-        }
+    if (token) {
+      localStorage.setItem("jwtToken", token);
 
-        const data = await response.json();
-        setPreferenceId(data.preferenceId);
-      } catch (error) {
-        console.error("Error creating preference:", error);
-      }
-    };
-
-    createPreference();
+      window.location.href = "http://localhost:3000";
+    }
   }, []);
 
   return (
@@ -46,8 +32,8 @@ const Home = () => {
       <BlogTwo />
       <Opinions />
       <Blog />
-      <div className="flex justify-center py-8">
-        {preferenceId ? <PaymentButton preferenceId={preferenceId} /> : <p>Cargando botón de pago...</p>}
+      <div className="App">
+        <button onClick={handleGoogleLogin}>Login With Google</button>
       </div>
     </div>
   );
