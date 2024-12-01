@@ -35,12 +35,10 @@ export const EncontraEventos = () => {
       const res = await fetch(`${APIURL}/events`);
       if (res.ok) {
         const data = await res.json();
-        console.log(data);
         return data;
       }
       throw new Error("Error al obtener los eventos.");
     } catch (error) {
-      console.log(error);
       return [];
     }
   };
@@ -51,22 +49,15 @@ export const EncontraEventos = () => {
     radius: number
   ) => {
     try {
-      console.log("Fetching nearby events with:", {
-        latitude,
-        longitude,
-        radius,
-      });
       const res = await fetch(
         `${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`
       );
       if (res.ok) {
         const data = await res.json();
-        console.log("Nearby events data:", data);
         return data;
       }
       throw new Error("Error al obtener los eventos cercanos.");
     } catch (error) {
-      console.log(error);
       return [];
     }
   };
@@ -133,12 +124,10 @@ export const EncontraEventos = () => {
 
   const handleNearbyEvents = (selectedRadius: number) => {
     setIsOpen(false);
-    console.log("handleNearbyEvents called with radius:", selectedRadius);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
-          console.log("Geolocation obtained:", { latitude, longitude });
           const nearbyEvents = await getNearbyEvents(
             latitude,
             longitude,

@@ -52,23 +52,6 @@ const LandingPage = () => {
             {...fadeInUp}
             transition={{ delay: 0.4 }}
           >
-            {!user && (
-              <motion.a
-                href="/api/auth/login"
-                className="group relative inline-flex items-center overflow-hidden rounded-full bg-purple-600 px-8 py-3 text-white focus:outline-none focus:ring active:bg-purple-500 transition-all duration-300 ease-in-out hover:bg-purple-700"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="absolute right-0 translate-x-full transition-transform duration-300 group-hover:-translate-x-4">
-                  <Ticket className="h-5 w-5" />
-                </span>
-
-                <span className="text-sm font-medium transition-all duration-300 group-hover:mr-4">
-                  Crear Cuenta
-                </span>
-              </motion.a>
-            )}
-
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -86,6 +69,26 @@ const LandingPage = () => {
                 </span>
               </Link>
             </motion.div>
+
+            {!user && (
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  href="/api/auth/login"
+                  className="group relative inline-flex items-center overflow-hidden rounded-full bg-white px-8 py-3 text-purple-600 hover:text-white focus:outline-none focus:ring transition-all duration-300 ease-in-out hover:bg-purple-600"
+                >
+                  <span className="absolute right-0 translate-x-full transition-transform duration-300 group-hover:-translate-x-4">
+                    <Ticket className="h-5 w-5" />
+                  </span>
+
+                  <span className="text-sm font-medium transition-all duration-300 group-hover:mr-4">
+                    Crear Cuenta
+                  </span>
+                </Link>
+              </motion.div>
+            )}
           </motion.div>
 
           <motion.div 

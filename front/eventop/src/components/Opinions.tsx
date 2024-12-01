@@ -57,7 +57,7 @@ export default function Component() {
                         <div className="flex items-center">
                           <img 
                             alt={review.name} 
-                            src="https://dummyimage.com/106x106" 
+                            src="https://i.pinimg.com/736x/8b/87/8f/8b878f4e4a303bb30e2c4a31c2e6a6aa.jpg" 
                             className="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center ring-2 ring-purple-500/50"
                           />
                           <span className="flex-grow flex flex-col pl-4">
