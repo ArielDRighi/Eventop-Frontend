@@ -6,8 +6,9 @@ import { useUserContext } from "@/context/userContext";
 import { IUserProfile } from "@/interfaces/IUser";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
-import { updateUserImage } from "@/helpers/users.helpers"; // Assuming you have this helper function
-import { EditIcon } from "lucide-react";
+import { updateUserImage, updateUserProfile, changeUserPassword } from "@/helpers/users.helpers";
+import { EditIcon, Eye, EyeClosed } from "lucide-react";
+
 interface UserInfoProps {
   user: IUserProfile | null;
 }
@@ -19,6 +20,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newImage, setNewImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const token = JSON.parse(Cookies.get("accessToken") || "null");
   const { userId } = useUserContext();
   const {
@@ -54,11 +56,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
     console.log("Token:", token);
     console.log("Id:", userId);
     try {
-      const res = await updateUserImage(
-        token as string,
-        userId as string,
-        newImage
-      );
+      const res = await updateUserImage(token as string, userId as string, newImage);
       console.log(res);
     } catch (error) {
       console.log("Error al actualizar la imagen:", error);
@@ -67,13 +65,21 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
     closeModal();
   };
 
+  const handleLogOut = () => {
+    Cookies.remove("accessToken");
+    window.location.href = "/login";
+  };
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   useEffect(() => {
     if (user) {
       // Establece valores iniciales del formulario
       Object.entries(user).forEach(([key, value]) =>
         setValue(key as keyof IUserProfile, value)
       );
-      setImagePreview(user.imageUrl);
       setUserData(user);
       setLoading(false);
     } else {
@@ -81,9 +87,30 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
     }
   }, [user, setValue]);
 
-  const onSubmit = (data: IUserProfile) => {
-    console.log("Datos enviados:", data);
-    // Aquí puedes agregar lógica para actualizar la información del usuario
+  const onSubmit = async (data: IUserProfile) => {
+    const dataToSend = {
+      name: data.name,
+      email: data.email,
+      preferredLanguage: data.preferredLanguage || "",
+      preferredCurrency: data.preferredCurrency || "",
+      password: data.password || ""
+    };
+    console.log("Datos enviados:", dataToSend);
+    try {
+      const res = await updateUserProfile(token as string, userId as string, dataToSend);
+      console.log("Perfil actualizado:", res);
+    } catch (error) {
+      console.log("Error al actualizar el perfil:", error);
+    }
+  };
+
+  const onSubmitPasswordChange = async (data: { currentPassword: string; newPassword: string }) => {
+    try {
+      const res = await changeUserPassword(token as string, userId as string, data.currentPassword, data.newPassword);
+      console.log("Contraseña cambiada:", res);
+    } catch (error) {
+      console.log("Error al cambiar la contraseña:", error);
+    }
   };
 
   if (loading) {
@@ -109,11 +136,11 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
 
   return (
     <section className="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 flex flex-col">
-      <h2 className="text-3xl font-bold text-slate-200 text-center mb-8">
+      <h2 className="text-3xl font-bold text-purple-500 text-center mb-8">
         Información del Usuario
       </h2>
 
-      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="max-w-4xl mx-auto bg-gray-800 rounded-xl shadow-md overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-1 p-2 flex flex-col justify-start items-center">
             <Image
@@ -123,33 +150,33 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
               width={192}
               height={192}
             />
-            <button onClick={openModal} className="text-center">
+            <button onClick={openModal} className="text-center mt-4 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition duration-300">
               <EditIcon />
             </button>
 
             {isModalOpen && (
               <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-                <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
                   <span
                     className="absolute top-2 right-2 text-gray-500 cursor-pointer"
                     onClick={closeModal}
                   >
                     &times;
                   </span>
-                  <h2 className="text-xl font-bold mb-4">Cambiar Imagen</h2>
+                  <h2 className="text-xl font-bold mb-4 text-white">Cambiar Imagen</h2>
                   <input
                     type="file"
                     onChange={handleImageChange}
-                    className="mb-4"
+                    className="mb-4 text-white"
                   />
                   <button
                     onClick={handleSubmitImage}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
                   >
                     Guardar
                   </button>
                   <button
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2"
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2 hover:bg-red-600 transition duration-300"
                     onClick={closeModal}
                   >
                     Cancelar
@@ -165,18 +192,16 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-300"
                 >
                   Nombre
                 </label>
                 <input
                   id="name"
-                  type="text"
-                  onChange={handleOnChange}
                   {...register("name", {
                     required: "El nombre es obligatorio",
                   })}
-                  className="mt-1 p-2 border w-full rounded-md"
+                  className="mt-1 p-2 border w-full rounded-md bg-gray-700 text-white"
                 />
                 {errors.name && (
                   <span className="text-red-500 text-sm">
@@ -189,19 +214,17 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-300"
                 >
                   Email
                 </label>
                 <input
                   id="email"
                   type="email"
-                  onChange={handleOnChange}
-
                   {...register("email", {
                     required: "El email es obligatorio",
                   })}
-                  className="mt-1 p-2 border w-full rounded-md"
+                  className="mt-1 p-2 border w-full rounded-md bg-gray-700 text-white"
                 />
                 {errors.email && (
                   <span className="text-red-500 text-sm">
@@ -209,46 +232,20 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
                   </span>
                 )}
               </div>
-              {/* Password */}
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Contraseña
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  onChange={handleOnChange}
-
-                  {...register("password", {
-                    required: "La contraseña es obligatoria",
-                  })}
-                  className="mt-1 p-2 border w-full rounded-md"
-                />
-                {errors.password && (
-                  <span className="text-red-500 text-sm">
-                    {errors.password.message}
-                  </span>
-                )}
-
-                </div>
 
               {/* Idioma Preferido */}
               <div>
                 <label
                   htmlFor="preferredLanguage"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-300"
                 >
                   Idioma Preferido
                 </label>
                 <input
                   id="preferredLanguage"
                   onChange={handleOnChange}
-
                   {...register("preferredLanguage")}
-                  className="mt-1 p-2 border w-full rounded-md"
+                  className="mt-1 p-2 border w-full rounded-md bg-gray-700 text-white"
                 />
               </div>
 
@@ -256,7 +253,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
               <div>
                 <label
                   htmlFor="preferredCurrency"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-300"
                 >
                   Moneda Preferida
                 </label>
@@ -264,17 +261,86 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
                   id="preferredCurrency"
                   onChange={handleOnChange}
                   {...register("preferredCurrency")}
-                  className="mt-1 p-2 border w-full rounded-md"
+                  className="mt-1 p-2 border w-full rounded-md bg-gray-700 text-white"
                 />
               </div>
 
-              {/* Botón Guardar */}
-              <div className="flex justify-end">
+              {/* Botones Guardar y Log Out */}
+              <div className="flex justify-end gap-4">
                 <button
                   type="submit"
                   className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
                 >
                   Guardar Cambios
+                </button>
+                <button
+                  onClick={handleLogOut}
+                  className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition duration-300"
+                >
+                  Log Out
+                </button>
+              </div>
+            </form>
+
+            {/* Formulario para Cambiar la Contraseña */}
+            <form onSubmit={handleSubmit(onSubmitPasswordChange)} className="space-y-6 mt-8">
+              <h3 className="text-xl font-bold text-gray-300">Cambiar Contraseña</h3>
+              <div className="relative">
+                <label
+                  htmlFor="currentPassword"
+                  className="block text-sm font-medium text-gray-300"
+                >
+                  Contraseña Actual
+                </label>
+                <input
+                  id="currentPassword"
+                  type={showPassword ? "text" : "password"}
+                  onChange={handleOnChange}
+                  {...register("currentPassword", {
+                    required: "La contraseña actual es obligatoria",
+                  })}
+                  className="mt-1 p-2 border w-full rounded-md bg-gray-700 text-white"
+                />
+                <button
+                  type="button"
+                  onClick={toggleShowPassword}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-300"
+                >
+                  {showPassword ? <EyeClosed /> : <Eye />}
+                </button>
+                {errors.currentPassword && (
+                  <span className="text-red-500 text-sm">
+                    {errors.currentPassword.message}
+                  </span>
+                )}
+              </div>
+              <div>
+                <label
+                  htmlFor="newPassword"
+                  className="block text-sm font-medium text-gray-300"
+                >
+                  Nueva Contraseña
+                </label>
+                <input
+                  id="newPassword"
+                  type="password"
+                  {...register("newPassword", {
+                    required: "La nueva contraseña es obligatoria",
+                  })}
+                  className="mt-1 p-2 border w-full rounded-md bg-gray-700 text-white"
+                />
+                {errors.newPassword && (
+                  <span className="text-red-500 text-sm">
+                    {errors.newPassword.message}
+                  </span>
+                )}
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+                >
+                  Cambiar Contraseña
                 </button>
               </div>
             </form>

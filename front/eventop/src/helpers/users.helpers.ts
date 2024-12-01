@@ -58,5 +58,22 @@ export const updateUserImage = async (token: string, id: string, image: File | n
 
 }
 
+export const updateUserProfile = async (token: string, id: string, data: IUserProfile) => {
+  try {
+    const response = await fetch(`${APIURL}/users/${id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const res = await response.json();
+    return res;
+  } catch (error) {
+    console.log("Error en updateUserProfile:", error);
+    throw error;
+  }
+}
 // Removed local useState declaration to avoid conflict with imported useState from React
 

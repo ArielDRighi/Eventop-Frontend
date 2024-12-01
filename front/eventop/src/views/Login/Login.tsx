@@ -88,7 +88,7 @@ export const Login = () => {
       const response = await login(userData);
       const { accessToken  } = response;
       // Almacenar token y datos de usuario en localStorage
-      Cookies.set("accessToken", JSON.stringify( accessToken ));
+      Cookies.set("accessToken", JSON.stringify( accessToken ), { expires: 1 / 24 });
       // Pop-up de éxito
       Swal.fire({
         title: "¡Éxito!",
