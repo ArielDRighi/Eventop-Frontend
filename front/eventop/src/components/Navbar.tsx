@@ -12,6 +12,11 @@ const NavBar = () => {
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+    if (!menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
   };
 
   const handleLogOut = () => {
@@ -47,7 +52,9 @@ const NavBar = () => {
               <Link href={"/events"}>Encuentra Eventos</Link>
             </li>
             <li>
-              <Link href={"/ayuda"}>Ayuda</Link>
+              <Link href={"/contact"}>
+                Ayuda
+              </Link>
             </li>
             {role == "admin" && (
               <li>

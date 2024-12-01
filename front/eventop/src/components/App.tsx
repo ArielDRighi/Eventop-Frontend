@@ -5,7 +5,7 @@ import PaymentButton from "./PaymentButton";
 
 const App: React.FC = () => {
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
-  
+
   const eventId = 1; // Reemplaza con el ID del evento que deseas pagar
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const App: React.FC = () => {
       try {
         console.log("Bloque try");
 
-        const response:Response = await fetch(
+        const response: Response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/payment/create_preference`, // preferencia de pago
           {
             method: "POST",
@@ -29,7 +29,9 @@ const App: React.FC = () => {
 
         if (!response.ok) {
           if (response.status === 404) {
-            console.error("Error 404: URL no encontrada - /payment/create_preference");
+            console.error(
+              "Error 404: URL no encontrada - /payment/create_preference"
+            );
           } else if (response.status === 500) {
             console.error("Error 500: Error interno del servidor");
           } else {
@@ -52,10 +54,12 @@ const App: React.FC = () => {
       {preferenceId ? (
         <PaymentButton preferenceId={preferenceId} />
       ) : (
-        <p>Error al cargar la preferencia de pago. Por favor, intente nuevamente.</p>
+        <p>
+          Error al cargar la preferencia de pago. Por favor, intente nuevamente.
+        </p>
       )}
     </div>
-  )
+  );
 };
 
 export default App;

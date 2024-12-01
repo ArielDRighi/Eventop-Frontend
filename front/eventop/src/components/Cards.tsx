@@ -105,6 +105,7 @@ const Cards: React.FC = () => {
     if (loading)
       return (
         <div className="flex items-center justify-center space-x-2">
+          
           <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
           <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
           <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
@@ -126,9 +127,18 @@ const Cards: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 py-20 px-4 sm:px-6 lg:px-8">
       <main className="max-w-7xl mx-auto">
-        <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 text-center mb-12">
-          Proximos Eventos
-        </h1>
+        <div className="card mb-12">
+          <div className="loader">
+            <p className="text-3xl font-bold text-purple-300">Eventos</p>
+            <div className="words">
+              <span className="word">Musicales</span>
+              <span className="word">Deportivos</span>
+              <span className="word">Culturales</span>
+              <span className="word">Sociales</span>
+              <span className="word">Musicales</span>
+            </div>
+          </div>
+        </div>
         {renderContent}
       </main>
     </div>

@@ -7,11 +7,13 @@ import { createEvent } from "@/helpers/events.helper";
 import Cookies from "js-cookie";
 import { useGetAllLocations } from "@/helpers/location.helper";
 import { ILocation } from "@/interfaces/ILocations";
-
+import { useRouter } from "next/navigation";
 interface IFormInput extends Omit<IEventsCreate, "date" | "image"> {
   date: string;
   quantityAvailable: number;
 }
+
+
 
 const EventForm: React.FC = () => {
   const {
@@ -24,7 +26,7 @@ const EventForm: React.FC = () => {
 
   // Llamar a la función useGetAllLocations y desestructurar el resultado
   const { result: locations, loading } = useGetAllLocations();
-
+  const router = useRouter();
   // Función para manejar el envío del formulario
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const token = JSON.parse(Cookies.get("adminToken") || "null");
@@ -50,6 +52,7 @@ const EventForm: React.FC = () => {
       // Limpiar el formulario después de enviar los datos
       reset();
       setImage(null);
+      router.push("/admin/events");
     } catch (error) {
       console.error("Error creando el evento:", error);
     }
@@ -63,13 +66,15 @@ const EventForm: React.FC = () => {
   };
 
   return (
-    <form
-  onSubmit={handleSubmit(onSubmit)}
-  className="bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100 mt-8 space-y-8 p-8 border border-gray-700 rounded-xl shadow-2xl max-w-4xl mx-auto"
->
+    <div>
   <h1 className="text-4xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-center">
     Crear Evento
   </h1>
+
+    <form
+  onSubmit={handleSubmit(onSubmit)}
+  className="bg-gradient-to-br from-gray-900 to-gray-900 text-gray-100 mt-8 space-y-8 p-8 border border-gray-900 rounded-xl shadow-2xl max-w-4xl mx-auto"
+>
 
   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
     {/* Nombre */}
@@ -347,6 +352,7 @@ const EventForm: React.FC = () => {
     Crear Evento
   </button>
 </form>
+    </div>
   );
 };
 
