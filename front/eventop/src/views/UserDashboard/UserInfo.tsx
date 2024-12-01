@@ -6,7 +6,11 @@ import { useUserContext } from "@/context/userContext";
 import { IUserProfile } from "@/interfaces/IUser";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
-import { updateUserImage, updateUserProfile, changeUserPassword } from "@/helpers/users.helpers";
+import {
+  updateUserImage,
+  updateUserProfile,
+  changeUserPassword,
+} from "@/helpers/users.helpers";
 import { EditIcon, Eye, EyeClosed } from "lucide-react";
 
 interface UserInfoProps {
@@ -56,7 +60,11 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
     console.log("Token:", token);
     console.log("Id:", userId);
     try {
-      const res = await updateUserImage(token as string, userId as string, newImage);
+      const res = await updateUserImage(
+        token as string,
+        userId as string,
+        newImage
+      );
       console.log(res);
     } catch (error) {
       console.log("Error al actualizar la imagen:", error);
@@ -93,20 +101,32 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
       email: data.email,
       preferredLanguage: data.preferredLanguage || "",
       preferredCurrency: data.preferredCurrency || "",
-      password: data.password || ""
+      password: data.password || "",
     };
     console.log("Datos enviados:", dataToSend);
     try {
-      const res = await updateUserProfile(token as string, userId as string, dataToSend);
+      const res = await updateUserProfile(
+        token as string,
+        userId as string,
+        dataToSend
+      );
       console.log("Perfil actualizado:", res);
     } catch (error) {
       console.log("Error al actualizar el perfil:", error);
     }
   };
 
-  const onSubmitPasswordChange = async (data: { currentPassword: string; newPassword: string }) => {
+  const onSubmitPasswordChange = async (data: {
+    currentPassword: string;
+    newPassword: string;
+  }) => {
     try {
-      const res = await changeUserPassword(token as string, userId as string, data.currentPassword, data.newPassword);
+      const res = await changeUserPassword(
+        token as string,
+        userId as string,
+        data.currentPassword,
+        data.newPassword
+      );
       console.log("Contraseña cambiada:", res);
     } catch (error) {
       console.log("Error al cambiar la contraseña:", error);
@@ -150,7 +170,10 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
               width={192}
               height={192}
             />
-            <button onClick={openModal} className="text-center mt-4 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition duration-300">
+            <button
+              onClick={openModal}
+              className="text-center mt-4 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition duration-300"
+            >
               <EditIcon />
             </button>
 
@@ -163,11 +186,13 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
                   >
                     &times;
                   </span>
-                  <h2 className="text-xl font-bold mb-4 text-white">Cambiar Imagen</h2>
+                  <h2 className="text-xl font-bold mb-4 text-white">
+                    Cambiar Imagen
+                  </h2>
                   <input
                     type="file"
                     onChange={handleImageChange}
-                    className="mb-4 text-white"
+                    className="file-input file-input-bordered file-input-primary w-full max-w-xs"
                   />
                   <button
                     onClick={handleSubmitImage}
@@ -283,8 +308,13 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
             </form>
 
             {/* Formulario para Cambiar la Contraseña */}
-            <form onSubmit={handleSubmit(onSubmitPasswordChange)} className="space-y-6 mt-8">
-              <h3 className="text-xl font-bold text-gray-300">Cambiar Contraseña</h3>
+            <form
+              onSubmit={handleSubmit(onSubmitPasswordChange)}
+              className="space-y-6 mt-8"
+            >
+              <h3 className="text-xl font-bold text-gray-300">
+                Cambiar Contraseña
+              </h3>
               <div className="relative">
                 <label
                   htmlFor="currentPassword"
