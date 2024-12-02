@@ -58,7 +58,7 @@ export const Login = () => {
     console.log(token)
     if (token) {
       console.log(`Token: ${token}`);
-      Cookies.set("accesToken", JSON.stringify( token ));
+      Cookies.set("accessToken", JSON.stringify( token ));
       window.location.href = "/"
     }
   }, []);

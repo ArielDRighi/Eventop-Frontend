@@ -33,7 +33,8 @@ const UserDashboard = () => {
         if (typeof parsedToken !== "string") {
           throw new Error("Invalid token format");
         }
-        const res = await getUserById(parsedToken, userId as string);
+        const res = await getUserById(parsedToken, userId);
+        console.log(res)
         setUserData(res);
       } catch (error: any) {
         console.error("Error fetching user:", error);

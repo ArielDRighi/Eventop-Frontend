@@ -9,7 +9,7 @@ import Image from "next/image";
 import {
   updateUserImage,
   updateUserProfile,
-  // changeUserPassword,
+  changeUserPassword,
 } from "@/helpers/users.helpers";
 import { EditIcon, Eye, EyeClosed } from "lucide-react";
 
@@ -33,6 +33,12 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
     formState: { errors },
     setValue,
   } = useForm<IUserProfile>();
+
+  const {
+    register: registerPassword,
+    handleSubmit: handleSubmitPassword,
+    formState: { errors: errorsPassword },
+  } = useForm<{ oldPassword: string; newPassword: string }>();
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -89,6 +95,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
         setValue(key as keyof IUserProfile, value)
       );
       setUserData(user);
+      setImagePreview(user.imageUrl);
       setLoading(false);
     } else {
       setError(true);
@@ -117,16 +124,16 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
   };
 
   const onSubmitPasswordChange = async (data: {
-    currentPassword: string;
+    oldPassword: string;
     newPassword: string;
   }) => {
+     const dataPassword = {
+      oldPassword: data.oldPassword,
+      newPassword: data.newPassword,
+     }
+    console.log("Datos enviados:", dataPassword)
     try {
-      const res = await changeUserPassword(
-        token as string,
-        userId as string,
-        data.currentPassword,
-        data.newPassword
-      );
+      const res = await changeUserPassword(token, user?.userId, dataPassword)
       console.log("Contraseña cambiada:", res);
     } catch (error) {
       console.log("Error al cambiar la contraseña:", error);
@@ -268,7 +275,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
                 </label>
                 <input
                   id="preferredLanguage"
-                  onChange={handleOnChange}
                   {...register("preferredLanguage")}
                   className="mt-1 p-2 border w-full rounded-md bg-gray-700 text-white"
                 />
@@ -284,9 +290,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
                 </label>
                 <input
                   id="preferredCurrency"
-                  onChange={handleOnChange}
                   {...register("preferredCurrency")}
-                  className="mt-1 p-2 border w-full rounded-md bg-gray-700 text-white"
                 />
               </div>
 
@@ -323,10 +327,9 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
                   Contraseña Actual
                 </label>
                 <input
-                  id="currentPassword"
+                  id="oldPassword"
                   type={showPassword ? "text" : "password"}
-                  onChange={handleOnChange}
-                  {...register("currentPassword", {
+                  {...register("oldPassword", {
                     required: "La contraseña actual es obligatoria",
                   })}
                   className="mt-1 p-2 border w-full rounded-md bg-gray-700 text-white"
@@ -340,7 +343,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
                 </button>
                 {errors.currentPassword && (
                   <span className="text-red-500 text-sm">
-                    {errors.currentPassword.message}
+                    {errors.oldPassword.message}
                   </span>
                 )}
               </div>
