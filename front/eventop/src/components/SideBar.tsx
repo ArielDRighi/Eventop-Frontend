@@ -11,20 +11,20 @@ import {
   Ticket,
   User,
 } from "lucide-react";
-import { useAdmin } from "@/context/admincontext";
+import { useUserContext } from "@/context/userContext";
 
 const SideBar = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const { setIsAdmin } = useAdmin();
+  const { setRole } = useUserContext();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
   const handleSingOut = () => {
-    Cookies.remove("adminToken");
-    setIsAdmin(false);
+    Cookies.remove("accessToken");
+    setRole(null);
     router.push("/");
   };
 

@@ -1,11 +1,13 @@
 "use client";
 
-import { UserProfile, useUser, logout } from '@auth0/nextjs-auth0/client';
 import React, { useEffect, useState } from 'react';
 
-export const UserInfo = () => {
-  const { error, isLoading, user } = useUser();
-  
+interface UserInfoProps {
+  userName: string;
+}
+
+export const UserInfo: React.FC<UserInfoProps> = ({ userName }) => {
+
   const [userData, setUserData] = useState<UserProfile | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -21,18 +23,17 @@ export const UserInfo = () => {
   };
 
   const handleSave = () => {
-    alert(`Datos guardados:\nNombre: ${formData.name}\nEmail: ${formData.email}`);
-    setIsEditing(false);
+    console.log('Guardando datos', formData);
   };
 
 
   useEffect(() => {
-    if (user) {
-      setUserData(user);
+    if (userName) {
+      setUserData(userName);
     }
-  }, [user]);
+  }, [userName]);
 
-  if (isLoading) {
+  if (!userName) {
     return (
       <section>
         <h1 className="text-3xl text-center font-bold text-slate-200">

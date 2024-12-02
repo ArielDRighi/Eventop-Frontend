@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import React from "react";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useUserContext } from "@/context/userContext";
 
 const LayoutOne = () => {
 
-  const { user } = useUser();
+  const { role } = useUserContext()
   return (
     <div className="flex justify-center">
       <div>
@@ -30,7 +30,7 @@ const LayoutOne = () => {
             
             <div className="max-w-lg px-4 pb-24 mx-auto text-left md:max-w-none md:text-center">
               <div className="text-center py-4 space-x-4">
-                {!user && (
+                {!role && (
                   <button className="backdrop-blur-sm transition duration-500 ease-in-out bg-purple-500 border border-[#E2E8F0] translate-y-1 text-white hover:bg-purple-800 text-lg font-semibold py-3 px-6 rounded-3xl inline-flex items-center">
                     <span>
                       <a href={"/api/auth/login"}>Crear Cuenta</a>

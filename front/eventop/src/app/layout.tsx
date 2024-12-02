@@ -3,10 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import NavBar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { UserProvider } from "@/context/userContext";
 import Script from "next/script";
-
-import { AdminProvider } from "@/context/admincontext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,7 +30,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <UserProvider>
-      <AdminProvider>
         <body
           className={`${geistSans.variable} ${geistMono.variable} bg-gray-900 flex flex-col justify-between h-screen w-screen`}
         >
@@ -49,7 +46,6 @@ export default function RootLayout({
             ></df-messenger>
           
         </body>
-        </AdminProvider>
       </UserProvider>
     </html>
   );

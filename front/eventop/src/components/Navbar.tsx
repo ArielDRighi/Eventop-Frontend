@@ -1,15 +1,13 @@
 "use client"
 
-import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
 import React, { useState } from "react";
-import { useAdmin } from "@/context/admincontext";
 import { MenuIcon, XIcon } from "lucide-react";
+import { useUserContext } from "@/context/userContext";
 
 const NavBar = () => {
-  const { user } = useUser();
-  const { isAdmin } = useAdmin();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { role } = useUserContext();
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -23,8 +21,8 @@ const NavBar = () => {
           <span className="text-purple-500">Top</span>
         </Link>
       </div>
-      <div className="navbar-center lg:hidden">
-        <details className="dropdown">
+      <div className="navbar-end lg:hidden">
+        <details className="dropdown dropdown-end">
           <summary className="btn m-1 text-slate-900 focus:outline-none flex items-center">
             {menuOpen ? (
               <XIcon className="w-6 h-6" onClick={toggleMenu} />
@@ -48,7 +46,7 @@ const NavBar = () => {
                 Ayuda
               </Link>
             </li>
-            {isAdmin && (
+            {role == "admin" && (
               <li>
                 <Link href={"/admin"}>
                   Admin
@@ -71,7 +69,7 @@ const NavBar = () => {
                 </ul>
               </details>
             </li>
-            {user ? (
+            {role ? (
               <li>
                 <Link href={"/micuenta"}>
                   Mi cuenta
@@ -79,7 +77,7 @@ const NavBar = () => {
               </li>
             ) : (
               <li>
-                <Link href="/api/auth/login">
+                <Link href="/login">
                   Login
                 </Link>
               </li>
@@ -104,7 +102,7 @@ const NavBar = () => {
               Ayuda
             </Link>
           </li>
-          {isAdmin && (
+          {role == 'admin' && (
             <li>
               <Link href={"/admin"}>
                 Admin
@@ -129,18 +127,18 @@ const NavBar = () => {
           </li>
         </ul>
       </div>
-      <div className="navbar-end">
-        {user ? (
+      <div className="hidden lg:flex lg:navbar-end">
+        {role ? (
           <a
-            className="btn bg-purple-500 text-white hover:bg-purple-600"
+            className="btn bg-purple-500 text-white hover:bg-purple-600 hidden lg:flex"
             href={"/micuenta"}
           >
             Mi Cuenta
           </a>
         ) : (
           <a
-            className="btn bg-purple-500 text-white hover:bg-purple-600"
-            href={"/api/auth/login"}
+            className="btn bg-purple-500 text-white hover:bg-purple-600 hidden lg:flex"
+            href={"/login"}
           >
             Inicia Sesión
           </a>
