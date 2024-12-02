@@ -26,3 +26,29 @@ export const useGetAllLocations = () => {
 
   return { result, loading, error };
 };
+
+export const useCreateLocation = () => {  
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const createLocation = async (location: ILocation) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${APIURL}/locations/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(location),
+      });
+      if (res.status === 201) {
+        setLoading(false);
+      }
+    } catch (error: any) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  return { createLocation, loading, error };
+}
