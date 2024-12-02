@@ -9,7 +9,7 @@ import Image from "next/image";
 import {
   updateUserImage,
   updateUserProfile,
-  changeUserPassword,
+  // changeUserPassword,
 } from "@/helpers/users.helpers";
 import { EditIcon, Eye, EyeClosed } from "lucide-react";
 

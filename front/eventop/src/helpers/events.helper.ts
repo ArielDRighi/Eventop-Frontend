@@ -154,6 +154,7 @@ export const useDeleteEvent = async (id: number, token: any) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log(response);
     const res = await response.json();
       if (res.message === "Event deleted successfully") {
         Swal.fire({
@@ -168,8 +169,8 @@ export const useDeleteEvent = async (id: number, token: any) => {
           },
           buttonsStyling: false,
         });
+      }
       return res;
-    }
   } catch (error: any) {
     Swal.fire({
       title: "Error",
@@ -199,8 +200,7 @@ export const useEditEvent = async (id: number, data: IEventsCreate, token: any) 
       },
       body: JSON.stringify(data),
     });
-    const res = await response.json();
-    if (res.message === undefined) {
+    if (response.status === 200) {
       Swal.fire({
         title: "Evento actualizado",
         text: "El evento ha sido actualizado exitosamente.",
@@ -209,10 +209,11 @@ export const useEditEvent = async (id: number, data: IEventsCreate, token: any) 
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
           confirmButton:
-            "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
+          "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
       });
+      const res = await response.json();
       return res;
     }
   }
@@ -243,20 +244,20 @@ export const useApproveEvent = async (id: number, token: any) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    const res = await response.json();
-      if (res.message === "Event approved successfully") {
-        Swal.fire({
-          title: "Evento aprobado",
-          text: "El evento ha sido aprobado exitosamente.",
-          icon: "success",
-          customClass: {
-            popup: "bg-white shadow-lg rounded-lg p-6",
-            title: "text-2xl font-semibold text-gray-800",
-            confirmButton:
-              "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
-          },
-          buttonsStyling: false,
-        });
+    if (response.status === 200) {
+      Swal.fire({
+        title: "Evento aprobado",
+        text: "El evento ha sido aprobado exitosamente.",
+        icon: "success",
+        customClass: {
+          popup: "bg-white shadow-lg rounded-lg p-6",
+          title: "text-2xl font-semibold text-gray-800",
+          confirmButton:
+          "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
+        },
+        buttonsStyling: false,
+      });
+      const res = await response.json();
       return res;
     }
   } catch (error: any) {
@@ -277,3 +278,51 @@ export const useApproveEvent = async (id: number, token: any) => {
     throw new Error(error.message || "Error al eliminar el evento");
   }
 };
+//change the image of the event
+
+export const useChangeImage = async (id: number, image: File, token: any) => {
+  try {
+    const formData = new FormData();
+    formData.append("image", image);
+    const response = await fetch(`${APIURL}/events/${id}/image`, {
+      method: "PUT", 
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },  
+      body: formData,
+    });
+    if (response.status === 200) {
+      Swal.fire({
+        title: "Imagen actualizada",
+        text: "La imagen del evento ha sido actualizada exitosamente.",
+        icon: "success",
+        customClass: {
+          popup: "bg-white shadow-lg rounded-lg p-6",
+          title: "text-2xl font-semibold text-gray-800",
+          confirmButton:
+          "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
+        },
+        buttonsStyling: false,
+      });
+      const res = await response.json();
+      return res;
+    }
+  }
+  catch (error: any) {
+    Swal.fire({
+      title: "Error",
+      text:
+        error.message ||
+        "Hubo un problema al actualizar la imagen del evento. Por favor, inténtalo de nuevo.",
+      icon: "error",
+      customClass: {
+        popup: "bg-white shadow-lg rounded-lg p-6",
+        title: "text-2xl font-semibold text-gray-800",
+        confirmButton:
+          "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded",
+      },
+      buttonsStyling: false,
+    });
+    throw new Error(error.message || "Error al actualizar la imagen del evento");
+  }
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState} from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useGetAllLocations } from "@/helpers/location.helper";
 import { ILocation } from "@/interfaces/ILocations";
@@ -8,10 +8,11 @@ import { useEventById } from "@/helpers/events.helper";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import DeleteButton from "@/components/DeleteButton";
+import EditEventImage from "@/components/EditEventImage";
 import ApproveButton from "@/components/ApproveButton";
 import Cookies from "js-cookie";
 import { useEditEvent } from "@/helpers/events.helper";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 interface IFormInput {
   name: string;
   description: string;
@@ -24,9 +25,10 @@ interface IFormInput {
 const EditEventPage = () => {
   const params = useParams();
   const eventId = parseInt(params.eventId as string, 10);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const { event, loading, error } = useEventById(eventId);
   const { result: locations, loading: loadingLocations } = useGetAllLocations();
-  // const router = useRouter();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -45,31 +47,19 @@ const EditEventPage = () => {
       setValue("location_id", event.location_id.locationId);
       setValue("category_id", event.category_id.categoryId);
     }
+    setImagePreview(event?.imageUrl || null);
   }, [event, setValue]);
 
-  // const confirmDelete = () => {
-  //   Swal.fire({
-  //     title: "¿Estás seguro?",
-  //     text: "No podrás revertir esta acción",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#d33",
-  //     cancelButtonColor: "#3085d6",
-  //     confirmButtonText: "Sí, eliminar",
-  //     cancelButtonText: "Cancelar",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       handleDelete(eventId);
-  //     }
-  //   });
-  // };
+
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const token = JSON.parse(Cookies.get("accessToken") || "null");
     console.log(data);
     try {
       const res = await useEditEvent(eventId, data, token);
-      // router.push("/admin/events")
+    if(res) {
+      router.push("/admin/events")
+    }
       console.log(res);
     } catch (error) {
       console.error("Error actualizando el evento:", error);
@@ -111,14 +101,15 @@ const EditEventPage = () => {
       <div className="max-w-5xl mx-auto bg-gray-900 rounded-xl shadow-2xl overflow-hidden border-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-1 p-8">
-            <div className="relative group">
+            <div className="relative group text-center">
               <Image
                 className="h-full w-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
-                src={event.imageUrl || "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"}
+                src={imagePreview|| "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"}
                 alt={event.name}
                 width={500}
                 height={500}
               />
+              <EditEventImage changeImage={setImagePreview} id={event.eventId}/>
             </div>
           </div>
           <div className="md:col-span-2 p-8 bg-gray-900 rounded-r-xl">
@@ -268,12 +259,12 @@ const EditEventPage = () => {
                     <path d="M14 4l0 4l-6 0l0 -4" />
                   </svg>
                 </button>
-                <div className="flex gap-4 w-full sm:w-auto justify-center">
+              </div>
+            </form>
+                <div className="flex gap-4 w-full sm:w-auto justify-center mt-4">
                   <DeleteButton eventId={event.eventId} />
                   <ApproveButton eventId={event.eventId} />
                 </div>
-              </div>
-            </form>
           </div>
         </div>
       </div>
