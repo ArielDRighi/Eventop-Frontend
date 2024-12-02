@@ -13,6 +13,7 @@ import {
   Calendar,
   HelpCircle,
   Pin,
+  Drama,
 } from "lucide-react";
 
 
@@ -171,6 +172,16 @@ const SideBar = () => {
                 >
                   <Pin className="w-5 h-5 mr-3 group-hover:bounce transition-transform duration-200" />
                   <span>Locations</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/admin/categories"
+                  target="_blank"
+                  className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
+                >
+                  <Drama className="w-5 h-5 mr-3 group-hover:bounce transition-transform duration-200" />
+                  <span>Categories</span>
                 </Link>
               </li>
               <li>
