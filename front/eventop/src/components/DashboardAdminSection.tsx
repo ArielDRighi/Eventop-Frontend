@@ -1,6 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const DashboardAdminSection = () => {
+  const [tickets, setTickets] = useState([]);
+  const [openTickets, setOpenTickets] = useState(0);
+  const [inProgressTickets, setInProgressTickets] = useState(0);
+  const [closedTickets, setClosedTickets] = useState(0);
+
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/events`
+        );
+        if (!response.ok) {
+          throw new Error("Error fetching tickets");
+        }
+        const allTickets = await response.json();
+        console.log(allTickets);
+
+        const open = allTickets.filter(
+          (ticket) => !ticket.approved && new Date(ticket.date) > new Date()
+        ).length;
+        const inProgress = allTickets.filter(
+          (ticket) => !ticket.approved && new Date(ticket.date) <= new Date()
+        ).length;
+        const closed = allTickets.filter((ticket) => ticket.approved).length;
+        console.log(open, inProgress, closed);
+
+        setTickets(allTickets);
+        setOpenTickets(open);
+        setInProgressTickets(inProgress);
+        setClosedTickets(closed);
+      } catch (error) {
+        console.error("Error fetching tickets:", error);
+      }
+    };
+
+    fetchTickets();
+  }, []);
+
   return (
     <div>
       <main className="p-6 bg-gray-900">
@@ -19,7 +57,9 @@ const DashboardAdminSection = () => {
                       Tickets sin resolver
                     </p>
                   </div>
-                  <div className="text-xl font-semibold text-gray-800">32</div>
+                  <div className="text-xl font-semibold text-gray-800">
+                    {openTickets}
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between bg-yellow-100 p-4 rounded-lg mt-4">
@@ -31,7 +71,9 @@ const DashboardAdminSection = () => {
                       Tickets actualmente siendo trabajados
                     </p>
                   </div>
-                  <div className="text-xl font-semibold text-gray-800">12</div>
+                  <div className="text-xl font-semibold text-gray-800">
+                    {inProgressTickets}
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between bg-green-100 p-4 rounded-lg mt-4">
@@ -39,7 +81,9 @@ const DashboardAdminSection = () => {
                     <h3 className="text-lg font-semibold">Tickets Cerrados</h3>
                     <p className="text-sm text-gray-500">Tickets resueltos</p>
                   </div>
-                  <div className="text-xl font-semibold text-gray-800">50</div>
+                  <div className="text-xl font-semibold text-gray-800">
+                    {closedTickets}
+                  </div>
                 </div>
               </div>
 
