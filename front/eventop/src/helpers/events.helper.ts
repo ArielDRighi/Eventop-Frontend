@@ -11,9 +11,6 @@ export const createEvent = async (
   image: File | null
 ) => {
   try {
-    const { access_token } = token;
-    console.log(access_token);
-
     // Crear un FormData y agregar los datos y la imagen
     const formData = new FormData();
     formData.append("data", JSON.stringify(data)); // Agregar los datos como string
@@ -23,7 +20,7 @@ export const createEvent = async (
     const response = await fetch(`${APIURL}/events/create`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${access_token}`,
+        Authorization: `Bearer ${token}`,
         // No se debe especificar "Content-Type" con FormData, ya que lo hace automáticamente
       },
       body: formData,
@@ -150,12 +147,11 @@ export const useEventById = (id: string | number) => {
 };
 
 export const useDeleteEvent = async (id: number, token: any) => {
-  const { access_token } = token;
   try {
     const response = await fetch(`${APIURL}/events/${id}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${access_token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     const res = await response.json();
@@ -194,12 +190,11 @@ export const useDeleteEvent = async (id: number, token: any) => {
 };
 
 export const useEditEvent = async (id: number, data: IEventsCreate, token: any) => {
-  const { access_token } = token;
   try {
     const response = await fetch(`${APIURL}/events/${id}`, {
       method: "PUT",
       headers: {
-        Authorization: `Bearer ${access_token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
@@ -241,12 +236,11 @@ export const useEditEvent = async (id: number, data: IEventsCreate, token: any) 
 }
 
 export const useApproveEvent = async (id: number, token: any) => {
-  const { access_token } = token;
   try {
     const response = await fetch(`${APIURL}/events/${id}/approve`, {
       method: "PUT",
       headers: {
-        Authorization: `Bearer ${access_token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     const res = await response.json();

@@ -65,7 +65,7 @@ const EditEventPage = () => {
   // };
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    const token = JSON.parse(Cookies.get("adminToken") || "null");
+    const token = JSON.parse(Cookies.get("accessToken") || "null");
     console.log(data);
     try {
       const res = await useEditEvent(eventId, data, token);

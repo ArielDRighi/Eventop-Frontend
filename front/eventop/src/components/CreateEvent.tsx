@@ -29,7 +29,7 @@ const EventForm: React.FC = () => {
   const router = useRouter();
   // Función para manejar el envío del formulario
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    const token = JSON.parse(Cookies.get("adminToken") || "null");
+    const token = JSON.parse(Cookies.get("accessToken") || "null");
     console.log(token);
     if (!token) {
       throw new Error(
@@ -52,10 +52,16 @@ const EventForm: React.FC = () => {
       // Limpiar el formulario después de enviar los datos
       reset();
       setImage(null);
-      router.push("/admin/events");
+      // router.push("/admin/events");
     } catch (error) {
       console.error("Error creando el evento:", error);
     }
+  };
+
+  const validateDate = (value) => {
+    const selectedDate = new Date(value);
+    const currentDate = new Date();
+    return selectedDate > currentDate || "La fecha del evento debe ser posterior a la fecha actual";
   };
 
   // Función para manejar la subida de la imagen
@@ -110,7 +116,10 @@ const EventForm: React.FC = () => {
       <input
         id="date"
         type="date"
-        {...register("date", { required: "La fecha es obligatoria" })}
+        {...register("date",  {
+          required: "La fecha es obligatoria",
+          validate: validateDate,
+        })}
         className="input h-[52px] text-[15px] text-white/60 w-full bg-gray-900 text-gray-50 px-3 py-1 rounded-lg border border-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500   transition-all duration-150 ease-in-out"
       />
       {errors.date && (
