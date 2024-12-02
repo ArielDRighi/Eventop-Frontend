@@ -6,7 +6,7 @@ import { texts } from "../helpers/texts";
 import { currencies } from "../helpers/currencies";
 import * as dotenv from "dotenv";
 import { useParams } from "next/navigation";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useUserContext } from "../context/userContext";
 
 dotenv.config({
   path: ".env",
@@ -16,7 +16,6 @@ type Language = "es" | "en" | "pt" | "fr";
 type Currency = "USD" | "EUR" | "ARS" | "BRL";
 
 export default function Payments() {
-  const { user } = useUser();
   const [ticketCount, setTicketCount] = useState(1);
   const [basePrice, setBasePrice] = useState(0); // Inicialmente 0
   const [total, setTotal] = useState(0);
@@ -32,9 +31,10 @@ export default function Payments() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
   const params = useParams();
+  const { username } = useUserContext();
 
   const eventId = params.eventId as string;
-  const email = user?.email; // Usa el email del usuario logueado
+  const email = username; // Usa el email del usuario logueado
   const quantity = ticketCount;
   console.log("ID del evento", eventId);
   console.log("Email del usuario", email);

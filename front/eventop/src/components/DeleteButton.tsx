@@ -8,22 +8,19 @@ const DeleteButton: React.FC<{ eventId: number }> = ({ eventId }) => {
   const router = useRouter();
 
   const handleDelete = async (eventId: number) => {
-    const token = JSON.parse(Cookies.get("adminToken") || "null");
+    const token = JSON.parse(Cookies.get("accessToken") || "null");
     if (!token) {
       throw new Error("Token is not available");
     }
-
     try {
       const res = await useDeleteEvent(eventId, token);
       console.log(res);
-      return true; 
     } catch (error) {
       console.error("Failed to delete event:", error);
-      return false; 
-    }
+     }
   };
 
-  const confirmDelete = () => {
+   const confirmDelete = () => {
     Swal.fire({
       title: "¿Estás seguro?",
       text: "No podrás revertir esta acción",
@@ -33,15 +30,9 @@ const DeleteButton: React.FC<{ eventId: number }> = ({ eventId }) => {
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Sí, eliminar",
       cancelButtonText: "Cancelar",
-    }).then(async (result) => {
+    }).then((result) => {
       if (result.isConfirmed) {
-        const success = await handleDelete(eventId);
-        if (success) {
-          Swal.fire("Eliminado", "El evento fue eliminado exitosamente", "success");
-          router.push("/admin/events"); 
-        } else {
-          Swal.fire("Error", "No se pudo eliminar el evento", "error");
-        }
+        handleDelete(eventId);
       }
     });
   };
