@@ -1,5 +1,4 @@
 "use client";
-
 import SectionOne from "../components/SectionOne";
 import Cards from "@/components/Cards";
 import Blog from "@/components/Blog";
