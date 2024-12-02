@@ -85,7 +85,7 @@ export const changeUserPassword = async (
   data: { Oldpassword: string; newPassword: string }
 ) => {
   try {
-    const response = await fetch(`${APIURL}/aurh/${id}/change-password`, {
+    const response = await fetch(`${APIURL}/auth/${id}/change-password`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -101,13 +101,14 @@ export const changeUserPassword = async (
   }
 };
 
-export const createUserPassword = async ( 
-  token: string, 
+export const createUserPassword = async (
+  token: string,
   id: string,
-  data: { password: string; confirmPassword: string }) => {
+  data: { password: string; confirmPassword: string }
+) => {
   try {
     const response = await fetch(`${APIURL}/auth/${id}/assign-password`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -120,5 +121,5 @@ export const createUserPassword = async (
     console.log("Error en createUserPassword:", error);
     throw error;
   }
-} 
+};
 // Removed local useState declaration to avoid conflict with imported useState from React
