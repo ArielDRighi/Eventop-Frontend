@@ -85,7 +85,7 @@ export const changeUserPassword = async (
   data: { Oldpassword: string; newPassword: string }
 ) => {
   try {
-    const response = await fetch(`${APIURL}/users/${id}/change-password`, {
+    const response = await fetch(`${APIURL}/aurh/${id}/change-password`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -106,7 +106,7 @@ export const createUserPassword = async (
   id: string,
   data: { password: string; confirmPassword: string }) => {
   try {
-    const response = await fetch(`${APIURL}/users/${id}/create-password`, {
+    const response = await fetch(`${APIURL}/auth/${id}/assign-password`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
