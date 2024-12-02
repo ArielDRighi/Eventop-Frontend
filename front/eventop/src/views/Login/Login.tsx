@@ -51,7 +51,7 @@ export const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`;
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google/login`;
   };
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export const Login = () => {
     const token = URLparams.get("token");
     if (token) {
       console.log(`Token: ${token}`);
-      Cookies.set("access_token", JSON.stringify( token ));
+      Cookies.set("access_token", JSON.stringify(token));
       router.push("/");
     }
   }, []);
@@ -92,7 +92,7 @@ export const Login = () => {
       const { access_token } = response;
 
       // Almacenar token y datos de usuario en localStorage
-      Cookies.set("accessToken", JSON.stringify( access_token ));
+      Cookies.set("accessToken", JSON.stringify(access_token));
 
       // Pop-up de éxito
       Swal.fire({
