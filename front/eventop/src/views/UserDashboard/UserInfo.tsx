@@ -9,9 +9,9 @@ import Image from "next/image";
 import {
   updateUserImage,
   updateUserProfile,
-  changeUserPassword,
 } from "@/helpers/users.helpers";
-import { EditIcon, Eye, EyeClosed } from "lucide-react";
+import { EditIcon } from "lucide-react";
+import HandlePassword from "@/components/HandlePassword";
 
 interface UserInfoProps {
   user: IUserProfile | null;
@@ -120,23 +120,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
       console.log("Perfil actualizado:", res);
     } catch (error) {
       console.log("Error al actualizar el perfil:", error);
-    }
-  };
-
-  const onSubmitPasswordChange = async (data: {
-    oldPassword: string;
-    newPassword: string;
-  }) => {
-     const dataPassword = {
-      oldPassword: data.oldPassword,
-      newPassword: data.newPassword,
-     }
-    console.log("Datos enviados:", dataPassword)
-    try {
-      const res = await changeUserPassword(token, user?.userId, dataPassword)
-      console.log("Contraseña cambiada:", res);
-    } catch (error) {
-      console.log("Error al cambiar la contraseña:", error);
     }
   };
 
@@ -291,6 +274,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
                 <input
                   id="preferredCurrency"
                   {...register("preferredCurrency")}
+                  className="mt-1 p-2 border w-full rounded-md bg-gray-700 text-white"
                 />
               </div>
 
@@ -312,71 +296,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
             </form>
 
             {/* Formulario para Cambiar la Contraseña */}
-            <form
-              onSubmit={handleSubmit(onSubmitPasswordChange)}
-              className="space-y-6 mt-8"
-            >
-              <h3 className="text-xl font-bold text-gray-300">
-                Cambiar Contraseña
-              </h3>
-              <div className="relative">
-                <label
-                  htmlFor="currentPassword"
-                  className="block text-sm font-medium text-gray-300"
-                >
-                  Contraseña Actual
-                </label>
-                <input
-                  id="oldPassword"
-                  type={showPassword ? "text" : "password"}
-                  {...register("oldPassword", {
-                    required: "La contraseña actual es obligatoria",
-                  })}
-                  className="mt-1 p-2 border w-full rounded-md bg-gray-700 text-white"
-                />
-                <button
-                  type="button"
-                  onClick={toggleShowPassword}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-300"
-                >
-                  {showPassword ? <EyeClosed /> : <Eye />}
-                </button>
-                {errors.currentPassword && (
-                  <span className="text-red-500 text-sm">
-                    {errors.oldPassword.message}
-                  </span>
-                )}
-              </div>
-              <div>
-                <label
-                  htmlFor="newPassword"
-                  className="block text-sm font-medium text-gray-300"
-                >
-                  Nueva Contraseña
-                </label>
-                <input
-                  id="newPassword"
-                  type="password"
-                  {...register("newPassword", {
-                    required: "La nueva contraseña es obligatoria",
-                  })}
-                  className="mt-1 p-2 border w-full rounded-md bg-gray-700 text-white"
-                />
-                {errors.newPassword && (
-                  <span className="text-red-500 text-sm">
-                    {errors.newPassword.message}
-                  </span>
-                )}
-              </div>
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-                >
-                  Cambiar Contraseña
-                </button>
-              </div>
-            </form>
+            <div className="border-t border-gray-700 mt-8"></div>
+            <HandlePassword password={userData?.password || ""} id={userData?.userId} />
           </div>
         </div>
       </div>

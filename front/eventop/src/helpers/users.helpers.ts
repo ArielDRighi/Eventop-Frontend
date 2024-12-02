@@ -1,4 +1,5 @@
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
+import { IUserProfile } from "../interfaces/IUser";
 
 export const useGetAllUsers = async (token: string) => {
   try {
@@ -99,4 +100,25 @@ export const changeUserPassword = async (
     throw error;
   }
 };
+
+export const createUserPassword = async ( 
+  token: string, 
+  id: string,
+  data: { password: string; confirmPassword: string }) => {
+  try {
+    const response = await fetch(`${APIURL}/users/${id}/create-password`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const res = await response.json();
+    return res;
+  } catch (error) {
+    console.log("Error en createUserPassword:", error);
+    throw error;
+  }
+} 
 // Removed local useState declaration to avoid conflict with imported useState from React
