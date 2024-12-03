@@ -15,6 +15,7 @@ const DeleteButton: React.FC<{ eventId: number }> = ({ eventId }) => {
     try {
       const res = await useDeleteEvent(eventId, token);
       console.log(res);
+      router.push("/admin/events");
     } catch (error) {
       console.error("Failed to delete event:", error);
      }
