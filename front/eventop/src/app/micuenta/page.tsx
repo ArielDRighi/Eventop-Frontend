@@ -13,14 +13,8 @@ const UserDashboard = () => {
   const router = useRouter();
   const [userData, setUserData] = useState<IUserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { userName, role } = useUserContext();
 
-  const { userId } = useUserContext();
-
-  const token = Cookies.get("accessToken");
-
-  // Validar existencia de token y userId antes de continuar
-  
   useEffect(() => {
     if (!token) {
       router.push("/login");
@@ -49,12 +43,13 @@ const UserDashboard = () => {
 
   // Renderizar estados de carga o error
   if (isLoading) {
-    return <div className="flex items-center justify-center space-x-2">
-          
-    <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
-    <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
-    <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
-  </div>
+    return (
+      <div className="flex items-center justify-center space-x-2">
+        <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+        <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+        <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+      </div>
+    );
   }
 
   if (error) {

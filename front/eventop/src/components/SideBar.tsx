@@ -22,7 +22,6 @@ const SideBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEventsOpen, setIsEventsOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
-
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
@@ -81,8 +80,9 @@ const SideBar = () => {
               href="/admin"
               className="flex items-center space-x-2 text-xl font-semibold"
             >
-              
-              <span>Even<span className="text-purple-500">Top</span></span>
+              <span>
+                Even<span className="text-purple-500">Top</span>
+              </span>
             </Link>
             <button
               onClick={toggleSidebar}
@@ -150,7 +150,6 @@ const SideBar = () => {
                         Create Event
                       </Link>
                     </li>
-                    
                   </ul>
                 )}
               </li>
