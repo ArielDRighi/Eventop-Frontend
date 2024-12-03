@@ -76,7 +76,7 @@ const LandingPage = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Link
-                  href="/api/auth/login"
+                  href="/login"
                   className="group relative inline-flex items-center overflow-hidden rounded-full bg-white px-8 py-3 text-purple-600 hover:text-white focus:outline-none focus:ring transition-all duration-300 ease-in-out hover:bg-purple-600"
                 >
                   <span className="absolute right-0 translate-x-full transition-transform duration-300 group-hover:-translate-x-4">

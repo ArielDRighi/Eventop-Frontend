@@ -68,7 +68,7 @@ export const EncontraEventos = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      const eventsData = await getEvents();
+      const eventsData: IEvent[] = await getEvents();
 
       if (locationsData) {
         setLocations(locationsData);
@@ -84,9 +84,11 @@ export const EncontraEventos = () => {
       if (categoriesError) {
         console.error("Error al obtener las categorías:", categoriesError);
       }
-
-      setEvents(eventsData);
-      setFilteredEvents(eventsData);
+      const upcomingEvents = eventsData.filter(
+        (event) => new Date(event.date) >= new Date() && event.approved === true
+      );
+      setEvents(upcomingEvents);
+      setFilteredEvents(upcomingEvents);
     };
 
     loadData();
@@ -106,6 +108,8 @@ export const EncontraEventos = () => {
         searchTerm === "" ||
         evento.name.toLowerCase().includes(searchTerm.toLowerCase());
 
+        const matchesRadius = radius === 10 || evento.distance <= radius;
+
       const price = evento.price;
       const priceFilterNumber = priceFilter === "0" ? 0 : parseInt(priceFilter);
 
@@ -115,7 +119,7 @@ export const EncontraEventos = () => {
         (priceFilter !== "0" && price > 0 && price <= priceFilterNumber);
 
       return (
-        matchesCategory && matchesLocation && matchesSearch && matchesPrice
+        matchesCategory && matchesLocation && matchesSearch && matchesPrice && matchesRadius
       );
     });
 
@@ -335,8 +339,10 @@ export const EncontraEventos = () => {
                 <button
                   onClick={() => {
                     setSearchTerm("");
+                    setRadius(10);
                     setSelectedCategory("");
                     setSelectedLocation("");
+                    setPriceFilter("");
                   }}
                   className="inline-flex items-center px-6 py-3 bg-purple-600 text-white font-medium text-base rounded-full hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-100 transition-all duration-300 transform hover:scale-105"
                 >

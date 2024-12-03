@@ -73,7 +73,7 @@ export default function Component() {
                 onMouseLeave={() => setHoveredId(null)}
               >
                 <Image
-                  src={item.imageUrl}
+                  src={item.imageUrl || "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"}
                   alt={item.name}
                   width={600}
                   height={400}

@@ -42,18 +42,16 @@ export const useCreateLocation = () => {
         },
         body: JSON.stringify(location),
       });
-      console.log(response);
       const res = await response.json();
-      console.log(res);
-      if (res.statusCode === 201) {
+      if (response.status === 201) {
         setLoading(false);
         return res;
       }
-      if (res.statusCode === 401) {
+      if (response.status === 401) {
         setLoading(false);
         throw new Error(res.message);
       }
-      if (res.statusCode === 400) {
+      if (response.status === 400) {
         setLoading(false);
         throw new Error(res.message);
       }
@@ -82,18 +80,16 @@ export const useDeleteLocation = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response);
-      const res = await response.json();
-      console.log(res);
-      if (res.statusCode === 204) {
+      if (response.statusCode === 204) {
+        const res = await response.json();
+         return res;
         setLoading(false);
-        return res;
       }
-      if (res.statusCode === 401) {
+      if (response.statusCode === 401) {
         setLoading(false);
         throw new Error(res.message);
       }
-      if (res.statusCode === 400) {
+      if (response.statusCode === 400) {
         setLoading(false);
         throw new Error(res.message);
       }
