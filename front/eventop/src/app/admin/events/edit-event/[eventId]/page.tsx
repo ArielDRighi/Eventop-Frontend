@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useGetAllLocations } from "@/helpers/location.helper";
 import { ILocation } from "@/interfaces/ILocations";
@@ -11,7 +11,7 @@ import DeleteButton from "@/components/DeleteButton";
 import EditEventImage from "@/components/EditEventImage";
 import ApproveButton from "@/components/ApproveButton";
 import Cookies from "js-cookie";
-import { useEditEvent } from "@/helpers/events.helper";
+import { editEvent } from "@/helpers/events.helper";
 import { useRouter } from "next/navigation";
 interface IFormInput {
   name: string;
@@ -39,30 +39,26 @@ const EditEventPage = () => {
     formState: { errors },
   } = useForm<IFormInput>();
 
-  
-
   useEffect(() => {
     if (event) {
       setValue("name", event.name);
       setValue("description", event.description);
       setValue("date", event.date);
-      setValue("price", event.price);
+      setValue("price", Number(event.price));
       setValue("location_id", event.location_id.locationId);
       setValue("category_id", event.category_id.categoryId);
     }
     setImagePreview(event?.imageUrl || null);
   }, [event, setValue]);
 
-
-
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const token = JSON.parse(Cookies.get("accessToken") || "null");
     console.log(data);
     try {
-      const res = await useEditEvent(eventId, data, token);
-    if(res) {
-      router.push("/admin/events")
-    }
+      const res = await editEvent(eventId, data, token);
+      if (res) {
+        router.push("/admin/events");
+      }
       console.log(res);
     } catch (error) {
       console.error("Error actualizando el evento:", error);
@@ -73,10 +69,10 @@ const EditEventPage = () => {
   if (loading || loadingLocations) {
     return (
       <div className="flex items-center justify-center space-x-2">
-          <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
-          <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
-          <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
-        </div>
+        <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+        <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+        <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+      </div>
     );
   }
 
@@ -107,24 +103,35 @@ const EditEventPage = () => {
             <div className="relative group text-center">
               <Image
                 className="h-full w-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
-                src={imagePreview|| "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"}
+                src={
+                  imagePreview ||
+                  "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"
+                }
                 alt={event.name}
                 width={500}
                 height={500}
               />
-              <EditEventImage changeImage={setImagePreview} id={event.eventId}/>
+              <EditEventImage
+                changeImage={setImagePreview}
+                id={event.eventId}
+              />
             </div>
           </div>
           <div className="md:col-span-2 p-8 bg-gray-900 rounded-r-xl">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="col-span-1">
-                  <label htmlFor="name" className="block text-lg font-semibold text-gray-50 mb-2">
+                  <label
+                    htmlFor="name"
+                    className="block text-lg font-semibold text-gray-50 mb-2"
+                  >
                     Nombre
                   </label>
                   <input
                     id="name"
-                    {...register("name", { required: "El nombre es obligatorio" })}
+                    {...register("name", {
+                      required: "El nombre es obligatorio",
+                    })}
                     className="input h-[52px] text-[15px] text-gray-50 w-full bg-gray-900 px-3 py-1 rounded-lg border border-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-150 ease-in-out"
                   />
                   {errors.name && (
@@ -135,13 +142,18 @@ const EditEventPage = () => {
                 </div>
 
                 <div className="col-span-1">
-                  <label htmlFor="date" className="block text-lg font-semibold text-gray-300 mb-2">
+                  <label
+                    htmlFor="date"
+                    className="block text-lg font-semibold text-gray-300 mb-2"
+                  >
                     Fecha
                   </label>
                   <input
                     id="date"
                     type="date"
-                    {...register("date", { required: "La fecha es obligatoria" })}
+                    {...register("date", {
+                      required: "La fecha es obligatoria",
+                    })}
                     className="input h-[52px] text-[15px] text-white/60 w-full bg-gray-900 text-gray-50 px-3 py-1 rounded-lg border border-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-150 ease-in-out"
                   />
                   {errors.date && (
@@ -152,12 +164,17 @@ const EditEventPage = () => {
                 </div>
 
                 <div className="col-span-1 lg:col-span-2">
-                  <label htmlFor="description" className="block text-lg font-semibold text-gray-300 mb-2">
+                  <label
+                    htmlFor="description"
+                    className="block text-lg font-semibold text-gray-300 mb-2"
+                  >
                     Descripción
                   </label>
                   <textarea
                     id="description"
-                    {...register("description", { required: "La descripción es obligatoria" })}
+                    {...register("description", {
+                      required: "La descripción es obligatoria",
+                    })}
                     className="input h-[68px] text-[15px] text-white/60 w-full bg-gray-900 text-gray-50 px-3 py-1 rounded-lg border border-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-150 ease-in-out"
                     rows={4}
                   />
@@ -169,14 +186,20 @@ const EditEventPage = () => {
                 </div>
 
                 <div className="col-span-1">
-                  <label htmlFor="price" className="block text-lg font-semibold text-gray-300 mb-2">
+                  <label
+                    htmlFor="price"
+                    className="block text-lg font-semibold text-gray-300 mb-2"
+                  >
                     Precio
                   </label>
                   <input
                     id="price"
                     type="number"
                     step="0.01"
-                    {...register("price", { required: "El precio es obligatorio", valueAsNumber: true })}
+                    {...register("price", {
+                      required: "El precio es obligatorio",
+                      valueAsNumber: true,
+                    })}
                     className="input h-[52px] text-[15px] text-white/60 w-full bg-gray-900 text-gray-50 px-3 py-1 rounded-lg border border-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-150 ease-in-out"
                   />
                   {errors.price && (
@@ -187,23 +210,36 @@ const EditEventPage = () => {
                 </div>
 
                 <div className="col-span-1">
-                  <label htmlFor="location_id" className="block text-lg font-semibold text-gray-300 mb-2">
+                  <label
+                    htmlFor="location_id"
+                    className="block text-lg font-semibold text-gray-300 mb-2"
+                  >
                     Ubicación
                   </label>
                   {loadingLocations ? (
-                    <p className="text-gray-400 italic">Cargando ubicaciones...</p>
+                    <p className="text-gray-400 italic">
+                      Cargando ubicaciones...
+                    </p>
                   ) : (
                     <select
                       id="location_id"
-                      {...register("location_id", { required: "La ubicación es obligatoria", valueAsNumber: true })}
+                      {...register("location_id", {
+                        required: "La ubicación es obligatoria",
+                        valueAsNumber: true,
+                      })}
                       className="input h-[52px] text-[15px] text-white/60 w-full bg-gray-900 text-gray-50 px-3 py-1 rounded-lg border border-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-150 ease-in-out"
                     >
                       <option value="">Selecciona una ubicación</option>
-                      {locations !== null && locations.map((location: ILocation) => (
-                        <option key={location.locationId} value={location.locationId}>
-                          {location.city}, {location.state}, {location.country}
-                        </option>
-                      ))}
+                      {locations !== null &&
+                        locations.map((location: ILocation) => (
+                          <option
+                            key={location.locationId}
+                            value={location.locationId}
+                          >
+                            {location.city}, {location.state},{" "}
+                            {location.country}
+                          </option>
+                        ))}
                     </select>
                   )}
                   {errors.location_id && (
@@ -214,12 +250,18 @@ const EditEventPage = () => {
                 </div>
 
                 <div className="col-span-1">
-                  <label htmlFor="category_id" className="block text-lg font-semibold text-gray-300 mb-2">
+                  <label
+                    htmlFor="category_id"
+                    className="block text-lg font-semibold text-gray-300 mb-2"
+                  >
                     Categoría
                   </label>
                   <select
                     id="category_id"
-                    {...register("category_id", { required: "La categoría es obligatoria", valueAsNumber: true })}
+                    {...register("category_id", {
+                      required: "La categoría es obligatoria",
+                      valueAsNumber: true,
+                    })}
                     className="input h-[52px] text-[15px] text-white/60 w-full bg-gray-900 text-gray-50 px-3 py-1 rounded-lg border border-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-150 ease-in-out"
                   >
                     <option value="">Selecciona una categoría</option>
@@ -254,8 +296,6 @@ const EditEventPage = () => {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    
-                   
                   >
                     <path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2" />
                     <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
@@ -264,16 +304,15 @@ const EditEventPage = () => {
                 </button>
               </div>
             </form>
-                <div className="flex gap-4 w-full sm:w-auto justify-center mt-4">
-                  <DeleteButton eventId={event.eventId} />
-                  <ApproveButton eventId={event.eventId} />
-                </div>
+            <div className="flex gap-4 w-full sm:w-auto justify-center mt-4">
+              <DeleteButton eventId={event.eventId} />
+              <ApproveButton eventId={event.eventId} />
+            </div>
           </div>
         </div>
       </div>
-      
     </section>
   );
-}
+};
 
 export default EditEventPage;

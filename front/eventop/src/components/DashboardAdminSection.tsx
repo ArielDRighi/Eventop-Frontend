@@ -1,9 +1,8 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 
 const DashboardAdminSection = () => {
-  const [tickets, setTickets] = useState([]);
   const [openTickets, setOpenTickets] = useState(0);
   const [inProgressTickets, setInProgressTickets] = useState(0);
   const [closedTickets, setClosedTickets] = useState(0);
@@ -21,15 +20,18 @@ const DashboardAdminSection = () => {
         console.log(allTickets);
 
         const open = allTickets.filter(
-          (ticket: { approved: boolean; date: string }) => !ticket.approved && new Date(ticket.date) > new Date()
+          (ticket: { approved: boolean; date: string }) =>
+            !ticket.approved && new Date(ticket.date) > new Date()
         ).length;
         const inProgress = allTickets.filter(
-          (ticket: { approved: boolean; date: string }) => !ticket.approved && new Date(ticket.date) <= new Date()
+          (ticket: { approved: boolean; date: string }) =>
+            !ticket.approved && new Date(ticket.date) <= new Date()
         ).length;
-        const closed = allTickets.filter((ticket: { approved: boolean }) => ticket.approved).length;
+        const closed = allTickets.filter(
+          (ticket: { approved: boolean }) => ticket.approved
+        ).length;
         console.log(open, inProgress, closed);
 
-        setTickets(allTickets);
         setOpenTickets(open);
         setInProgressTickets(inProgress);
         setClosedTickets(closed);

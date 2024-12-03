@@ -1,39 +1,36 @@
-import { ICategory } from "./ICategory"
-import { ILocation } from "./ILocations"
-
-interface IEvent {
-     eventId: number;
-     name: string;
-     date: string;
-     description: string;
-     imageUrl: string;
-     category_id: {
-       categoryId: number;
-       name: string;
-     };
-     location_id: {
-       locationId: number;
-       city: string;
-       state: string;
-       country: string;
-       address: string;
-     };
-     price: string;
-     quantityAvailable: number;
-     quantitySold: number;
-     quantityTotal: number;
-     approved: boolean;
-     currency: string;
-   }
+export interface IEvent {
+  eventId: number;
+  name: string;
+  date: string;
+  description: string;
+  imageUrl: string;
+  category_id: {
+    categoryId: number;
+    name: string;
+  };
+  location_id: {
+    locationId: number;
+    city: string;
+    state: string;
+    country: string;
+    address: string;
+  };
+  price: string;
+  quantityAvailable: number;
+  quantitySold: number;
+  quantityTotal: number;
+  approved: boolean;
+  currency: string;
+}
 
 export interface IEventsCreate {
-     name: string;
-     description: string;
-     date: string | Date;  // Usaremos el tipo string, aunque puedes manejarlo como Date si lo prefieres
-     price: number;
-     category_id: number;
-     location_id: number;
-     currency: string;
-     image: string | File;  // El valor será una cadena de base64 o una URL de imagen
-     quantityAvailable: number;
-   }
+  name: string;
+  description: string;
+  date: string | Date; // Usaremos el tipo string, aunque puedes manejarlo como Date si lo prefieres
+  price: number;
+  category_id: number;
+  location_id: number;
+  currency: string;
+  image: string | File; // El valor será una cadena de base64 o una URL de imagen
+  quantityAvailable: number;
+}

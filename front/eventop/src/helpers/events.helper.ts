@@ -1,5 +1,5 @@
 import { IEventsCreate } from "@/interfaces/IEventos";
-import { IEvents } from "@/interfaces/IEventos";
+import { IEvent } from "@/interfaces/IEventos";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
@@ -7,7 +7,7 @@ const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
 export const createEvent = async (
   data: IEventsCreate,
-  token: any,
+  token: string,
   image: File | null
 ) => {
   try {
@@ -94,7 +94,7 @@ export const useGetAllEvents = () => {
 };
 
 export const useEventById = (id: string | number) => {
-  const [event, setEvent] = useState<IEvents | null>(null);
+  const [event, setEvent] = useState<IEvent | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -124,7 +124,7 @@ export const useEventById = (id: string | number) => {
           }
           throw new Error(`Error al obtener el evento: ${res.statusText}`);
         }
-        const data: IEvents = await res.json();
+        const data: IEvent = await res.json();
         console.log("Evento obtenido:", data);
 
         setEvent(data);
@@ -146,7 +146,7 @@ export const useEventById = (id: string | number) => {
   return { event, loading, error };
 };
 
-export const useDeleteEvent = async (id: number, token: any) => {
+export const deleteEvent = async (id: number, token: any) => {
   try {
     const response = await fetch(`${APIURL}/events/${id}`, {
       method: "DELETE",
@@ -156,21 +156,21 @@ export const useDeleteEvent = async (id: number, token: any) => {
     });
     console.log(response);
     const res = await response.json();
-      if (res.message === "Event deleted successfully") {
-        Swal.fire({
-          title: "Evento eliminado",
-          text: "El evento ha sido eliminado exitosamente.",
-          icon: "success",
-          customClass: {
-            popup: "bg-white shadow-lg rounded-lg p-6",
-            title: "text-2xl font-semibold text-gray-800",
-            confirmButton:
-              "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
-          },
-          buttonsStyling: false,
-        });
-      }
-      return res;
+    if (res.message === "Event deleted successfully") {
+      Swal.fire({
+        title: "Evento eliminado",
+        text: "El evento ha sido eliminado exitosamente.",
+        icon: "success",
+        customClass: {
+          popup: "bg-white shadow-lg rounded-lg p-6",
+          title: "text-2xl font-semibold text-gray-800",
+          confirmButton:
+            "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
+        },
+        buttonsStyling: false,
+      });
+    }
+    return res;
   } catch (error: any) {
     Swal.fire({
       title: "Error",
@@ -190,7 +190,11 @@ export const useDeleteEvent = async (id: number, token: any) => {
   }
 };
 
-export const useEditEvent = async (id: number, data: IEventsCreate, token: any) => {
+export const editEvent = async (
+  id: number,
+  data: IEventsCreate,
+  token: any
+) => {
   try {
     const response = await fetch(`${APIURL}/events/${id}`, {
       method: "PUT",
@@ -209,15 +213,14 @@ export const useEditEvent = async (id: number, data: IEventsCreate, token: any) 
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
           confirmButton:
-          "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
+            "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
       });
       const res = await response.json();
       return res;
     }
-  }
-  catch (error: any) {
+  } catch (error: any) {
     Swal.fire({
       title: "Error",
       text:
@@ -234,9 +237,9 @@ export const useEditEvent = async (id: number, data: IEventsCreate, token: any) 
     });
     throw new Error(error.message || "Error al actualizar el evento");
   }
-}
+};
 
-export const useApproveEvent = async (id: number, token: any) => {
+export const approveEvent = async (id: number, token: any) => {
   try {
     const response = await fetch(`${APIURL}/events/${id}/approve`, {
       method: "PUT",
@@ -253,7 +256,7 @@ export const useApproveEvent = async (id: number, token: any) => {
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
           confirmButton:
-          "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
+            "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
       });
@@ -280,15 +283,16 @@ export const useApproveEvent = async (id: number, token: any) => {
 };
 //change the image of the event
 
-export const useChangeImage = async (id: number, image: File, token: any) => {
+export const changeImage = async (data: any) => {
+  const { id, image, token } = data;
   try {
     const formData = new FormData();
     formData.append("image", image);
     const response = await fetch(`${APIURL}/events/${id}/image`, {
-      method: "PUT", 
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
-      },  
+      },
       body: formData,
     });
     if (response.status === 200) {
@@ -300,15 +304,14 @@ export const useChangeImage = async (id: number, image: File, token: any) => {
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
           confirmButton:
-          "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
+            "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
       });
       const res = await response.json();
       return res;
     }
-  }
-  catch (error: any) {
+  } catch (error: any) {
     Swal.fire({
       title: "Error",
       text:
@@ -323,11 +326,17 @@ export const useChangeImage = async (id: number, image: File, token: any) => {
       },
       buttonsStyling: false,
     });
-    throw new Error(error.message || "Error al actualizar la imagen del evento");
+    throw new Error(
+      error.message || "Error al actualizar la imagen del evento"
+    );
   }
-}
+};
 
- export const getNearbyEvents = async (latitude: number, longitude: number, radius: number) => {
+export const getNearbyEvents = async (
+  latitude: number,
+  longitude: number,
+  radius: number
+) => {
   try {
     const res = await fetch(
       `${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`
@@ -337,7 +346,7 @@ export const useChangeImage = async (id: number, image: File, token: any) => {
       return data;
     }
     throw new Error("Error al obtener los eventos cercanos.");
-  } catch (error) {
-    return [];
+  } catch (error: any) {
+    return (error.message || "Error al obtener los eventos cercanos") as string;
   }
 };

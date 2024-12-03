@@ -13,8 +13,8 @@ const UserDashboard = () => {
   const router = useRouter();
   const [userData, setUserData] = useState<IUserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { userId, role } = useUserContext();
-  const token = Cookies.get(("accessToken") || "null");
+  const { userId } = useUserContext();
+  const token = Cookies.get("accessToken") || "null";
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const UserDashboard = () => {
     };
 
     fetchUser();
-  }, [userId]);
+  }, [userId, router, token]);
 
   // Renderizar estados de carga o error
   if (isLoading) {

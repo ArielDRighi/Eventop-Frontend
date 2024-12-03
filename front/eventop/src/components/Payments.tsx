@@ -35,7 +35,7 @@ export default function Payments() {
   const params = useParams();
 
   const eventId = params.eventId as string;
-  const email = userName // Usa el email del usuario logueado
+  const email = userName; // Usa el email del usuario logueado
   const quantity = ticketCount;
   console.log("ID del evento", eventId);
   console.log("Email del usuario", email);
@@ -47,24 +47,24 @@ export default function Payments() {
     cardCVC: false,
   });
 
-  // Función para obtener los detalles del evento
-  const fetchEventDetails = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}`
-      );
-      if (!response.ok) {
-        throw new Error("Error al obtener los detalles del evento");
-      }
-      const data = await response.json();
-      setBasePrice(data.price);
-      setQuantityAvailable(data.quantityAvailable); // Establecer la cantidad de tickets disponibles
-    } catch (error) {
-      console.error("Error fetching event details:", error);
-    }
-  };
-
   useEffect(() => {
+    // Función para obtener los detalles del evento
+    const fetchEventDetails = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}`
+        );
+        if (!response.ok) {
+          throw new Error("Error al obtener los detalles del evento");
+        }
+        const data = await response.json();
+        setBasePrice(data.price);
+        setQuantityAvailable(data.quantityAvailable); // Establecer la cantidad de tickets disponibles
+      } catch (error) {
+        console.error("Error fetching event details:", error);
+      }
+    };
+
     fetchEventDetails(); // Llama a la función para obtener los detalles del evento
   }, [eventId]);
 
@@ -112,7 +112,7 @@ export default function Payments() {
     };
 
     createPreference();
-  }, [paymentMethod, total, eventId, email]);
+  }, [paymentMethod, total, eventId, email, quantity]);
 
   const handleTicketChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setTicketCount(parseInt(e.target.value));

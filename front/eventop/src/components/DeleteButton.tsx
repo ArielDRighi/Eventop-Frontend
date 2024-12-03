@@ -1,7 +1,7 @@
 import React from "react";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-import { useDeleteEvent } from "@/helpers/events.helper";
+import { deleteEvent } from "@/helpers/events.helper";
 import { useRouter } from "next/navigation";
 
 const DeleteButton: React.FC<{ eventId: number }> = ({ eventId }) => {
@@ -13,15 +13,15 @@ const DeleteButton: React.FC<{ eventId: number }> = ({ eventId }) => {
       throw new Error("Token is not available");
     }
     try {
-      const res = await useDeleteEvent(eventId, token);
+      const res = await deleteEvent(eventId, token);
       console.log(res);
       router.push("/admin/events");
     } catch (error) {
       console.error("Failed to delete event:", error);
-     }
+    }
   };
 
-   const confirmDelete = () => {
+  const confirmDelete = () => {
     Swal.fire({
       title: "¿Estás seguro?",
       text: "No podrás revertir esta acción",

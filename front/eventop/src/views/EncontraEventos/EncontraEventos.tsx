@@ -3,10 +3,10 @@
 import { useGetAllCategories } from "@/helpers/categories.helpers";
 import { useGetAllLocations } from "@/helpers/location.helper";
 import { ICategory } from "@/interfaces/ICategory";
-import { IEvents } from "@/interfaces/IEventos";
+import { IEvent } from "@/interfaces/IEventos";
 import { ILocation } from "@/interfaces/ILocations";
 import { motion } from "framer-motion";
-import { Search, Calendar, MapPin, DollarSign, Users } from "lucide-react";
+import { Search, Calendar, MapPin, DollarSign } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState, useRef } from "react";
@@ -18,12 +18,12 @@ export const EncontraEventos = () => {
   const [priceFilter, setPriceFilter] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
-  const [events, setEvents] = useState<IEvents[]>([]);
-  const [filteredEvents, setFilteredEvents] = useState<IEvents[]>([]);
+  const [events, setEvents] = useState<IEvent[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<IEvent[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [locations, setLocations] = useState<ILocation[]>([]);
-  const [radius, setRadius] = useState<number>(null);
+  const [radius, setRadius] = useState<number | null>(null);
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -45,7 +45,7 @@ export const EncontraEventos = () => {
       }
       throw new Error("Error al obtener los eventos.");
     } catch (error) {
-      return [];
+      return (error as Error).message;
     }
   };
 
@@ -80,7 +80,7 @@ export const EncontraEventos = () => {
   }, [locationsData, categoriesData, locationsError, categoriesError]);
 
   useEffect(() => {
-    const filtered = events.filter((evento: IEvents) => {
+    const filtered = events.filter((evento: IEvent) => {
       const matchesCategory =
         selectedCategory === "" ||
         (evento.category_id &&
@@ -93,22 +93,18 @@ export const EncontraEventos = () => {
         searchTerm === "" ||
         evento.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesRadius = radius === 10 || evento.distance <= radius;
-
       const price = evento.price;
       const priceFilterNumber = priceFilter === "0" ? 0 : parseInt(priceFilter);
 
       const matchesPrice =
         priceFilter === "" ||
-        (priceFilter === "0" && price == 0) ||
-        (priceFilter !== "0" && price > 0 && price <= priceFilterNumber);
+        (priceFilter === "0" && price == "0") ||
+        (priceFilter !== "0" &&
+          Number(price) > 0 &&
+          Number(price) <= priceFilterNumber);
 
       return (
-        matchesCategory &&
-        matchesLocation &&
-        matchesSearch &&
-        matchesPrice &&
-        matchesRadius
+        matchesCategory && matchesLocation && matchesSearch && matchesPrice
       );
     });
 
@@ -119,9 +115,9 @@ export const EncontraEventos = () => {
     setIsOpen(false);
     console.log(selectedRadius);
     if (selectedRadius === null) {
-      setFilteredEvents(events)
-      return
-    } 
+      setFilteredEvents(events);
+      return;
+    }
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
@@ -200,16 +196,26 @@ export const EncontraEventos = () => {
                     }
                   >
                     <option value="">{`Todas las ${label.toLowerCase()}s`}</option>
-                    {(index === 0 ? categories : locations).map((item: any) => (
-                      <option
-                        key={item[index === 0 ? "categoryId" : "locationId"]}
-                        value={item[
-                          index === 0 ? "categoryId" : "locationId"
-                        ].toString()}
-                      >
-                        {index === 0 ? item.name : item.city}
-                      </option>
-                    ))}
+                    {(index === 0 ? categories : locations).map(
+                      (item: ICategory | ILocation) => (
+                        <option
+                          key={
+                            index === 0
+                              ? (item as ICategory).categoryId
+                              : (item as ILocation).locationId
+                          }
+                          value={
+                            index === 0
+                              ? (item as ICategory).categoryId.toString()
+                              : (item as ILocation).locationId.toString()
+                          }
+                        >
+                          {index === 0
+                            ? (item as ICategory).name
+                            : (item as ILocation).city}
+                        </option>
+                      )
+                    )}
                   </select>
                 </div>
               ))}
@@ -288,7 +294,7 @@ export const EncontraEventos = () => {
 
           <div className="grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-[30] ">
             {filteredEvents &&
-              filteredEvents.map((event: IEvents) => {
+              filteredEvents.map((event: IEvent) => {
                 if (!event.location_id) {
                   return null;
                 }

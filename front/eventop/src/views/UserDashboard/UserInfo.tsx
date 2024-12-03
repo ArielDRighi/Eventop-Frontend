@@ -6,10 +6,7 @@ import { useUserContext } from "@/context/userContext";
 import { IUserProfile, IUserEdit } from "@/interfaces/IUser";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
-import {
-  updateUserImage,
-  updateUserProfile,
-} from "@/helpers/users.helpers";
+import { updateUserImage, updateUserProfile } from "@/helpers/users.helpers";
 import { EditIcon } from "lucide-react";
 import HandlePassword from "@/components/HandlePassword";
 
@@ -24,7 +21,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newImage, setNewImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
   const token = JSON.parse(Cookies.get("accessToken") || "null");
   const { userId } = useUserContext();
   const {
@@ -34,23 +30,12 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
     setValue,
   } = useForm<IUserProfile>();
 
-  const {
-    register: registerPassword,
-    handleSubmit: handleSubmitPassword,
-    formState: { errors: errorsPassword },
-  } = useForm<{ oldPassword: string; newPassword: string }>();
-
   const openModal = () => {
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-  };
-
-  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setUserData((prevData) => prevData ? ({ ...prevData, [name]: value }) : null);
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,10 +67,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
   const handleLogOut = () => {
     Cookies.remove("accessToken");
     window.location.href = "/login";
-  };
-
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
   };
 
   useEffect(() => {
@@ -297,7 +278,10 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
 
             {/* Formulario para Cambiar la Contraseña */}
             <div className="border-t border-gray-700 mt-8"></div>
-            <HandlePassword password={userData?.password || ""} id={String(userData?.userId)} />
+            <HandlePassword
+              password={userData?.password || ""}
+              id={String(userData?.userId)}
+            />
           </div>
         </div>
       </div>
