@@ -13,12 +13,14 @@ const LocationsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [locations, setLocations] = useState<ILocation[]>([]);
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
  
   useEffect(() => {
-    setLocations(result);
+    if (result) {
+      setLocations(result);
+    }
   }, [result]);
 
   const filteredLocations = locations?.filter((location) =>
@@ -50,7 +52,7 @@ const LocationsPage = () => {
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div>Error: {error}</div>;
   }
 
   return (

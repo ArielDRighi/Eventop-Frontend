@@ -6,9 +6,9 @@ import Swal from "sweetalert2";
 import { login } from "@/helpers/auth.helper";
 import Cookies from "js-cookie";
 import { Eye, EyeClosed } from "lucide-react";
+import Image from "next/image";
 
 export const Login = () => {
-
   const [userData, setUserData] = useState<ILoginProps>({
     email: "",
     password: "",
@@ -55,11 +55,11 @@ export const Login = () => {
   useEffect(() => {
     const URLparams = new URLSearchParams(window.location.search);
     const token = URLparams.get("token");
-    console.log(token)
+    console.log(token);
     if (token) {
       console.log(`Token: ${token}`);
-      Cookies.set("accessToken", JSON.stringify( token ));
-      window.location.href = "/"
+      Cookies.set("accessToken", JSON.stringify(token));
+      window.location.href = "/";
     }
   }, []);
 
@@ -86,9 +86,11 @@ export const Login = () => {
     }
     try {
       const response = await login(userData);
-      const { accessToken  } = response;
+      const { accessToken } = response;
       // Almacenar token y datos de usuario en localStorage
-      Cookies.set("accessToken", JSON.stringify( accessToken ), { expires: 1 / 24 });
+      Cookies.set("accessToken", JSON.stringify(accessToken), {
+        expires: 1 / 24,
+      });
       // Pop-up de éxito
       Swal.fire({
         title: "¡Éxito!",
@@ -106,12 +108,12 @@ export const Login = () => {
           window.location.href = "/"; // Cambia "/ruta-de-redireccion" por la ruta deseada
         }
       });
-    } catch (error) {
+    } catch (error: any) {
       setErrors({ email: "Email o contraseña incorrectos.", password: "" });
       // Pop-up de error
       Swal.fire({
         title: "Error",
-        text: "No se pudo iniciar sesión. Por favor verifica tus credenciales.",
+        text: `No se pudo iniciar sesión. Por favor verifica tus credenciales., ${error.message}`,
         icon: "error",
         customClass: {
           popup: "bg-white shadow-lg rounded-lg p-6",
@@ -233,7 +235,7 @@ export const Login = () => {
                 className="mx-auto w-full rounded-lg bg-slate-200 flex flex-row items-center justify-center gap-x-2 px-4 py-3 text-sm duration-200 hover:bg-slate-300"
               >
                 Inicia Sesion con Google{" "}
-                <img src="google.svg" alt="google" className="w-5 h-5" />
+                <Image src="google.svg" alt="google" width={20} height={20} />
               </button>
             </div>
 
@@ -247,10 +249,12 @@ export const Login = () => {
         </div>
 
         <div className="relative">
-          <img
+          <Image
             src="window.jpg"
             alt="login"
             className="hidden md:flex rounded-r-2xl w-[400px] h-full object-cover"
+            width={400} // Añadir width
+            height={600} // Añadir height (ajusta según sea necesario)
           />
         </div>
       </div>

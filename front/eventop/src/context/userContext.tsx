@@ -8,7 +8,7 @@ interface UserContextProps {
   role: string | null;
   setRole: React.Dispatch<React.SetStateAction<string | null>>;
   userId: string | null;
-  username: string | null;
+  userName: string | null;
 }
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
@@ -16,7 +16,7 @@ const UserContext = createContext<UserContextProps | undefined>(undefined);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [role, setRole] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);  
-  const [username, setUsername] = useState<string | null>(null);
+  const [userName, setUsername] = useState<string | null>(null);
   
   useEffect(() => {
     const token = Cookies.get("accessToken");
@@ -47,7 +47,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ role, setRole, userId, username }}>
+    <UserContext.Provider value={{ role, setRole, userId, userName }}>
       {children}
     </UserContext.Provider>
   );

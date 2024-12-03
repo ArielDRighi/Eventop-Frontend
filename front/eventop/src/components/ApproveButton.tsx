@@ -1,7 +1,7 @@
 import React from "react";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-import { useApproveEvent } from "@/helpers/events.helper";
+import { approveEvent } from "@/helpers/events.helper";
 import { useRouter } from "next/navigation";
 
 const ApproveButton: React.FC<{ eventId: number }> = ({ eventId }) => {
@@ -12,7 +12,7 @@ const ApproveButton: React.FC<{ eventId: number }> = ({ eventId }) => {
       throw new Error("Token is not available");
     }
     try {
-      const res = await useApproveEvent(eventId, token);
+      const res = await approveEvent(eventId, token);
       if (res) {
         router.push("/admin/events");
       }
