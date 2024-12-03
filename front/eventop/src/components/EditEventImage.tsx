@@ -4,8 +4,7 @@ import { changeImage as changeImageHelper } from "@/helpers/events.helper";
 import Cookies from "js-cookie";
 
 interface EditEventImageProps {
-  changeImage: React.Dispatch<React.SetStateAction<string | null>>;
-
+  changeImage: React.Dispatch<React.SetStateAction<string>>;
   id: number;
 }
 
@@ -29,9 +28,9 @@ const EditEventImage: React.FC<EditEventImageProps> = ({
       return;
     }
     const data = {
+      id,
       image: selectedImage,
-      id: Number(id),
-      token: token,
+      token,
     };
     try {
       const res = await changeImageHelper(data);

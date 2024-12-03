@@ -12,7 +12,7 @@ export const useGetAllLocations = () => {
     (async () => {
       try {
         const res = await fetch(`${APIURL}/locations`, {
-          method: "GET"
+          method: "GET",
         });
         const data = await res.json();
         setResult(data);
@@ -27,7 +27,7 @@ export const useGetAllLocations = () => {
   return { result, loading, error };
 };
 
-export const useCreateLocation = () => {  
+export const useCreateLocation = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -62,7 +62,7 @@ export const useCreateLocation = () => {
   };
 
   return { createLocation, loading, error };
-}
+};
 
 // delete locations
 
@@ -80,18 +80,20 @@ export const useDeleteLocation = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (response.statusCode === 204) {
+      if (response.status === 204) {
         const res = await response.json();
-         return res;
+        return res;
         setLoading(false);
       }
-      if (response.statusCode === 401) {
+      if (response.status === 401) {
+        const res = await response.json();
+        return res;
         setLoading(false);
-        throw new Error(res.message);
       }
-      if (response.statusCode === 400) {
+      if (response.status === 400) {
+        const res = await response.json();
+        return res;
         setLoading(false);
-        throw new Error(res.message);
       }
     } catch (error: any) {
       setError(error.message);
@@ -100,4 +102,4 @@ export const useDeleteLocation = () => {
   };
 
   return { deleteLocation, loading, error };
-}
+};

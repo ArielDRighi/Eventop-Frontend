@@ -1,6 +1,7 @@
-import React from 'react';
-import { IUser } from '@/interfaces/IUser';
-import {useBanUser }from '@/helpers/users.helpers';
+import React from "react";
+import { IUser } from "@/interfaces/IUser";
+// import Cookies from "js-cookie";
+// import { banUser } from "@/helpers/users.helpers";
 
 interface InfoUsersAdminProps {
   userData: IUser[];
@@ -8,21 +9,20 @@ interface InfoUsersAdminProps {
 
 const InfoUsersAdmin: React.FC<InfoUsersAdminProps> = ({ userData }) => {
   const users = userData;
-   
-  const handleBanUser = async (id: string) => {
-    console.log('Banning user with id:', id);
-    try {
-      const token = Cookies.get('accessToken');
-      if (token) {
-        const parsedToken = JSON.parse(token);
-        const response = await useBanUser(parsedToken, id);
-        console.log('User banned:', response);
-      }
-    } catch (error) {
-      console.error('Error banning user:', error);
-    }
-  }
 
+  // const handleBanUser = async (id: string) => {
+  //   console.log("Banning user with id:", id);
+  //   try {
+  //     const token = Cookies.get("accessToken");
+  //     if (token) {
+  //       const parsedToken = JSON.parse(token);
+  //       const response = await banUser(parsedToken, id);
+  //       console.log("User banned:", response);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error banning user:", error);
+  //   }
+  // };
 
   return (
     <div className="bg-gray-800 p-8 rounded-md w-full max-w-6xl mx-auto">
@@ -52,25 +52,29 @@ const InfoUsersAdmin: React.FC<InfoUsersAdminProps> = ({ userData }) => {
               {users.map((user) => (
                 <tr key={user.userId}>
                   <td className="px-5 py-2 border-b border-gray-800  bg-gray-200 text-sm">
-                    <p className="text-gray-800 whitespace-no-wrap">{user.name}</p>
+                    <p className="text-gray-800 whitespace-no-wrap">
+                      {user.name}
+                    </p>
                   </td>
                   <td className="px-5 py-2 border-b border-gray-800 bg-gray-200 text-sm">
-                    <p className="text-gray-800 whitespace-no-wrap">{user.email}</p>
+                    <p className="text-gray-800 whitespace-no-wrap">
+                      {user.email}
+                    </p>
                   </td>
                   <td className="px-5 py-2 border-b border-gray-800 bg-gray-200 text-sm">
                     <span
                       className={`relative inline-block px-3 py-1 font-semibold leading-tight ${
-                        user.isBanned ? 'text-red-900' : 'text-green-900'
+                        user.isBanned ? "text-red-900" : "text-green-900"
                       }`}
                     >
                       <span
                         aria-hidden
                         className={`absolute inset-0 opacity-50 rounded-full ${
-                          user.isBanned ? 'bg-red-200' : 'bg-green-200'
+                          user.isBanned ? "bg-red-200" : "bg-green-200"
                         }`}
                       ></span>
                       <span className="relative">
-                        {user.isBanned ? 'Banned' : 'Active'}
+                        {user.isBanned ? "Banned" : "Active"}
                       </span>
                     </span>
                   </td>
@@ -78,12 +82,12 @@ const InfoUsersAdmin: React.FC<InfoUsersAdminProps> = ({ userData }) => {
                     <button className="bg-purple-500 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer">
                       Edit
                     </button>
-                    </td>
-                    <td className="px-5 py-2 border-b border-gray-800 bg-gray-200 text-sm">
+                  </td>
+                  <td className="px-5 py-2 border-b border-gray-800 bg-gray-200 text-sm">
                     <button className="bg-red-500 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer">
                       Suspender
-                      </button>
-                    </td>
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
