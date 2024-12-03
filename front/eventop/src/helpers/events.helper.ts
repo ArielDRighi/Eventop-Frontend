@@ -327,13 +327,17 @@ export const useChangeImage = async (id: number, image: File, token: any) => {
   }
 }
 
-
-export const getNearbyEvents = (latitude, longitude, selectedRadius) => {
-   return fetch(`${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${selectedRadius}`)
-    .then((res) => res.json())
-    .then((data) => data)
-    .catch((error) => {
-      console.error("Error:", error);
-      return null;
-    });
-}
+ export const getNearbyEvents = async (latitude: number, longitude: number, radius: number) => {
+  try {
+    const res = await fetch(
+      `${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`
+    );
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+    throw new Error("Error al obtener los eventos cercanos.");
+  } catch (error) {
+    return [];
+  }
+};

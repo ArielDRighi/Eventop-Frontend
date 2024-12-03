@@ -23,9 +23,14 @@ export const EncontraEventos = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [locations, setLocations] = useState<ILocation[]>([]);
-  const [radius, setRadius] = useState<number>(10);
+  const [radius, setRadius] = useState<number>(null);
+  const [latitude, setLatitude] = useState<number>(0);
+  const [longitude, setLongitude] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const coords = { latitude, longitude };
+  console.log(coords);
 
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
@@ -33,21 +38,24 @@ export const EncontraEventos = () => {
 
   const getEvents = async () => {
     try {
-      const response = await fetch(`${APIURL}/events`);
-      if (!response.ok) {
-        throw new Error("Error fetching events");
+      const res = await fetch(`${APIURL}/events`);
+      if (res.ok) {
+        const data = await res.json();
+        return data;
       }
-      const data = await response.json();
-      setEvents(data);
-      setFilteredEvents(data);
+      throw new Error("Error al obtener los eventos.");
     } catch (error) {
-      console.error("Error fetching events:", error);
+      return [];
     }
   };
 
+  const { result: locationsData, error: locationsError } = useGetAllLocations();
+  const { result: categoriesData, error: categoriesError } =
+    useGetAllCategories();
+
   useEffect(() => {
     const loadData = async () => {
-      const eventsData: IEvent[] = await getEvents();
+      const eventsData = await getEvents();
 
       if (locationsData) {
         setLocations(locationsData);
@@ -63,11 +71,9 @@ export const EncontraEventos = () => {
       if (categoriesError) {
         console.error("Error al obtener las categorías:", categoriesError);
       }
-      const upcomingEvents = eventsData.filter(
-        (event) => new Date(event.date) >= new Date() && event.approved === true
-      );
-      setEvents(upcomingEvents);
-      setFilteredEvents(upcomingEvents);
+
+      setEvents(eventsData);
+      setFilteredEvents(eventsData);
     };
 
     loadData();
@@ -76,12 +82,18 @@ export const EncontraEventos = () => {
   useEffect(() => {
     const filtered = events.filter((evento: IEvents) => {
       const matchesCategory =
-        selectedCategory === "" || (evento.category_id && evento.category_id.categoryId === parseInt(selectedCategory));
+        selectedCategory === "" ||
+        (evento.category_id &&
+          evento.category_id.categoryId === parseInt(selectedCategory));
       const matchesLocation =
-        selectedLocation === "" || (evento.location_id && evento.location_id.locationId === parseInt(selectedLocation));
-      const matchesSearch = searchTerm === "" || evento.name.toLowerCase().includes(searchTerm.toLowerCase());
+        selectedLocation === "" ||
+        (evento.location_id &&
+          evento.location_id.locationId === parseInt(selectedLocation));
+      const matchesSearch =
+        searchTerm === "" ||
+        evento.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-        const matchesRadius = radius === 10 || evento.distance <= radius;
+      const matchesRadius = radius === 10 || evento.distance <= radius;
 
       const price = evento.price;
       const priceFilterNumber = priceFilter === "0" ? 0 : parseInt(priceFilter);
@@ -92,22 +104,35 @@ export const EncontraEventos = () => {
         (priceFilter !== "0" && price > 0 && price <= priceFilterNumber);
 
       return (
-        matchesCategory && matchesLocation && matchesSearch && matchesPrice && matchesRadius
+        matchesCategory &&
+        matchesLocation &&
+        matchesSearch &&
+        matchesPrice &&
+        matchesRadius
       );
     });
 
     setFilteredEvents(filtered);
   }, [selectedCategory, selectedLocation, searchTerm, events, priceFilter]);
 
-  const handleNearbyEvents = (selectedRadius: number) => {
-    console.log("handleNearbyEvents called with radius:", selectedRadius);
+  const handleNearbyEvents = (selectedRadius: number | null) => {
+    setIsOpen(false);
+    console.log(selectedRadius);
+    if (selectedRadius === null) {
+      setFilteredEvents(events)
+      return
+    } 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
-          console.log("Geolocation obtained:", { latitude, longitude });
-          const nearbyEvents = await getNearbyEvents(latitude, longitude, selectedRadius);
-          console.log("Nearby events:", nearbyEvents);
+          setLatitude(latitude);
+          setLongitude(longitude);
+          const nearbyEvents = await getNearbyEvents(
+            latitude,
+            longitude,
+            selectedRadius
+          );
           setFilteredEvents(nearbyEvents);
         },
         (error) => {
@@ -119,6 +144,20 @@ export const EncontraEventos = () => {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <div>
       <section className="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-16 px-4 sm:px-6 lg:px-8 min-h-screen">
@@ -128,48 +167,53 @@ export const EncontraEventos = () => {
               Encuentra Eventos
             </h1>
             <p className="text-md text-gray-300 max-w-3xl mx-auto">
-              Descubre los mejores eventos en tu ciudad y vive experiencias inolvidables
+              Descubre los mejores eventos en tu ciudad y vive experiencias
+              inolvidables
             </p>
           </div>
 
-          <div className="bg-gray-900 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl p-8 mb-10">
-            {/* Filtros */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-              {/* Filtro de categoría */}
+          <div className="bg-gray-900 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl p-8 mb-10 relative z-[40]">
+            <h2 className="text-3xl font-bold mb-6 text-center">
+              Filtrar Eventos
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 relative z-[50]">
               <div className="relative">
-                <select
-                  className="w-full pl-4 pr-10 py-3 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-white transition duration-300"
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                >
-                  <option value="">Todas las categorías</option>
-                  {/* Renderizar opciones de categorías */}
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
-                </div>
+                <input
+                  type="text"
+                  placeholder="Buscar eventos..."
+                  className="w-full pl-12 pr-4 py-3 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-300 transition duration-300"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-300" />
               </div>
 
-              {/* Filtro de ubicación */}
-              <div className="relative">
-                <select
-                  className="w-full pl-4 pr-10 py-3 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-white transition duration-300"
-                  value={selectedLocation}
-                  onChange={(e) => setSelectedLocation(e.target.value)}
-                >
-                  <option value="">Todas las ubicaciones</option>
-                  {/* Renderizar opciones de ubicaciones */}
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
+              {["Categoría", "Ubicación"].map((label, index) => (
+                <div key={label} className="relative">
+                  <select
+                    className="w-full pl-4 pr-10 py-3 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-white transition duration-300"
+                    value={index === 0 ? selectedCategory : selectedLocation}
+                    onChange={(e) =>
+                      index === 0
+                        ? setSelectedCategory(e.target.value)
+                        : setSelectedLocation(e.target.value)
+                    }
+                  >
+                    <option value="">{`Todas las ${label.toLowerCase()}s`}</option>
+                    {(index === 0 ? categories : locations).map((item: any) => (
+                      <option
+                        key={item[index === 0 ? "categoryId" : "locationId"]}
+                        value={item[
+                          index === 0 ? "categoryId" : "locationId"
+                        ].toString()}
+                      >
+                        {index === 0 ? item.name : item.city}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-              </div>
+              ))}
 
-              {/* Filtro de precio */}
               <div className="relative">
                 <select
                   className="w-full pl-4 pr-10 py-3 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-white transition duration-300"
@@ -183,91 +227,119 @@ export const EncontraEventos = () => {
                   <option value="500">Hasta 500</option>
                   <option value="1000">Hasta 1000</option>
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              </div>
+              <div className="relative z-[100]" ref={dropdownRef}>
+                <button
+                  onClick={toggleDropdown}
+                  className="w-full pl-4 pr-10 py-3 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-white transition duration-300 flex justify-between items-center"
+                >
+                  {radius === null
+                    ? "Todos los eventos"
+                    : radius === 10
+                    ? "Eventos cercanos"
+                    : `Eventos en ${radius} km`}
+                  <svg
+                    className={`fill-current h-4 w-4 transform ${
+                      isOpen ? "rotate-180" : ""
+                    } transition-transform`}
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
                     <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                   </svg>
-                </div>
-              </div>
-
-              {/* Botón de eventos cercanos */}
-              <div className="relative">
-                <button className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-300">
-                  Eventos cercanos a mi
                 </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                  <ul className="py-1">
-                    {[5, 10, 15, 20, 50].map((km) => (
-                      <li key={km}>
+                {isOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-[101]">
+                    <ul className="py-1">
+                      <li>
                         <button
-                          onClick={() => handleNearbyEvents(km)}
-                          className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
+                          onClick={() => {
+                            setRadius(null); // Sin filtro
+                            handleNearbyEvents(null);
+                          }}
+                          className={`block px-4 py-2 text-white hover:bg-gray-700 w-full text-left ${
+                            radius === null ? "bg-purple-600" : ""
+                          }`}
                         >
-                          {km} km
+                          Mostrar todos
                         </button>
                       </li>
-                    ))}
-                  </ul>
-                </div>
+                      {[5, 10, 15, 20, 50].map((km) => (
+                        <li key={km}>
+                          <button
+                            onClick={() => {
+                              setRadius(km);
+                              handleNearbyEvents(km);
+                            }}
+                            className={`block px-4 py-2 text-white hover:bg-gray-700 w-full text-left ${
+                              radius === km ? "bg-purple-600" : ""
+                            }`}
+                          >
+                            {km} km
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
+          </div>
 
-            {/* Lista de eventos */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredEvents &&
-                filteredEvents.map((event: IEvents) => {
-                  if (!event.location_id) {
-                    return null; // O puedes manejarlo de otra manera, como mostrar un mensaje de error
-                  }
-                  return (
-                    <motion.div
-                      key={event.eventId}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="bg-gray-900 bg-opacity-50 rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl"
-                    >
-                      <div className="relative h-56">
-                        <Image
-                          className="w-full h-56 object-cover object-center"
-                          src={event.imageUrl || "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"}
-                          alt={event.name}
-                          loading="lazy"
-                          layout="fill"
-                          objectFit="cover"
-                          className="transition-transform duration-500 transform hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-start p-4">
-                          <Link
-                            href={`/events/${event.eventId}`}
-                            className="bg-purple-600 text-white font-semibold px-6 py-2 rounded-xl hover:bg-purple-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-                          >
-                            Ver Detalles
-                          </Link>
-                        </div>
+          <div className="grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-[30] ">
+            {filteredEvents &&
+              filteredEvents.map((event: IEvents) => {
+                if (!event.location_id) {
+                  return null;
+                }
+                return (
+                  <motion.div
+                    key={event.eventId}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="bg-gray-900 bg-opacity-50 rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl"
+                  >
+                    <div className="relative h-56">
+                      <Image
+                        src={
+                          event.imageUrl ||
+                          "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"
+                        }
+                        alt={event.name}
+                        layout="fill"
+                        objectFit="cover"
+                        className="transition-transform duration-500 transform hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-start p-4">
+                        <Link
+                          href={`/events/${event.eventId}`}
+                          className="bg-purple-600 text-white font-semibold px-6 py-2 rounded-xl hover:bg-purple-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+                        >
+                          Ver Detalles
+                        </Link>
                       </div>
-                      <div className="p-6">
-                        <h3 className="text-2xl font-bold mb-3 line-clamp-2">{event.name}</h3>
-                        <div className="flex items-center text-gray-300 mb-2">
-                          <Calendar className="h-5 w-5 mr-2 text-purple-400" />
-                          <span>{event.date}</span>
-                        </div>
-                        <div className="flex items-center text-gray-300">
-                          <MapPin className="h-5 w-5 mr-2 text-purple-400" />
-                          <span>{event.location_id.city}</span>
-                        </div>
-                        <div className="flex items-center text-gray-300">
-                          <DollarSign className="h-5 w-5 mr-2 text-purple-400" />
-                          <span>{event.price}</span>
-                        </div>
-                        <div className="flex items-center text-gray-300">
-                          <Users className="h-5 w-5 mr-2 text-purple-400" />
-                          <span>Tickets disponibles: {event.quantityAvailable}</span>
-                        </div>
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-2xl font-bold mb-3 line-clamp-2">
+                        {event.name}
+                      </h3>
+                      <div className="flex items-center text-gray-300 mb-2">
+                        <Calendar className="h-5 w-5 mr-2 text-purple-400" />
+                        <span>{event.date}</span>
                       </div>
-                    </motion.div>
-                  );
-                })}
+                      <div className="flex items-center text-gray-300">
+                        <MapPin className="h-5 w-5 mr-2 text-purple-400" />
+                        <span>{event.location_id.city}</span>
+                      </div>
+                      <div className="flex items-center text-gray-300">
+                        <DollarSign className="h-5 w-5 mr-2 text-purple-400" />
+                        <span>{event.price}</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
 
             {filteredEvents.length === 0 && (
               <div className="flex flex-col items-center justify-center space-y-5 p-8 bg-gray-900 rounded-lg shadow-inner">
@@ -277,10 +349,10 @@ export const EncontraEventos = () => {
                 <button
                   onClick={() => {
                     setSearchTerm("");
-                    setRadius(10);
                     setSelectedCategory("");
                     setSelectedLocation("");
                     setPriceFilter("");
+                    setRadius(10);
                   }}
                   className="inline-flex items-center px-6 py-3 bg-purple-600 text-white font-medium text-base rounded-full hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-100 transition-all duration-300 transform hover:scale-105"
                 >
@@ -291,11 +363,17 @@ export const EncontraEventos = () => {
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    Limpiar filtros
-                  </button>
-                </div>
-              )}
-            </div>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    ></path>
+                  </svg>
+                  Limpiar filtros
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </section>
