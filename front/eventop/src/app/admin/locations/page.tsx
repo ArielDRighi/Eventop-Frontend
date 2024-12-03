@@ -5,6 +5,7 @@ import { useGetAllLocations, useDeleteLocation } from "@/helpers/location.helper
 import { ILocation } from "@/interfaces/ILocations";
 import CreateLocation from "@/components/CreateLocation";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 
 const LocationsPage = () => {
   const { result, loading, error } = useGetAllLocations();
@@ -30,8 +31,15 @@ const LocationsPage = () => {
     const token = JSON.parse(Cookies.get("accessToken") || "null");
     try {
       const res = await deleteLocation(location.locationId, token);
-      if (res) {
+      if (res === undefined) {
         setLocations(locations.filter((loc) => loc.locationId !== location.locationId));
+        Swal.fire({ 
+          title: "Success",
+          text: "Location deleted successfully",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
       console.log(res);
     } catch (error) {
@@ -58,7 +66,7 @@ const LocationsPage = () => {
         className="mb-4 p-2 border border-gray-300 rounded bg-gray-800 text-white focus:ring-2 focus:ring-purple-500"
       />
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-gray-900 text-white rounded-lg overflow-scroll">
+        <table className="min-w-full bg-gray-900 text-white rounded-lg overflow-scroll max-h-[%50]">
           <thead>
             <tr>
               <th className="py-2 px-4 border-b border-gray-700">ID</th>

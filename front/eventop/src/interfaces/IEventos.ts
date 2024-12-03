@@ -1,18 +1,30 @@
 import { ICategory } from "./ICategory"
 import { ILocation } from "./ILocations"
 
-export interface IEvents {
+interface IEvent {
+     eventId: number;
+     name: string;
+     date: string;
+     description: string;
+     imageUrl: string;
+     category_id: {
+       categoryId: number;
+       name: string;
+     };
+     location_id: {
+       locationId: number;
+       city: string;
+       state: string;
+       country: string;
+       address: string;
+     };
+     price: string;
+     quantityAvailable: number;
+     quantitySold: number;
+     quantityTotal: number;
      approved: boolean;
-     eventId: number,
-     name: string,
-     description: string,
-     date: string,
-     price: number,
-     currency: string,
-     imageUrl?: string,
-     location_id: ILocation,
-     category_id: ICategory,
-}
+     currency: string;
+   }
 
 export interface IEventsCreate {
      name: string;

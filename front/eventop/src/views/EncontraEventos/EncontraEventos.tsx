@@ -46,8 +46,32 @@ export const EncontraEventos = () => {
   };
 
   useEffect(() => {
-    getEvents();
-  }, []);
+    const loadData = async () => {
+      const eventsData: IEvent[] = await getEvents();
+
+      if (locationsData) {
+        setLocations(locationsData);
+      }
+
+      if (categoriesData) {
+        setCategories(categoriesData);
+      }
+
+      if (locationsError) {
+        console.error("Error al obtener las ubicaciones:", locationsError);
+      }
+      if (categoriesError) {
+        console.error("Error al obtener las categorías:", categoriesError);
+      }
+      const upcomingEvents = eventsData.filter(
+        (event) => new Date(event.date) >= new Date() && event.approved === true
+      );
+      setEvents(upcomingEvents);
+      setFilteredEvents(upcomingEvents);
+    };
+
+    loadData();
+  }, [locationsData, categoriesData, locationsError, categoriesError]);
 
   useEffect(() => {
     const filtered = events.filter((evento: IEvents) => {
@@ -57,6 +81,8 @@ export const EncontraEventos = () => {
         selectedLocation === "" || (evento.location_id && evento.location_id.locationId === parseInt(selectedLocation));
       const matchesSearch = searchTerm === "" || evento.name.toLowerCase().includes(searchTerm.toLowerCase());
 
+        const matchesRadius = radius === 10 || evento.distance <= radius;
+
       const price = evento.price;
       const priceFilterNumber = priceFilter === "0" ? 0 : parseInt(priceFilter);
 
@@ -65,7 +91,9 @@ export const EncontraEventos = () => {
         (priceFilter === "0" && price == 0) ||
         (priceFilter !== "0" && price > 0 && price <= priceFilterNumber);
 
-      return matchesCategory && matchesLocation && matchesSearch && matchesPrice;
+      return (
+        matchesCategory && matchesLocation && matchesSearch && matchesPrice && matchesRadius
+      );
     });
 
     setFilteredEvents(filtered);
@@ -241,16 +269,27 @@ export const EncontraEventos = () => {
                   );
                 })}
 
-              {filteredEvents.length === 0 && (
-                <div className="text-center">
-                  <p className="text-2xl text-gray-400 mb-4">No se encontraron eventos que coincidan con tu búsqueda.</p>
-                  <button
-                    onClick={() => {
-                      setSearchTerm("");
-                      setSelectedCategory("");
-                      setSelectedLocation("");
-                    }}
-                    className="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+            {filteredEvents.length === 0 && (
+              <div className="flex flex-col items-center justify-center space-y-5 p-8 bg-gray-900 rounded-lg shadow-inner">
+                <p className="text-xl font-semibold text-gray-50">
+                  No se encontraron eventos
+                </p>
+                <button
+                  onClick={() => {
+                    setSearchTerm("");
+                    setRadius(10);
+                    setSelectedCategory("");
+                    setSelectedLocation("");
+                    setPriceFilter("");
+                  }}
+                  className="inline-flex items-center px-6 py-3 bg-purple-600 text-white font-medium text-base rounded-full hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-100 transition-all duration-300 transform hover:scale-105"
+                >
+                  <svg
+                    className="w-5 h-5 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
                     Limpiar filtros
                   </button>
