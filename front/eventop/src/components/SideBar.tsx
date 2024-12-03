@@ -12,15 +12,16 @@ import {
   ChevronDown,
   Calendar,
   HelpCircle,
+  Pin,
+  Drama,
 } from "lucide-react";
-import { useUserContext } from "@/context/userContext";
+
 
 const SideBar = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isEventsOpen, setIsEventsOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
-  const { setRole } = useUserContext();
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
@@ -42,7 +43,6 @@ const SideBar = () => {
 
   const handleSingOut = () => {
     Cookies.remove("accessToken");
-    setRole(null);
     router.push("/");
   };
 
@@ -161,6 +161,26 @@ const SideBar = () => {
                 >
                   <Calendar className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform duration-200" />
                   <span>Calendar</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/admin/locations"
+                  target="_blank"
+                  className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
+                >
+                  <Pin className="w-5 h-5 mr-3 group-hover:bounce transition-transform duration-200" />
+                  <span>Locations</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/admin/categories"
+                  target="_blank"
+                  className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
+                >
+                  <Drama className="w-5 h-5 mr-3 group-hover:bounce transition-transform duration-200" />
+                  <span>Categories</span>
                 </Link>
               </li>
               <li>

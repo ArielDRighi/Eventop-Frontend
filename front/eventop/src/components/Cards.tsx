@@ -144,6 +144,7 @@ const Cards: React.FC = () => {
     fetchEvents();
   }, []);
 
+
   const renderContent = useMemo(() => {
     if (loading)
       return (

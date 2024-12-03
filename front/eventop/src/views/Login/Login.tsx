@@ -3,13 +3,11 @@ import { ILoginErrors, ILoginProps } from "@/interfaces/ILoginProps";
 import { useEffect, useState } from "react";
 import validateLoginForm from "@/helpers/validateLoginForm";
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
 import { login } from "@/helpers/auth.helper";
 import Cookies from "js-cookie";
 import { Eye, EyeClosed } from "lucide-react";
 
 export const Login = () => {
-  const router = useRouter();
 
   const [userData, setUserData] = useState<ILoginProps>({
     email: "",
@@ -57,10 +55,11 @@ export const Login = () => {
   useEffect(() => {
     const URLparams = new URLSearchParams(window.location.search);
     const token = URLparams.get("token");
+    console.log(token)
     if (token) {
       console.log(`Token: ${token}`);
-      Cookies.set("access_token", JSON.stringify(token));
-      router.push("/");
+      Cookies.set("accessToken", JSON.stringify( token ));
+      window.location.href = "/"
     }
   }, []);
 
@@ -85,15 +84,11 @@ export const Login = () => {
       });
       return;
     }
-
     try {
       const response = await login(userData);
-      console.log(response);
-      const { access_token } = response;
-
+      const { accessToken  } = response;
       // Almacenar token y datos de usuario en localStorage
-      Cookies.set("accessToken", JSON.stringify(access_token));
-
+      Cookies.set("accessToken", JSON.stringify( accessToken ), { expires: 1 / 24 });
       // Pop-up de éxito
       Swal.fire({
         title: "¡Éxito!",
@@ -106,9 +101,11 @@ export const Login = () => {
             "bg-[#164E78] hover:bg-[#169978] text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = "/"; // Cambia "/ruta-de-redireccion" por la ruta deseada
+        }
       });
-
-      router.push("/");
     } catch (error) {
       setErrors({ email: "Email o contraseña incorrectos.", password: "" });
       // Pop-up de error

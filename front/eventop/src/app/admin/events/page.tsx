@@ -4,8 +4,8 @@ import GestionEventos from "@/views/GestionEventos/GestionEventos";
 // import Search from "../../../components/Search";
 
 const EventsPage = () => {
-  return (
-    <section className="flex flex-col gap-2">
+    return (
+      <section className="flex flex-col gap-2">
       <div>
         <h1 className="text-3xl font-bold text-slate-200 text-center mb-4">
           Gestión de Eventos

@@ -1,13 +1,13 @@
 "use client";
 
-import React from "react";
-import { useUserContext } from "@/context/userContext";
-import { Ticket, Search, Calendar, MapPin, TrendingUp } from "lucide-react";
-import Link from "next/link";
-import { motion } from "framer-motion";
+import React from "react"
+import { useUserContext } from "@/context/userContext" 
+import { Ticket, Search, Calendar, MapPin, TrendingUp } from 'lucide-react'
+import Link from "next/link"
+import { motion } from "framer-motion"
 
 const LandingPage = () => {
-  const { role } = useUserContext();
+  const { role } = useUserContext()
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
