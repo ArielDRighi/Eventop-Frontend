@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import {ICategory} from "@/interfaces/ICategory";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -31,7 +32,7 @@ export const useCreateCategory = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-   const createCategory = async (category, token) => {
+   const createCategory = async (category: string, token: string) => {
     setLoading(true);
     try {
       const response = await fetch(`${APIURL}/categories/create`, {
@@ -66,7 +67,7 @@ export const useDeleteCategory = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const deleteCategory = async (id, token) => {
+  const deleteCategory = async (id: number, token: string) => {
     setLoading(true);
     try {
       const response = await fetch(`${APIURL}/categories/${id}`, {

@@ -326,3 +326,14 @@ export const useChangeImage = async (id: number, image: File, token: any) => {
     throw new Error(error.message || "Error al actualizar la imagen del evento");
   }
 }
+
+
+export const getNearbyEvents = (latitude, longitude, selectedRadius) => {
+   return fetch(`${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${selectedRadius}`)
+    .then((res) => res.json())
+    .then((data) => data)
+    .catch((error) => {
+      console.error("Error:", error);
+      return null;
+    });
+}

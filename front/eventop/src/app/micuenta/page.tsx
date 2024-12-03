@@ -1,6 +1,6 @@
 "use client";
 
-import  UserInfo  from "@/views/UserDashboard/UserInfo";
+import UserInfo from "@/views/UserDashboard/UserInfo";
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,9 @@ const UserDashboard = () => {
   const router = useRouter();
   const [userData, setUserData] = useState<IUserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { userName, role } = useUserContext();
+  const [error, setError] = useState<string | null>(null);
+  const { userId, role } = useUserContext();
+  const token = Cookies.get("accessToken");
 
   useEffect(() => {
     if (!token) {
@@ -27,8 +29,11 @@ const UserDashboard = () => {
         if (typeof parsedToken !== "string") {
           throw new Error("Invalid token format");
         }
+        if (!userId) {
+          throw new Error("User ID is null");
+        }
         const res = await getUserById(parsedToken, userId);
-        console.log(res)
+        console.log(res);
         setUserData(res);
       } catch (error: any) {
         console.error("Error fetching user:", error);

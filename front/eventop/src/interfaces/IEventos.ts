@@ -1,4 +1,4 @@
-import { ICategory } from "./ICategory.ts"
+import { ICategory } from "./ICategory"
 import { ILocation } from "./ILocations"
 
 export interface IEvents {

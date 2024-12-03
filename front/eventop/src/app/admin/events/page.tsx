@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-// import CreateEvent from "@/components/CreateEvent";
-// import SideBar from "@/components/SideBar";
-=======
->>>>>>> Stashed changes
+
 import GestionEventos from "@/views/GestionEventos/GestionEventos";
 
 const EventsPage = () => {

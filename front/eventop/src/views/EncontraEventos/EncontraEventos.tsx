@@ -2,7 +2,7 @@
 
 import { useGetAllCategories } from "@/helpers/categories.helpers";
 import { useGetAllLocations } from "@/helpers/location.helper";
-import { ICategory } from "@/interfaces/ICategoty";
+import { ICategory } from "@/interfaces/ICategory";
 import { IEvents } from "@/interfaces/IEventos";
 import { ILocation } from "@/interfaces/ILocations";
 import { motion } from "framer-motion";
@@ -10,6 +10,7 @@ import { Search, Calendar, MapPin, DollarSign, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState, useRef } from "react";
+import { getNearbyEvents } from "@/helpers/events.helper";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -78,6 +79,7 @@ export const EncontraEventos = () => {
           const { latitude, longitude } = position.coords;
           console.log("Geolocation obtained:", { latitude, longitude });
           const nearbyEvents = await getNearbyEvents(latitude, longitude, selectedRadius);
+          console.log("Nearby events:", nearbyEvents);
           setFilteredEvents(nearbyEvents);
         },
         (error) => {
