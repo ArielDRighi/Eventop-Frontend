@@ -16,6 +16,7 @@ type Language = "es" | "en" | "pt" | "fr";
 type Currency = "USD" | "EUR" | "ARS" | "BRL";
 
 export default function Payments() {
+  const { userName } = useUserContext();
   const [ticketCount, setTicketCount] = useState(1);
   const [basePrice, setBasePrice] = useState(0); // Inicialmente 0
   const [total, setTotal] = useState(0);
@@ -29,12 +30,12 @@ export default function Payments() {
   const [cardCVC, setCardCVC] = useState("");
   const [savePaymentInfo, setSavePaymentInfo] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [quantityAvailable, setQuantityAvailable] = useState(0); // Estado para la cantidad de tickets disponibles
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
   const params = useParams();
-  const { username } = useUserContext();
 
   const eventId = params.eventId as string;
-  const email = username; // Usa el email del usuario logueado
+  const email = userName; // Usa el email del usuario logueado
   const quantity = ticketCount;
   console.log("ID del evento", eventId);
   console.log("Email del usuario", email);
@@ -46,23 +47,24 @@ export default function Payments() {
     cardCVC: false,
   });
 
-  // Función para obtener los detalles del evento
-  const fetchEventDetails = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}`
-      );
-      if (!response.ok) {
-        throw new Error("Error al obtener los detalles del evento");
-      }
-      const data = await response.json();
-      setBasePrice(data.price); // Asume que el precio está en data.price
-    } catch (error) {
-      console.error("Error fetching event details:", error);
-    }
-  };
-
   useEffect(() => {
+    // Función para obtener los detalles del evento
+    const fetchEventDetails = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}`
+        );
+        if (!response.ok) {
+          throw new Error("Error al obtener los detalles del evento");
+        }
+        const data = await response.json();
+        setBasePrice(data.price);
+        setQuantityAvailable(data.quantityAvailable); // Establecer la cantidad de tickets disponibles
+      } catch (error) {
+        console.error("Error fetching event details:", error);
+      }
+    };
+
     fetchEventDetails(); // Llama a la función para obtener los detalles del evento
   }, [eventId]);
 
@@ -110,7 +112,7 @@ export default function Payments() {
     };
 
     createPreference();
-  }, [paymentMethod, total, eventId, email]);
+  }, [paymentMethod, total, eventId, email, quantity]);
 
   const handleTicketChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setTicketCount(parseInt(e.target.value));
@@ -162,6 +164,9 @@ export default function Payments() {
       >
         <h2 className="text-2xl font-bold text-gray-800 mb-2">{t.title}</h2>
         <p className="text-gray-600 text-xs sm:text-sm mb-4">{t.description}</p>
+        <p className="text-gray-600 text-xs sm:text-sm mb-4">
+          Tickets disponibles: {quantityAvailable}
+        </p>
       </motion.div>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-4">

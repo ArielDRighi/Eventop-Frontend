@@ -1,41 +1,42 @@
-'use client'
+"use client";
 
-declare global {
+declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
-      'df-messenger': any;
+      "df-messenger": any;
     }
   }
 }
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 
 export default function EnhancedDialogflowChatbot() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const script = document.createElement('script')
-    script.src = "https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"
-    script.async = true
-    document.body.appendChild(script)
+    const script = document.createElement("script");
+    script.src =
+      "https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1";
+    script.async = true;
+    document.body.appendChild(script);
 
     // Verificar el estado de apertura en localStorage
-    const hasOpened = localStorage.getItem('chatbotOpened')
+    const hasOpened = localStorage.getItem("chatbotOpened");
     if (hasOpened) {
-      setIsOpen(false)
+      setIsOpen(false);
     }
 
     return () => {
-      document.body.removeChild(script)
-    }
-  }, [])
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const toggleChatbot = () => {
-    setIsOpen(!isOpen)
+    setIsOpen(!isOpen);
     if (!isOpen) {
-      localStorage.setItem('chatbotOpened', 'true')
+      localStorage.setItem("chatbotOpened", "true");
     }
-  }
+  };
 
   return (
     <>
@@ -45,10 +46,10 @@ export default function EnhancedDialogflowChatbot() {
         agent-id="e58e2f28-b4d2-468c-b436-7d5ac5896bf9"
         language-code="es"
         chat-icon="https://example.com/path-to-your-custom-icon.png"
-        className={`df-messenger-custom ${isOpen ? 'df-messenger-open' : ''}`}
-        expand={isOpen ? 'true' : 'false'}
+        className={`df-messenger-custom ${isOpen ? "df-messenger-open" : ""}`}
+        expand={isOpen ? "true" : "false"}
       ></df-messenger>
-      <button 
+      <button
         className="chat-toggle-btn"
         onClick={toggleChatbot}
         aria-label={isOpen ? "Cerrar chat" : "Abrir chat"}
@@ -57,26 +58,35 @@ export default function EnhancedDialogflowChatbot() {
       </button>
       <style jsx global>{`
         @keyframes pulse {
-          0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7); }
-          70% { box-shadow: 0 0 0 10px rgba(139, 92, 246, 0); }
-          100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+          0% {
+            box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7);
+          }
+          70% {
+            box-shadow: 0 0 0 10px rgba(139, 92, 246, 0);
+          }
+          100% {
+            box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+          }
         }
 
         .df-messenger-custom {
-          --df-messenger-bot-message: #8B5CF6;
-          --df-messenger-user-message: #60A5FA;
-          --df-messenger-chat-background-color: #1F2937;
-          --df-messenger-font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-          --df-messenger-send-icon: #60A5FA;
+          --df-messenger-bot-message: #8b5cf6;
+          --df-messenger-user-message: #60a5fa;
+          --df-messenger-chat-background-color: #1f2937;
+          --df-messenger-font-family: ui-sans-serif, system-ui, -apple-system,
+            BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+            "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol", "Noto Color Emoji";
+          --df-messenger-send-icon: #60a5fa;
           --df-messenger-button-titlebar-color: #111827;
-          --df-messenger-button-titlebar-font-color: #FFFFFF;
+          --df-messenger-button-titlebar-font-color: #ffffff;
           --df-messenger-chat-border-radius: 1rem;
           --df-messenger-message-border-radius: 1rem;
-          --df-messenger-input-box-color: #4B5563;
-          --df-messenger-input-box-border-color: #4B5563;
-          --df-messenger-input-font-color: #FFFFFF;
-          --df-messenger-input-placeholder-font-color: #9CA3AF;
-          --df-messenger-minimized-chat-close-icon-color: #FFFFFF;
+          --df-messenger-input-box-color: #4b5563;
+          --df-messenger-input-box-border-color: #4b5563;
+          --df-messenger-input-font-color: #ffffff;
+          --df-messenger-input-placeholder-font-color: #9ca3af;
+          --df-messenger-minimized-chat-close-icon-color: #ffffff;
         }
 
         .df-messenger-custom {
@@ -89,7 +99,8 @@ export default function EnhancedDialogflowChatbot() {
           height: 600px;
           max-height: calc(100vh - 100px);
           transition: all 0.3s ease-in-out;
-          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+            0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
         .df-messenger-custom.df-messenger-open > df-messenger-chat {
@@ -133,8 +144,9 @@ export default function EnhancedDialogflowChatbot() {
         .df-messenger-custom df-message-text {
           padding: 0.75rem 1rem;
           line-height: 1.5;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-          color: #FFFFFF;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+            0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          color: #ffffff;
           font-weight: 600;
         }
 
@@ -143,20 +155,22 @@ export default function EnhancedDialogflowChatbot() {
         }
 
         .df-messenger-custom df-chip {
-          background-color: #4B5563;
-          color: #FFFFFF;
+          background-color: #4b5563;
+          color: #ffffff;
           border-radius: 1rem;
           padding: 0.5rem 1rem;
           margin-right: 0.5rem;
           margin-bottom: 0.5rem;
           transition: all 0.2s ease;
-          box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+          box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1),
+            0 1px 2px -1px rgba(0, 0, 0, 0.06);
         }
 
         .df-messenger-custom df-chip:hover {
-          background-color: #6B7280;
+          background-color: #6b7280;
           transform: translateY(-2px);
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+            0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         .chat-toggle-btn {
@@ -166,13 +180,14 @@ export default function EnhancedDialogflowChatbot() {
           width: 60px;
           height: 60px;
           border-radius: 50%;
-          background-color: #8B5CF6;
+          background-color: #8b5cf6;
           border: none;
           cursor: pointer;
           display: flex;
           justify-content: center;
           align-items: center;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+            0 2px 4px -1px rgba(0, 0, 0, 0.06);
           transition: all 0.3s ease;
           animation: pulse 2s infinite;
         }
@@ -189,7 +204,7 @@ export default function EnhancedDialogflowChatbot() {
 
         .chat-toggle-icon::before,
         .chat-toggle-icon::after {
-          content: '';
+          content: "";
           position: absolute;
           background-color: white;
           transition: all 0.3s ease;
@@ -225,9 +240,9 @@ export default function EnhancedDialogflowChatbot() {
 
         .df-messenger-custom df-message[agent="human"] df-message-text,
         .df-messenger-custom df-message[agent="bot"] df-message-text {
-          color: #FFFFFF;
+          color: #ffffff;
         }
       `}</style>
     </>
-  )
+  );
 }

@@ -26,4 +26,10 @@ export interface IUserProfile {
   createdAt: string;
 }
 
-  export interface IUserEdit {}
+  export interface IUserEdit {
+    name: string,
+    email: string,
+    preferredLanguage: string,
+    preferredCurrency:  string,
+    password: string,
+  }

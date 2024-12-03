@@ -1,5 +1,5 @@
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
-import { IUserProfile } from "../interfaces/IUser";
+import { IUserEdit } from "../interfaces/IUser";
 
 export const useGetAllUsers = async (token: string, page:number, limit:number) => {
   try {
@@ -41,7 +41,9 @@ export const updateUserImage = async (
 ) => {
   try {
     const formData = new FormData();
-    formData.append("image", image);
+    if (image) {
+      formData.append("image", image);
+    }
 
     const response = await fetch(`${APIURL}/users/${id}/upload-image`, {
       method: "POST",
@@ -61,7 +63,7 @@ export const updateUserImage = async (
 export const updateUserProfile = async (
   token: string,
   id: string,
-  data: IUserProfile
+  data: IUserEdit
 ) => {
   try {
     const response = await fetch(`${APIURL}/users/${id}`, {
@@ -83,7 +85,7 @@ export const updateUserProfile = async (
 export const changeUserPassword = async (
   token: string,
   id: string,
-  data: { Oldpassword: string; newPassword: string }
+  data: { oldPassword: string; newPassword: string }
 ) => {
   try {
     const response = await fetch(`${APIURL}/auth/${id}/change-password`, {

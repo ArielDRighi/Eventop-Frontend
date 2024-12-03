@@ -25,8 +25,6 @@ export const EncontraEventos = () => {
   const [radius, setRadius] = useState<number>(10);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [userLocation, setUserLocation] = useState<{latitude: number, longitude: number} | null>(null);
-  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
@@ -45,31 +43,21 @@ export const EncontraEventos = () => {
     }
   };
 
-  const getNearbyEvents = async (
-    latitude: number,
-    longitude: number,
-    radius: number
-  ) => {
+  const getNearbyEvents = async (latitude: number, longitude: number, radius: number) => {
     try {
-      console.log(`Buscando eventos cerca de: ${latitude}, ${longitude} con radio: ${radius}km`);
-      const res = await fetch(
-        `${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`
-      );
+      const res = await fetch(`${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`);
       if (res.ok) {
         const data = await res.json();
-        console.log('Eventos cercanos recibidos:', data);
         return data;
       }
       throw new Error("Error al obtener los eventos cercanos.");
     } catch (error) {
-      console.error("Error en getNearbyEvents:", error);
       return [];
     }
   };
 
   const { result: locationsData, error: locationsError } = useGetAllLocations();
-  const { result: categoriesData, error: categoriesError } =
-    useGetAllCategories();
+  const { result: categoriesData, error: categoriesError } = useGetAllCategories();
 
   useEffect(() => {
     const loadData = async () => {
@@ -100,36 +88,14 @@ export const EncontraEventos = () => {
   }, [locationsData, categoriesData, locationsError, categoriesError]);
 
   useEffect(() => {
-    console.log('Aplicando filtros:', {
-      categoryFilter: selectedCategory,
-      locationFilter: selectedLocation,
-      searchTerm,
-      priceFilter,
-      radius,
-      hasUserLocation: !!userLocation
-    });
-
     const filtered = events.filter((evento: IEvents) => {
       const matchesCategory =
-        selectedCategory === "" ||
-        (evento.category_id &&
-          evento.category_id.categoryId === parseInt(selectedCategory));
-      
+        selectedCategory === "" || (evento.category_id && evento.category_id.categoryId === parseInt(selectedCategory));
       const matchesLocation =
-        selectedLocation === "" ||
-        (evento.location_id &&
-          evento.location_id.locationId === parseInt(selectedLocation));
-      
-      const matchesSearch =
-        searchTerm === "" ||
-        evento.name.toLowerCase().includes(searchTerm.toLowerCase());
+        selectedLocation === "" || (evento.location_id && evento.location_id.locationId === parseInt(selectedLocation));
+      const matchesSearch = searchTerm === "" || evento.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesRadius = 
-        !userLocation || 
-        radius === 10 || 
-        (evento.distance !== undefined && evento.distance <= radius);
-
-      console.log(`Evento ${evento.name} - distancia: ${evento.distance}, matchesRadius: ${matchesRadius}`);
+      const matchesRadius = radius === 10 || evento.distance <= radius;
 
       const price = evento.price;
       const priceFilterNumber = priceFilter === "0" ? 0 : parseInt(priceFilter);
@@ -139,94 +105,33 @@ export const EncontraEventos = () => {
         (priceFilter === "0" && price == 0) ||
         (priceFilter !== "0" && price > 0 && price <= priceFilterNumber);
 
-      return (
-        matchesCategory && 
-        matchesLocation && 
-        matchesSearch && 
-        matchesPrice && 
-        matchesRadius
-      );
+      return matchesCategory && matchesLocation && matchesSearch && matchesPrice && matchesRadius;
     });
 
-    console.log(`Eventos filtrados: ${filtered.length} de ${events.length}`);
     setFilteredEvents(filtered);
-  }, [selectedCategory, selectedLocation, searchTerm, events, priceFilter, radius, userLocation]);
+  }, [selectedCategory, selectedLocation, searchTerm, events, priceFilter]);
 
-  const handleNearbyEvents = async (selectedRadius: number) => {
-    setIsLoadingLocation(true);
+  const handleNearbyEvents = (selectedRadius: number) => {
     setIsOpen(false);
-
-    try {
-      let lat, lng;
-      
-      if (!userLocation) {
-        console.log('Obteniendo nueva ubicación del usuario...');
-        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(
-            resolve,
-            reject,
-            {
-              enableHighAccuracy: true,
-              timeout: 5000,
-              maximumAge: 0
-            }
-          );
-        });
-        
-        lat = position.coords.latitude;
-        lng = position.coords.longitude;
-        console.log(`Nueva ubicación obtenida: ${lat}, ${lng}`);
-        setUserLocation({ latitude: lat, longitude: lng });
-      } else {
-        console.log('Usando ubicación existente del usuario');
-        lat = userLocation.latitude;
-        lng = userLocation.longitude;
-      }
-
-      console.log(`Buscando eventos en radio de ${selectedRadius}km`);
-      const nearbyEvents = await getNearbyEvents(lat, lng, selectedRadius);
-      
-      if (nearbyEvents && Array.isArray(nearbyEvents) && nearbyEvents.length > 0) {
-        console.log(`Se encontraron ${nearbyEvents.length} eventos cercanos`);
-        setEvents(nearbyEvents);
-        setFilteredEvents(nearbyEvents);
-        setRadius(selectedRadius);
-      } else {
-        console.log('No se encontraron eventos cercanos');
-        setFilteredEvents([]);
-        alert("No se encontraron eventos en el radio seleccionado");
-      }
-    } catch (error) {
-      console.error("Error completo:", error);
-      alert("Error al obtener la ubicación o los eventos cercanos. Por favor, verifica los permisos de ubicación.");
-    } finally {
-      setIsLoadingLocation(false);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          const nearbyEvents = await getNearbyEvents(latitude, longitude, selectedRadius);
+          setFilteredEvents(nearbyEvents);
+        },
+        (error) => {
+          console.error("Error obtaining geolocation:", error);
+        }
+      );
+    } else {
+      alert("La geolocalización no es compatible con este navegador.");
     }
-  };
-
-  const clearFilters = async () => {
-    setSearchTerm("");
-    setRadius(10);
-    setSelectedCategory("");
-    setSelectedLocation("");
-    setPriceFilter("");
-    setUserLocation(null);
-    
-    // Restaurar los eventos originales
-    const eventsData = await getEvents();
-    const upcomingEvents = eventsData.filter(
-      (event) => new Date(event.date) >= new Date() && event.approved === true
-    );
-    setEvents(upcomingEvents);
-    setFilteredEvents(upcomingEvents);
   };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -244,15 +149,12 @@ export const EncontraEventos = () => {
               Encuentra Eventos
             </h1>
             <p className="text-md text-gray-300 max-w-3xl mx-auto">
-              Descubre los mejores eventos en tu ciudad y vive experiencias
-              inolvidables
+              Descubre los mejores eventos en tu ciudad y vive experiencias inolvidables
             </p>
           </div>
 
           <div className="bg-gray-900 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl p-8 mb-10 relative z-[40]">
-            <h2 className="text-3xl font-bold mb-6 text-center">
-              Filtrar Eventos
-            </h2>
+            <h2 className="text-3xl font-bold mb-6 text-center">Filtrar Eventos</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 relative z-[50]">
               <div className="relative">
                 <input
@@ -271,18 +173,14 @@ export const EncontraEventos = () => {
                     className="w-full pl-4 pr-10 py-3 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-white transition duration-300"
                     value={index === 0 ? selectedCategory : selectedLocation}
                     onChange={(e) =>
-                      index === 0
-                        ? setSelectedCategory(e.target.value)
-                        : setSelectedLocation(e.target.value)
+                      index === 0 ? setSelectedCategory(e.target.value) : setSelectedLocation(e.target.value)
                     }
                   >
                     <option value="">{`Todas las ${label.toLowerCase()}s`}</option>
                     {(index === 0 ? categories : locations).map((item: any) => (
                       <option
                         key={item[index === 0 ? "categoryId" : "locationId"]}
-                        value={item[
-                          index === 0 ? "categoryId" : "locationId"
-                        ].toString()}
+                        value={item[index === 0 ? "categoryId" : "locationId"].toString()}
                       >
                         {index === 0 ? item.name : item.city}
                       </option>
@@ -310,19 +208,10 @@ export const EncontraEventos = () => {
                 <button
                   onClick={toggleDropdown}
                   className="w-full pl-4 pr-10 py-3 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-white transition duration-300 flex justify-between items-center"
-                  disabled={isLoadingLocation}
                 >
-                  {isLoadingLocation ? (
-                    "Obteniendo ubicación..."
-                  ) : radius === 10 ? (
-                    "Eventos cercanos"
-                  ) : (
-                    `Eventos en ${radius} km`
-                  )}
+                  {radius === 10 ? "Eventos cercanos " : `Eventos en ${radius} km`}
                   <svg
-                    className={`fill-current h-4 w-4 transform ${
-                      isOpen ? "rotate-180" : ""
-                    } transition-transform`}
+                    className={`fill-current h-4 w-4 transform ${isOpen ? "rotate-180" : ""} transition-transform`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                   >
@@ -389,9 +278,7 @@ export const EncontraEventos = () => {
                       </div>
                     </div>
                     <div className="p-6">
-                      <h3 className="text-2xl font-bold mb-3 line-clamp-2">
-                        {event.name}
-                      </h3>
+                      <h3 className="text-2xl font-bold mb-3 line-clamp-2">{event.name}</h3>
                       <div className="flex items-center text-gray-300 mb-2">
                         <Calendar className="h-5 w-5 mr-2 text-purple-400" />
                         <span>{event.date}</span>
@@ -411,11 +298,15 @@ export const EncontraEventos = () => {
 
             {filteredEvents.length === 0 && (
               <div className="flex flex-col items-center justify-center space-y-5 p-8 bg-gray-900 rounded-lg shadow-inner">
-                <p className="text-xl font-semibold text-gray-50">
-                  No se encontraron eventos
-                </p>
+                <p className="text-xl font-semibold text-gray-50">No se encontraron eventos</p>
                 <button
-                  onClick={clearFilters}
+                  onClick={() => {
+                    setSearchTerm("");
+                    setRadius(10);
+                    setSelectedCategory("");
+                    setSelectedLocation("");
+                    setPriceFilter("");
+                  }}
                   className="inline-flex items-center px-6 py-3 bg-purple-600 text-white font-medium text-base rounded-full hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-100 transition-all duration-300 transform hover:scale-105"
                 >
                   <svg
@@ -425,12 +316,7 @@ export const EncontraEventos = () => {
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    ></path>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                   </svg>
                   Limpiar filtros
                 </button>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ILocation } from "@/interfaces/ILocations";
+import { ILocation, ILocationCreate } from "@/interfaces/ILocations";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -31,7 +31,7 @@ export const useCreateLocation = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const createLocation = async (location: ILocation, token: string) => {
+  const createLocation = async (location: ILocationCreate, token: string) => {
     setLoading(true);
     try {
       const response = await fetch(`${APIURL}/locations/create`, {

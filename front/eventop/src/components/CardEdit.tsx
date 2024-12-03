@@ -1,6 +1,6 @@
 import { IEvents } from "@/interfaces/IEventos";
 import { Calendar, DollarSign, Edit, MapPin } from "lucide-react";
-import Image from 'next/image';
+import Image from "next/image";
 import Link from "next/link";
 
 const CardEdit: React.FC<{ event: IEvents }> = ({ event }) => (
@@ -11,10 +11,15 @@ const CardEdit: React.FC<{ event: IEvents }> = ({ event }) => (
     <div className="relative h-40">
       <Image
         className="w-full h-full object-cover transition-transform duration-500 transform hover:scale-110"
-        src={event.imageUrl || "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"}
+        src={
+          event.imageUrl ||
+          "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"
+        }
         alt={event.name}
         layout="fill"
         objectFit="cover"
+        width={500} // Añadir width
+        height={300} // Añadir height
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-start p-4">
         <Link

@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-// import { motion } from "framer-motion";
+import { Calendar, MapPin, DollarSign, Users } from "lucide-react";
 
 interface Event {
   eventId: number;
@@ -30,11 +30,7 @@ interface Event {
 }
 
 const EventCard: React.FC<{ event: Event }> = ({ event }) => (
-  <Link
-    key={`event-${event.eventId}`}
-    href={`/events/${event.eventId}`}
-    className="block h-full"
-  >
+  <Link key={`event-${event.eventId}`} href={`/events/${event.eventId}`} className="block h-full">
     <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out h-full flex flex-col">
       <div className="relative h-48 w-full group">
         <Image
@@ -56,9 +52,7 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => (
         </div>
       </div>
       <div className="p-4 flex flex-col h-[200px]">
-        <h3 className="text-white text-xl font-semibold mb-3 line-clamp-2">
-          {event.name}
-        </h3>
+        <h3 className="text-white text-xl font-semibold mb-3 line-clamp-2">{event.name}</h3>
         <div className="flex-grow flex flex-col justify-between">
           <div className="space-y-3">
             <p className="text-gray-400 font-semibold flex items-center">
@@ -119,17 +113,15 @@ const Cards: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchEvents() {
+    const fetchEvents = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/events`
-        );
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`);
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
         const data: Event[] = await response.json();
 
-        const upcomingEvents = data.filter(
-          (event) =>
-            new Date(event.date) >= new Date() && event.approved === true
-        );
+        const upcomingEvents = data.filter((event) => new Date(event.date) >= new Date() && event.approved === true);
         setEvents(upcomingEvents);
       } catch (error) {
         setError("Error al cargar los eventos");
@@ -137,7 +129,7 @@ const Cards: React.FC = () => {
       } finally {
         setLoading(false);
       }
-    }
+    };
 
     fetchEvents();
   }, []);
@@ -151,7 +143,7 @@ const Cards: React.FC = () => {
           <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
         </div>
       );
-    if (error) return <div>{error}</div>;
+    if (error) return <div>Error al cargar los eventos: {error}</div>;
 
     return events.length ? (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -160,27 +152,16 @@ const Cards: React.FC = () => {
         ))}
       </div>
     ) : (
-      <div className="text-center text-gray-400">
-        No hay eventos disponibles
-      </div>
+      <div className="text-center text-gray-400">No hay eventos disponibles</div>
     );
   }, [events, loading, error]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 py-20 px-4 sm:px-6 lg:px-8">
       <main className="max-w-7xl mx-auto">
-        <div className="card mb-12">
-          <div className="loader">
-            <p className="text-3xl font-bold text-purple-300">Eventos</p>
-            <div className="words">
-              <span className="word">Musicales</span>
-              <span className="word">Deportivos</span>
-              <span className="word">Culturales</span>
-              <span className="word">Sociales</span>
-              <span className="word">Musicales</span>
-            </div>
-          </div>
-        </div>
+        <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 text-center mb-12">
+          Proximos Eventos
+        </h1>
         {renderContent}
       </main>
     </div>

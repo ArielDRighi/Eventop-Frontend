@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Pencil } from "lucide-react";
-import { useChangeImage } from "@/helpers/events.helper";
+import { changeImage as changeImageHelper } from "@/helpers/events.helper";
 import Cookies from "js-cookie";
 
 interface EditEventImageProps {
-  changeImage: React.Dispatch<React.SetStateAction<string>>;
+  changeImage: React.Dispatch<React.SetStateAction<string | null>>;
+
   id: number;
 }
 
-const EditEventImage: React.FC<EditEventImageProps> = ({ changeImage, id }) => {
+const EditEventImage: React.FC<EditEventImageProps> = ({
+  changeImage: setImage,
+  id,
+}) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
@@ -24,10 +28,15 @@ const EditEventImage: React.FC<EditEventImageProps> = ({ changeImage, id }) => {
       console.error("No image selected");
       return;
     }
+    const data = {
+      image: selectedImage,
+      id: Number(id),
+      token: token,
+    };
     try {
-      const res = await useChangeImage(Number(id), selectedImage, token);
+      const res = await changeImageHelper(data);
       console.log(res);
-      changeImage(URL.createObjectURL(selectedImage));
+      setImage(URL.createObjectURL(selectedImage));
       closeModal();
     } catch (error) {
       console.error("Failed to change image:", error);
@@ -51,11 +60,14 @@ const EditEventImage: React.FC<EditEventImageProps> = ({ changeImage, id }) => {
          hover:duration-500 hover:after:-right-8 hover:before:right-12 hover:before:-bottom-8 hover:before:blur origin-left hover:decoration-2 hover:text-white relative bg-gray-900 
          h-12 w-full sm:w-48 border text-center p-2 mt-4 mx-auto text-white font-bold rounded-lg overflow-hidden before:absolute before:w-12 before:h-12 before:content-[''] before:right-1 before:top-1 before:z-10 before:bg-green-400 before:rounded-full before:blur-lg after:absolute after:z-10 after:w-20 after:h-20 after:content-[''] after:bg-green-500 after:right-8 after:top-3 after:rounded-full after:blur-lg"
       >
-        Cambiar Imagen <Pencil className="inline mb-1"/>
+        Cambiar Imagen <Pencil className="inline mb-1" />
       </button>
       {modalIsOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <form onSubmit={handleSubmitImage} className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
+          <form
+            onSubmit={handleSubmitImage}
+            className="bg-gray-800 rounded-lg p-6 w-full max-w-md"
+          >
             <span
               className="absolute top-2 right-2 text-gray-500 cursor-pointer"
               onClick={closeModal}

@@ -3,13 +3,10 @@
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useUserContext } from "@/context/userContext";
-import { IUserProfile } from "@/interfaces/IUser";
+import { IUserProfile, IUserEdit } from "@/interfaces/IUser";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
-import {
-  updateUserImage,
-  updateUserProfile,
-} from "@/helpers/users.helpers";
+import { updateUserImage, updateUserProfile } from "@/helpers/users.helpers";
 import { EditIcon } from "lucide-react";
 import HandlePassword from "@/components/HandlePassword";
 
@@ -24,7 +21,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newImage, setNewImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
   const token = JSON.parse(Cookies.get("accessToken") || "null");
   const { userId } = useUserContext();
   const {
@@ -34,23 +30,12 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
     setValue,
   } = useForm<IUserProfile>();
 
-  const {
-    register: registerPassword,
-    handleSubmit: handleSubmitPassword,
-    formState: { errors: errorsPassword },
-  } = useForm<{ oldPassword: string; newPassword: string }>();
-
   const openModal = () => {
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-  };
-
-  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setUserData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,10 +69,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
     window.location.href = "/login";
   };
 
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
   useEffect(() => {
     if (user) {
       // Establece valores iniciales del formulario
@@ -95,7 +76,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
         setValue(key as keyof IUserProfile, value)
       );
       setUserData(user);
-      setImagePreview(user.imageUrl);
+      setImagePreview(user.imageUrl || null);
       setLoading(false);
     } else {
       setError(true);
@@ -103,7 +84,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
   }, [user, setValue]);
 
   const onSubmit = async (data: IUserProfile) => {
-    const dataToSend = {
+    const dataToSend: IUserEdit = {
       name: data.name,
       email: data.email,
       preferredLanguage: data.preferredLanguage || "",
@@ -297,7 +278,10 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
 
             {/* Formulario para Cambiar la Contraseña */}
             <div className="border-t border-gray-700 mt-8"></div>
-            <HandlePassword password={userData?.password || ""} id={userData?.userId} />
+            <HandlePassword
+              password={userData?.password || ""}
+              id={String(userData?.userId)}
+            />
           </div>
         </div>
       </div>

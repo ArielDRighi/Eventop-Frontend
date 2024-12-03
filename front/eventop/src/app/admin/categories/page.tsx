@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useGetAllCategories, useCreateCategory, useDeleteCategory } from "@/helpers/categories.helpers.ts";
+import { useGetAllCategories, useCreateCategory, useDeleteCategory } from "@/helpers/categories.helpers";
 import { ICategory } from "@/interfaces/ICategory";
 import Cookies from "js-cookie";
 
@@ -9,34 +9,32 @@ const CategoriesPage = () => {
     const { result, loading, error } = useGetAllCategories();
     const { createCategory } = useCreateCategory();
     const { deleteCategory } = useDeleteCategory();
-
-    const [newCategory, setNewCategory] = useState("");
-    const [searchTerm, setSearchTerm] = useState("");
-    const [categories, setCategory] = useState<ICategory[]>([{
-        categoryId: 0,
-        name: ""
-    }])
+    const [newCategory, setNewCategory] = useState<string>(""); // Cambiado a string
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [categories, setCategory] = useState<ICategory[]>([]);
 
     useEffect(() => {  
-        setCategory(result);
+        if (result) {
+            setCategory(result);
+        }
      }, [result]);
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
     };
 
-    const handleNewCategoryChange = (e) => {
+    const handleNewCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewCategory(e.target.value);
     };
 
     const handleCreateCategory = async () => {
         const token = JSON.parse(Cookies.get("accessToken") || "null");
         try {
-            const res = await createCategory({ name: newCategory }, token);
+            const res = await createCategory(newCategory, token); // Pasar el objeto correcto
             console.log(res);
             setNewCategory("");
             if (res) {
-            setCategory([...categories, res]);
+                setCategory([...categories, res]);
             }
         } catch (error) {
             console.log(error);
@@ -47,8 +45,9 @@ const CategoriesPage = () => {
         const token = JSON.parse(Cookies.get("accessToken") || "null");
         try {
             const res = await deleteCategory(category.categoryId, token);
-             if (res){setCategory(categories.filter((cat) => cat.categoryId !== category.categoryId));}
-            
+            if (res) {
+                setCategory(categories.filter((cat) => cat.categoryId !== category.categoryId));
+            }
         } catch (error) {
             console.log(error);
         }
@@ -63,7 +62,7 @@ const CategoriesPage = () => {
     }
 
     if (error) {
-        return <div>Error: {error.message}</div>;
+        return <div>Error: {error}</div>;
     }
 
     return (
