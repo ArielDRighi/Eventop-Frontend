@@ -4,7 +4,7 @@ import { jwtVerify } from 'jose';
 
 export async function middleware(req: NextRequest) {
   // Obtén el token directamente del request
-  const token = JSON.parse(req.cookies.get('accessToken')?.value || '')
+  const token = JSON.parse(req.cookies.get('accessToken')?.value || 'null')
 
   if (!token) {
     // Redirige al login si el token no está presente y la ruta es protegida

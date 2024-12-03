@@ -2,6 +2,7 @@ import { ICategory } from "./ICategoty"
 import { ILocation } from "./ILocations"
 
 export interface IEvents {
+     approved: boolean;
      eventId: number,
      name: string,
      description: string,

@@ -1,48 +1,74 @@
 "use client";
 
-import { UserInfo } from "@/views/UserDashboard/UserInfo";
+import  UserInfo  from "@/views/UserDashboard/UserInfo";
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import { Compras } from "@/components/Compras";
 import { useUserContext } from "@/context/userContext";
 import Cookies from "js-cookie";
+import { getUserById } from "@/helpers/users.helpers"; // Renombrado para evitar confusión
+import { IUserProfile } from "@/interfaces/IUser";
 
 const UserDashboard = () => {
   const router = useRouter();
+  const [userData, setUserData] = useState<IUserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { userName, role } = useUserContext();
+  const [error, setError] = useState<string | null>(null);
+
+  const { userId } = useUserContext();
+
+  const token = Cookies.get("accessToken");
+
+  // Validar existencia de token y userId antes de continuar
   
   useEffect(() => {
-    console.log(userName);
-    if (userName === null) {
-      // router.push("/login");
-    } else {
-      setIsLoading(false);
+    if (!token) {
+      router.push("/login");
+      return;
     }
-  }, []);
+    // Función para obtener los datos del usuario
+    const fetchUser = async () => {
+      try {
+        const parsedToken = JSON.parse(token);
+        if (typeof parsedToken !== "string") {
+          throw new Error("Invalid token format");
+        }
+        const res = await getUserById(parsedToken, userId);
+        console.log(res)
+        setUserData(res);
+      } catch (error: any) {
+        console.error("Error fetching user:", error);
+        setError(error.message || "An error occurred.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
+    fetchUser();
+  }, [userId]);
+
+  // Renderizar estados de carga o error
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="flex items-center justify-center space-x-2">
+          
+    <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+    <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+    <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
+  </div>
   }
 
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  // Renderizar la vista principal
   return (
-    <>
+    <div>
       <Head>
         <title>User Dashboard</title>
-        <meta name="description" content="Dashboard personalizado para usuarios registrados." />
       </Head>
-    <section>
-        <h1 className="text-3xl text-center text-slate-200">Hola {userName}</h1>
-      {/* <UserInfo user={userName} role={role} /> */}
-      {/* Descomentar cuando el componente Compras esté listo */}
-      {/* userName && <Compras user={userName} /> */}
-      {role ? <div>Role: {role}</div> : <div>No role assigned</div>}
-      <button 
-      className="bg-slate-200 text-white p-2 rounded-md"
-      onClick={() => Cookies.remove("accessToken")}>Logout</button>
-    </section>
-    </>
+      <UserInfo user={userData} /> {/* Cambiado a userData */}
+    </div>
   );
 };
 

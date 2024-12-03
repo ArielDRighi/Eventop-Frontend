@@ -1,4 +1,4 @@
-import CreateEvent from "@/components/CreateEvent";
+// import CreateEvent from "@/components/CreateEvent";
 import SideBar from "@/components/SideBar";
 import GestionEventos from "@/views/GestionEventos/GestionEventos";
 // import Search from "../../../components/Search";
