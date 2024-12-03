@@ -36,10 +36,7 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => (
         {event.imageUrl && (
           <Image
             className="w-full h-56 object-cover object-center"
-            src={
-              event.imageUrl ||
-              "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"
-            }
+            src={event.imageUrl || "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"}
             alt={event.name}
             loading="lazy"
             width={500}
@@ -53,9 +50,7 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => (
         </div>
       </div>
       <div className="p-6">
-        <h3 className="text-white text-xl font-semibold mb-4 truncate">
-          {event.name}
-        </h3>
+        <h3 className="text-white text-xl font-semibold mb-4 truncate">{event.name}</h3>
         <div className="flex items-center text-gray-300 mb-2">
           <Calendar className="h-5 w-5 mr-2 text-purple-400" />
           <span>{event.date}</span>
@@ -90,18 +85,13 @@ const Cards: React.FC = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/events`
-        );
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`);
         if (!response.ok) {
           throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
         const data: Event[] = await response.json();
 
-        const upcomingEvents = data.filter(
-          (event) =>
-            new Date(event.date) >= new Date() && event.approved === true
-        );
+        const upcomingEvents = data.filter((event) => new Date(event.date) >= new Date() && event.approved === true);
         setEvents(upcomingEvents);
       } catch (error) {
         setError("Error al cargar los eventos");
@@ -132,9 +122,7 @@ const Cards: React.FC = () => {
         ))}
       </section>
     ) : (
-      <div className="text-center text-gray-400">
-        No hay eventos disponibles
-      </div>
+      <div className="text-center text-gray-400">No hay eventos disponibles</div>
     );
   }, [events, loading, error]);
 
