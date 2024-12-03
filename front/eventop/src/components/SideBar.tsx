@@ -13,15 +13,14 @@ import {
   Calendar,
   HelpCircle,
 } from "lucide-react";
-import { useAdmin } from "@/context/admincontext";
+import { useUserContext } from "@/context/userContext";
 
 const SideBar = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isEventsOpen, setIsEventsOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
-  const { setIsAdmin } = useAdmin();
-
+  const { setRole } = useUserContext();
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
@@ -42,8 +41,8 @@ const SideBar = () => {
   };
 
   const handleSingOut = () => {
-    Cookies.remove("adminToken");
-    setIsAdmin(false);
+    Cookies.remove("accessToken");
+    setRole(null);
     router.push("/");
   };
 
@@ -81,8 +80,9 @@ const SideBar = () => {
               href="/admin"
               className="flex items-center space-x-2 text-xl font-semibold"
             >
-              
-              <span>Even<span className="text-purple-500">Top</span></span>
+              <span>
+                Even<span className="text-purple-500">Top</span>
+              </span>
             </Link>
             <button
               onClick={toggleSidebar}
@@ -150,7 +150,6 @@ const SideBar = () => {
                         Create Event
                       </Link>
                     </li>
-                    
                   </ul>
                 )}
               </li>

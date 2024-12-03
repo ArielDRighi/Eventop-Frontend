@@ -1,18 +1,15 @@
+import CreateEvent from "@/components/CreateEvent";
+// import SideBar from "@/components/SideBar";
+import React from "react";
 
-
-import CreateEvent from '@/components/CreateEvent'
-import SideBar from '@/components/SideBar'
-import React from 'react'
-
- const CreateEventPage  = () => {
+const CreateEventPage = () => {
   return (
-    <section className="flex flex-col gap-2 mt-10">
-        <SideBar/>
+    <section className="flex flex-col gap-2">
       <div>
-        <CreateEvent/>
+        <CreateEvent />
       </div>
-      </section>
-  )
-}
+    </section>
+  );
+};
 
-export default CreateEventPage 
+export default CreateEventPage;
