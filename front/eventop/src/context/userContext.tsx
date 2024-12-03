@@ -31,7 +31,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           setRole(role);
         }
         const userId = decodedToken?.sub;
-        console.log("Username:", userId);
+        console.log("UserId:", userId);
         if (userId) {
           setUserId(userId);
         }
