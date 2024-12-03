@@ -1,11 +1,35 @@
 "use client";
-import React, { useMemo } from "react";
-import { useGetAllEvents } from "@/helpers/events.helper";
-import { IEvents } from "../interfaces/IEventos";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
-const EventCard: React.FC<{ event: IEvents }> = ({ event }) => (
+interface Event {
+  eventId: number;
+  name: string;
+  date: string;
+  description: string;
+  imageUrl: string;
+  category_id: {
+    categoryId: number;
+    name: string;
+  };
+  location_id: {
+    locationId: number;
+    city: string;
+    state: string;
+    country: string;
+    address: string;
+  };
+  price: string;
+  quantityAvailable: number;
+  quantitySold: number;
+  quantityTotal: number;
+  approved: boolean;
+  currency: string;
+}
+
+const EventCard: React.FC<{ event: Event }> = ({ event }) => (
   <Link
     key={`event-${event.eventId}`}
     href={`/events/${event.eventId}`}
@@ -93,13 +117,33 @@ const EventCard: React.FC<{ event: IEvents }> = ({ event }) => (
 );
 
 const Cards: React.FC = () => {
-  const { result, loading, error } = useGetAllEvents() as {
-    result: IEvents[] | null;
-    loading: boolean;
-    error: string;
-  };
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  console.log(result)
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/events`
+        );
+        const data: Event[] = await response.json();
+
+        const upcomingEvents = data.filter(
+          (event) => new Date(event.date) >= new Date()
+        );
+        setEvents(upcomingEvents);
+      } catch (error) {
+        setError("Error al cargar los eventos");
+        console.error("Error fetching events:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchEvents();
+  }, []);
+
 
   const renderContent = useMemo(() => {
     if (loading)
@@ -111,18 +155,20 @@ const Cards: React.FC = () => {
           <div className="w-4 h-4 rounded-full animate-pulse bg-violet-500"></div>
         </div>
       );
-    if (error) return <div>Error al cargar los eventos</div>;
+    if (error) return <div>{error}</div>;
 
-    return result?.length ? (
+    return events.length ? (
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {result.map((event) => (
+        {events.map((event) => (
           <EventCard key={`event-${event.eventId}`} event={event} />
         ))}
       </section>
     ) : (
-      <div className="text-center text-gray-400">No hay eventos disponibles</div>
+      <div className="text-center text-gray-400">
+        No hay eventos disponibles
+      </div>
     );
-  }, [result, loading, error]);
+  }, [events, loading, error]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 py-20 px-4 sm:px-6 lg:px-8">
