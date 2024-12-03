@@ -25,7 +25,9 @@ interface IFormInput {
 const EditEventPage = () => {
   const params = useParams();
   const eventId = parseInt(params.eventId as string, 10);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>(
+    "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"
+  );
   const { event, loading, error } = useEventById(eventId);
   const { result: locations, loading: loadingLocations } = useGetAllLocations();
   const router = useRouter();
@@ -46,8 +48,10 @@ const EditEventPage = () => {
       setValue("price", event.price);
       setValue("location_id", event.location_id.locationId);
       setValue("category_id", event.category_id.categoryId);
+      if (event.imageUrl) {
+        setImagePreview(event.imageUrl);
+      }
     }
-    setImagePreview(event?.imageUrl || null);
   }, [event, setValue]);
 
 
@@ -104,12 +108,19 @@ const EditEventPage = () => {
             <div className="relative group text-center">
               <Image
                 className="h-full w-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
-                src={imagePreview|| "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"}
+                src={imagePreview}
                 alt={event.name}
                 width={500}
                 height={500}
+                priority
+                onError={() => {
+                  setImagePreview("https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg");
+                }}
               />
-              <EditEventImage changeImage={setImagePreview} id={event.eventId}/>
+              <EditEventImage 
+                changeImage={(newImage: string) => setImagePreview(newImage)} 
+                id={event.eventId}
+              />
             </div>
           </div>
           <div className="md:col-span-2 p-8 bg-gray-900 rounded-r-xl">
