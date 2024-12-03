@@ -1,14 +1,15 @@
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 import { IUserProfile } from "../interfaces/IUser";
 
-export const useGetAllUsers = async (token: string) => {
+export const useGetAllUsers = async (token: string, page:number, limit:number) => {
   try {
-    const response = await fetch(`${APIURL}/users`, {
+    const response = await fetch(`${APIURL}/users?page=${page}&limit=${limit}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
+    console.log(response);
     const res = await response.json();
     return res;
   } catch (error) {
@@ -123,3 +124,20 @@ export const createUserPassword = async (
   }
 };
 // Removed local useState declaration to avoid conflict with imported useState from React
+
+const useBanUser = async (token: string, id: string) => {
+  try {
+    const response = await fetch(`${APIURL}/users/${id}/ban`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await response.json();
+    return res;
+  } catch (error) {
+    console.log("Error en useBanUser:", error);
+    throw error;
+  }
+}
