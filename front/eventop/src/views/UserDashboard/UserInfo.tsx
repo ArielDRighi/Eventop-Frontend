@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useUserContext } from "@/context/userContext";
-import { IUserProfile } from "@/interfaces/IUser";
+import { IUserProfile, IUserEdit } from "@/interfaces/IUser";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 import {
@@ -50,7 +50,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setUserData((prevData) => ({ ...prevData, [name]: value }));
+    setUserData((prevData) => prevData ? ({ ...prevData, [name]: value }) : null);
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,7 +95,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
         setValue(key as keyof IUserProfile, value)
       );
       setUserData(user);
-      setImagePreview(user.imageUrl);
+      setImagePreview(user.imageUrl || null);
       setLoading(false);
     } else {
       setError(true);
@@ -103,7 +103,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
   }, [user, setValue]);
 
   const onSubmit = async (data: IUserProfile) => {
-    const dataToSend = {
+    const dataToSend: IUserEdit = {
       name: data.name,
       email: data.email,
       preferredLanguage: data.preferredLanguage || "",
@@ -297,7 +297,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
 
             {/* Formulario para Cambiar la Contraseña */}
             <div className="border-t border-gray-700 mt-8"></div>
-            <HandlePassword password={userData?.password || ""} id={userData?.userId} />
+            <HandlePassword password={userData?.password || ""} id={String(userData?.userId)} />
           </div>
         </div>
       </div>

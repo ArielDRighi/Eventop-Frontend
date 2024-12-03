@@ -1,4 +1,4 @@
-import { ICategory } from "./ICategoty";
+import { ICategory } from "./ICategory.ts";
 import { IEvents } from "./IEventos";
 import { ILocation } from "./ILocations";
 

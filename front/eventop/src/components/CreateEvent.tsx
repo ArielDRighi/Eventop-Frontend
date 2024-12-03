@@ -58,7 +58,7 @@ const EventForm: React.FC = () => {
     }
   };
 
-  const validateDate = (value) => {
+  const validateDate = (value: string) => {
     const selectedDate = new Date(value);
     const currentDate = new Date();
     return selectedDate > currentDate || "La fecha del evento debe ser posterior a la fecha actual";

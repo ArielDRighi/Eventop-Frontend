@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useGetAllCategories, useCreateCategory, useDeleteCategory } from "@/helpers/categories.helpers.ts";
+import { useGetAllCategories, useCreateCategory, useDeleteCategory } from "@/helpers/categories.helpers";
 import { ICategory } from "@/interfaces/ICategory";
 import Cookies from "js-cookie";
 
@@ -18,14 +18,16 @@ const CategoriesPage = () => {
     }])
 
     useEffect(() => {  
-        setCategory(result);
+        if (result) {
+            setCategory(result);
+        }
      }, [result]);
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
     };
 
-    const handleNewCategoryChange = (e) => {
+    const handleNewCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewCategory(e.target.value);
     };
 
@@ -63,7 +65,7 @@ const CategoriesPage = () => {
     }
 
     if (error) {
-        return <div>Error: {error.message}</div>;
+        return <div>Error: {error}</div>;
     }
 
     return (

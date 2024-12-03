@@ -4,9 +4,13 @@ import { useChangeImage } from "@/helpers/events.helper";
 import Cookies from "js-cookie";
 
 interface EditEventImageProps {
-  changeImage: React.Dispatch<React.SetStateAction<string>>;
+
+  changeImage: React.Dispatch<React.SetStateAction<string | null>>;
+
   id: number;
+
 }
+
 
 const EditEventImage: React.FC<EditEventImageProps> = ({ changeImage, id }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);

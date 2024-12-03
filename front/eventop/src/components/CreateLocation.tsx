@@ -2,16 +2,18 @@
 
 // Formulario para crear una nueva locación
 import React, { useState } from "react";
-import { ILocation } from "@/interfaces/ILocations";
+import { ILocationCreate, ILocation } from "@/interfaces/ILocations";
 import { useCreateLocation } from "@/helpers/location.helper";
 import Cookies from "js-cookie";
 
 interface CreateLocationProps {
+
   setLocations: React.Dispatch<React.SetStateAction<ILocation[]>>;
+
 }
 
 const CreateLocation: React.FC<CreateLocationProps> = ({ setLocations }) => {
-  const [location, setLocation] = useState<ILocation>({
+  const [location, setLocation] = useState<ILocationCreate>({
     city: "",
     state: "",
     country: "",

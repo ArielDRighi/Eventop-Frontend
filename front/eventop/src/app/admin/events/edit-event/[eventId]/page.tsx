@@ -20,6 +20,9 @@ interface IFormInput {
   price: number;
   location_id: number;
   category_id: number;
+  currency: string;
+  image: string;
+  quantityAvailable: number;
 }
 
 const EditEventPage = () => {
