@@ -107,7 +107,7 @@ const NavBar = () => {
             <Link href={"/events"}>Encuentra Eventos</Link>
           </li>
           <li>
-            <Link href={"/ayuda"}>Ayuda</Link>
+            <Link href={"/contact"}>Ayuda</Link>
           </li>
           {role == "admin" && (
             <li>
