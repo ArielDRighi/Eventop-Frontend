@@ -2,6 +2,7 @@
   "extends": ["next/core-web-vitals", "next/typescript"],
   "rules": {
     "no-unexpected-multiline": "off",
-    "@typescript-eslint/no-explicit-any": "off" // Desactiva el error de any
+    "@typescript-eslint/no-explicit-any": "off", // Desactiva el error de any
+    "@typescript-eslint/no-namespace": "off"
   }
 }

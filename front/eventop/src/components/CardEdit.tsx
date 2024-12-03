@@ -1,9 +1,9 @@
-import { IEvents } from "@/interfaces/IEventos";
+import { IEvent } from "@/interfaces/IEventos";
 import { Calendar, DollarSign, Edit, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-const CardEdit: React.FC<{ event: IEvents }> = ({ event }) => (
+const CardEdit: React.FC<{ event: IEvent }> = ({ event }) => (
   <div
     key={`event-${event.eventId}`}
     className="bg-gray-900 bg-opacity-50 rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl flex flex-col"

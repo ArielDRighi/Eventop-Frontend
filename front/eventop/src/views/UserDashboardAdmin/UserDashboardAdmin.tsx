@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { IUser } from "@/interfaces/IUser";
 import Cookies from "js-cookie";
-import { useGetAllUsers } from "@/helpers/users.helpers";
+import { getAllUsers } from "@/helpers/users.helpers";
 import InfoUsersAdmin from "@/components/InfoUsersAdmin";
 
 const Dashboard = () => {
@@ -15,11 +15,11 @@ const Dashboard = () => {
     const fetchUsers = async () => {
       setLoading(true);
       const token = Cookies.get("accessToken");
-      
+
       if (token) {
         try {
           const parsedToken = JSON.parse(token);
-          const fetchedUsers = await useGetAllUsers(parsedToken, page, limit);
+          const fetchedUsers = await getAllUsers(parsedToken, page, limit);
           setUsers((prevUsers) => [...prevUsers, ...fetchedUsers]);
         } catch (error) {
           console.error("Error fetching users:", error);

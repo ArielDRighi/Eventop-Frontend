@@ -90,7 +90,9 @@ const EditEventPage = () => {
 
   if (!event) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center text-white">Evento no encontrado.</div>
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center text-white">
+        Evento no encontrado.
+      </div>
     );
   }
 
@@ -105,24 +107,38 @@ const EditEventPage = () => {
             <div className="relative group text-center">
               <Image
                 className="h-full w-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
-                src={imagePreview || "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"}
+                src={
+                  imagePreview ||
+                  "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"
+                }
                 alt={event.name}
                 width={500}
                 height={500}
                 priority
                 onError={() => {
-                  setImagePreview("https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg");
+                  setImagePreview(
+                    "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"
+                  );
                 }}
               />
-              <EditEventImage changeImage={(newImage: string) => setImagePreview(newImage)} id={event.eventId} />
-              <EditEventImage changeImage={setImagePreview} id={event.eventId} />
+              <EditEventImage
+                changeImage={setImagePreview}
+                id={event.eventId}
+              />
+              <EditEventImage
+                changeImage={setImagePreview}
+                id={event.eventId}
+              />
             </div>
           </div>
           <div className="md:col-span-2 p-8 bg-gray-900 rounded-r-xl">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="col-span-1">
-                  <label htmlFor="name" className="block text-lg font-semibold text-gray-50 mb-2">
+                  <label
+                    htmlFor="name"
+                    className="block text-lg font-semibold text-gray-50 mb-2"
+                  >
                     Nombre
                   </label>
                   <input
@@ -132,11 +148,18 @@ const EditEventPage = () => {
                     })}
                     className="input h-[52px] text-[15px] text-gray-50 w-full bg-gray-900 px-3 py-1 rounded-lg border border-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-150 ease-in-out"
                   />
-                  {errors.name && <span className="text-red-400 text-sm mt-1 block">{errors.name.message}</span>}
+                  {errors.name && (
+                    <span className="text-red-400 text-sm mt-1 block">
+                      {errors.name.message}
+                    </span>
+                  )}
                 </div>
 
                 <div className="col-span-1">
-                  <label htmlFor="date" className="block text-lg font-semibold text-gray-300 mb-2">
+                  <label
+                    htmlFor="date"
+                    className="block text-lg font-semibold text-gray-300 mb-2"
+                  >
                     Fecha
                   </label>
                   <input
@@ -147,11 +170,18 @@ const EditEventPage = () => {
                     })}
                     className="input h-[52px] text-[15px] text-white/60 w-full bg-gray-900 text-gray-50 px-3 py-1 rounded-lg border border-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-150 ease-in-out"
                   />
-                  {errors.date && <span className="text-red-400 text-sm mt-1 block">{errors.date.message}</span>}
+                  {errors.date && (
+                    <span className="text-red-400 text-sm mt-1 block">
+                      {errors.date.message}
+                    </span>
+                  )}
                 </div>
 
                 <div className="col-span-1 lg:col-span-2">
-                  <label htmlFor="description" className="block text-lg font-semibold text-gray-300 mb-2">
+                  <label
+                    htmlFor="description"
+                    className="block text-lg font-semibold text-gray-300 mb-2"
+                  >
                     Descripción
                   </label>
                   <textarea
@@ -163,12 +193,17 @@ const EditEventPage = () => {
                     rows={4}
                   />
                   {errors.description && (
-                    <span className="text-red-400 text-sm mt-1 block">{errors.description.message}</span>
+                    <span className="text-red-400 text-sm mt-1 block">
+                      {errors.description.message}
+                    </span>
                   )}
                 </div>
 
                 <div className="col-span-1">
-                  <label htmlFor="price" className="block text-lg font-semibold text-gray-300 mb-2">
+                  <label
+                    htmlFor="price"
+                    className="block text-lg font-semibold text-gray-300 mb-2"
+                  >
                     Precio
                   </label>
                   <input
@@ -181,15 +216,24 @@ const EditEventPage = () => {
                     })}
                     className="input h-[52px] text-[15px] text-white/60 w-full bg-gray-900 text-gray-50 px-3 py-1 rounded-lg border border-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-150 ease-in-out"
                   />
-                  {errors.price && <span className="text-red-400 text-sm mt-1 block">{errors.price.message}</span>}
+                  {errors.price && (
+                    <span className="text-red-400 text-sm mt-1 block">
+                      {errors.price.message}
+                    </span>
+                  )}
                 </div>
 
                 <div className="col-span-1">
-                  <label htmlFor="location_id" className="block text-lg font-semibold text-gray-300 mb-2">
+                  <label
+                    htmlFor="location_id"
+                    className="block text-lg font-semibold text-gray-300 mb-2"
+                  >
                     Ubicación
                   </label>
                   {loadingLocations ? (
-                    <p className="text-gray-400 italic">Cargando ubicaciones...</p>
+                    <p className="text-gray-400 italic">
+                      Cargando ubicaciones...
+                    </p>
                   ) : (
                     <select
                       id="location_id"
@@ -202,19 +246,28 @@ const EditEventPage = () => {
                       <option value="">Selecciona una ubicación</option>
                       {locations !== null &&
                         locations.map((location: ILocation) => (
-                          <option key={location.locationId} value={location.locationId}>
-                            {location.city}, {location.state}, {location.country}
+                          <option
+                            key={location.locationId}
+                            value={location.locationId}
+                          >
+                            {location.city}, {location.state},{" "}
+                            {location.country}
                           </option>
                         ))}
                     </select>
                   )}
                   {errors.location_id && (
-                    <span className="text-red-400 text-sm mt-1 block">{errors.location_id.message}</span>
+                    <span className="text-red-400 text-sm mt-1 block">
+                      {errors.location_id.message}
+                    </span>
                   )}
                 </div>
 
                 <div className="col-span-1">
-                  <label htmlFor="category_id" className="block text-lg font-semibold text-gray-300 mb-2">
+                  <label
+                    htmlFor="category_id"
+                    className="block text-lg font-semibold text-gray-300 mb-2"
+                  >
                     Categoría
                   </label>
                   <select
@@ -233,7 +286,9 @@ const EditEventPage = () => {
                     <option value={5}>Gastronomía</option>
                   </select>
                   {errors.category_id && (
-                    <span className="text-red-400 text-sm mt-1 block">{errors.category_id.message}</span>
+                    <span className="text-red-400 text-sm mt-1 block">
+                      {errors.category_id.message}
+                    </span>
                   )}
                 </div>
               </div>

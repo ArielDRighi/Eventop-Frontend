@@ -1,4 +1,5 @@
 "use client";
+import React, { useEffect, useState } from "react";
 
 declare module "react" {
   namespace JSX {
@@ -7,8 +8,6 @@ declare module "react" {
     }
   }
 }
-
-import React, { useEffect, useState } from "react";
 
 export default function EnhancedDialogflowChatbot() {
   const [isOpen, setIsOpen] = useState(false);

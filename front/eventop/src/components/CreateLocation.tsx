@@ -8,9 +8,7 @@ import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 
 interface CreateLocationProps {
-
   setLocations: React.Dispatch<React.SetStateAction<ILocation[]>>;
-
 }
 
 const CreateLocation: React.FC<CreateLocationProps> = ({ setLocations }) => {
@@ -30,10 +28,9 @@ const CreateLocation: React.FC<CreateLocationProps> = ({ setLocations }) => {
       ...prevLocation,
       [name]: value,
     }));
-    if (error) resetError()
   };
 
-  const handleSubmit = async ( e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const token = JSON.parse(Cookies.get("accessToken") || "null");
@@ -41,7 +38,7 @@ const CreateLocation: React.FC<CreateLocationProps> = ({ setLocations }) => {
       const res = await createLocation(location, token);
       console.log(res);
       if (res.city) {
-        Swal.fire({ 
+        Swal.fire({
           title: "Success",
           text: "Location created successfully",
           icon: "success",

@@ -1,6 +1,4 @@
-
-
-import { ICategory } from "@/interfaces/ICategoty";
+import { ICategory } from "@/interfaces/ICategory";
 import { ILocation } from "@/interfaces/ILocations";
 import { Search } from "lucide-react";
 
@@ -49,14 +47,18 @@ export const EventFilters: React.FC<EventFiltersProps> = ({
             className="w-full pl-4 pr-10 py-3 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-white transition duration-300"
             value={index === 0 ? selectedCategory : selectedLocation}
             onChange={(e) =>
-              index === 0 ? setSelectedCategory(e.target.value) : setSelectedLocation(e.target.value)
+              index === 0
+                ? setSelectedCategory(e.target.value)
+                : setSelectedLocation(e.target.value)
             }
           >
             <option value="">{`Todas las ${label.toLowerCase()}s`}</option>
             {(index === 0 ? categories : locations).map((item: any) => (
               <option
                 key={item[index === 0 ? "categoryId" : "locationId"]}
-                value={item[index === 0 ? "categoryId" : "locationId"].toString()}
+                value={item[
+                  index === 0 ? "categoryId" : "locationId"
+                ].toString()}
               >
                 {index === 0 ? item.name : item.city}
               </option>

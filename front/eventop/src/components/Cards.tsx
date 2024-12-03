@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Calendar, MapPin, DollarSign, Users } from "lucide-react";
 
 interface Event {
   eventId: number;
@@ -30,19 +29,27 @@ interface Event {
 }
 
 const EventCard: React.FC<{ event: Event }> = ({ event }) => (
-  <Link key={`event-${event.eventId}`} href={`/events/${event.eventId}`} className="block h-full">
+  <Link
+    key={`event-${event.eventId}`}
+    href={`/events/${event.eventId}`}
+    className="block h-full"
+  >
     <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out h-full flex flex-col">
       <div className="relative h-48 w-full group">
         <Image
           className="w-full h-full object-cover object-center"
-          src={event.imageUrl || "https://i.pinimg.com/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"}
+          src={
+            event.imageUrl ||
+            "https://i.pinimg.com/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"
+          }
           alt={event.name}
           loading="lazy"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
-            target.src = "https://i.pinimg.com/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg";
+            target.src =
+              "https://i.pinimg.com/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg";
           }}
         />
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out">
@@ -52,7 +59,9 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => (
         </div>
       </div>
       <div className="p-4 flex flex-col h-[200px]">
-        <h3 className="text-white text-xl font-semibold mb-3 line-clamp-2">{event.name}</h3>
+        <h3 className="text-white text-xl font-semibold mb-3 line-clamp-2">
+          {event.name}
+        </h3>
         <div className="flex-grow flex flex-col justify-between">
           <div className="space-y-3">
             <p className="text-gray-400 font-semibold flex items-center">
@@ -115,13 +124,18 @@ const Cards: React.FC = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/events`
+        );
         if (!response.ok) {
           throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
         const data: Event[] = await response.json();
 
-        const upcomingEvents = data.filter((event) => new Date(event.date) >= new Date() && event.approved === true);
+        const upcomingEvents = data.filter(
+          (event) =>
+            new Date(event.date) >= new Date() && event.approved === true
+        );
         setEvents(upcomingEvents);
       } catch (error) {
         setError("Error al cargar los eventos");
@@ -152,7 +166,9 @@ const Cards: React.FC = () => {
         ))}
       </div>
     ) : (
-      <div className="text-center text-gray-400">No hay eventos disponibles</div>
+      <div className="text-center text-gray-400">
+        No hay eventos disponibles
+      </div>
     );
   }, [events, loading, error]);
 

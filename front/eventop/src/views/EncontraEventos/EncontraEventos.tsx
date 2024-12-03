@@ -2,8 +2,8 @@
 
 import { useGetAllCategories } from "@/helpers/categories.helpers";
 import { useGetAllLocations } from "@/helpers/location.helper";
-import { ICategory } from "@/interfaces/ICategoty";
-import { IEvents } from "@/interfaces/IEventos";
+import { ICategory } from "@/interfaces/ICategory";
+import { IEvent } from "@/interfaces/IEventos";
 import { ILocation } from "@/interfaces/ILocations";
 import { motion } from "framer-motion";
 import { Search, Calendar, MapPin, DollarSign } from "lucide-react";
@@ -17,8 +17,8 @@ export const EncontraEventos = () => {
   const [priceFilter, setPriceFilter] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedLocation, setSelectedLocation] = useState<string>("");
-  const [events, setEvents] = useState<IEvents[]>([]);
-  const [filteredEvents, setFilteredEvents] = useState<IEvents[]>([]);
+  const [events, setEvents] = useState<IEvent[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<IEvent[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [locations, setLocations] = useState<ILocation[]>([]);
@@ -39,25 +39,32 @@ export const EncontraEventos = () => {
       }
       throw new Error("Error al obtener los eventos.");
     } catch (error) {
-      return [];
+      return error;
     }
   };
 
-  const getNearbyEvents = async (latitude: number, longitude: number, radius: number) => {
+  const getNearbyEvents = async (
+    latitude: number,
+    longitude: number,
+    radius: number
+  ) => {
     try {
-      const res = await fetch(`${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`);
+      const res = await fetch(
+        `${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`
+      );
       if (res.ok) {
         const data = await res.json();
         return data;
       }
       throw new Error("Error al obtener los eventos cercanos.");
     } catch (error) {
-      return [];
+      return error;
     }
   };
 
   const { result: locationsData, error: locationsError } = useGetAllLocations();
-  const { result: categoriesData, error: categoriesError } = useGetAllCategories();
+  const { result: categoriesData, error: categoriesError } =
+    useGetAllCategories();
 
   useEffect(() => {
     const loadData = async () => {
@@ -88,28 +95,49 @@ export const EncontraEventos = () => {
   }, [locationsData, categoriesData, locationsError, categoriesError]);
 
   useEffect(() => {
-    const filtered = events.filter((evento: IEvents) => {
+    const filtered = events.filter((evento: IEvent) => {
       const matchesCategory =
-        selectedCategory === "" || (evento.category_id && evento.category_id.categoryId === parseInt(selectedCategory));
+        selectedCategory === "" ||
+        (evento.category_id &&
+          evento.category_id.categoryId === parseInt(selectedCategory));
       const matchesLocation =
-        selectedLocation === "" || (evento.location_id && evento.location_id.locationId === parseInt(selectedLocation));
-      const matchesSearch = searchTerm === "" || evento.name.toLowerCase().includes(searchTerm.toLowerCase());
+        selectedLocation === "" ||
+        (evento.location_id &&
+          evento.location_id.locationId === parseInt(selectedLocation));
+      const matchesSearch =
+        searchTerm === "" ||
+        evento.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesRadius = radius === 10 || evento.distance <= radius;
+      const matchesRadius = radius === 10;
 
       const price = evento.price;
       const priceFilterNumber = priceFilter === "0" ? 0 : parseInt(priceFilter);
 
       const matchesPrice =
         priceFilter === "" ||
-        (priceFilter === "0" && price == 0) ||
-        (priceFilter !== "0" && price > 0 && price <= priceFilterNumber);
+        (priceFilter === "0" && price == "0") ||
+        (priceFilter !== "0" &&
+          price > "0" &&
+          Number(price) <= priceFilterNumber);
 
-      return matchesCategory && matchesLocation && matchesSearch && matchesPrice && matchesRadius;
+      return (
+        matchesCategory &&
+        matchesLocation &&
+        matchesSearch &&
+        matchesPrice &&
+        matchesRadius
+      );
     });
 
     setFilteredEvents(filtered);
-  }, [selectedCategory, selectedLocation, searchTerm, events, priceFilter]);
+  }, [
+    selectedCategory,
+    selectedLocation,
+    searchTerm,
+    events,
+    priceFilter,
+    radius,
+  ]);
 
   const handleNearbyEvents = (selectedRadius: number) => {
     setIsOpen(false);
@@ -117,7 +145,11 @@ export const EncontraEventos = () => {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
-          const nearbyEvents = await getNearbyEvents(latitude, longitude, selectedRadius);
+          const nearbyEvents = await getNearbyEvents(
+            latitude,
+            longitude,
+            selectedRadius
+          );
           setFilteredEvents(nearbyEvents);
         },
         (error) => {
@@ -131,7 +163,10 @@ export const EncontraEventos = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -149,12 +184,15 @@ export const EncontraEventos = () => {
               Encuentra Eventos
             </h1>
             <p className="text-md text-gray-300 max-w-3xl mx-auto">
-              Descubre los mejores eventos en tu ciudad y vive experiencias inolvidables
+              Descubre los mejores eventos en tu ciudad y vive experiencias
+              inolvidables
             </p>
           </div>
 
           <div className="bg-gray-900 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl p-8 mb-10 relative z-[40]">
-            <h2 className="text-3xl font-bold mb-6 text-center">Filtrar Eventos</h2>
+            <h2 className="text-3xl font-bold mb-6 text-center">
+              Filtrar Eventos
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 relative z-[50]">
               <div className="relative">
                 <input
@@ -173,14 +211,18 @@ export const EncontraEventos = () => {
                     className="w-full pl-4 pr-10 py-3 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-white transition duration-300"
                     value={index === 0 ? selectedCategory : selectedLocation}
                     onChange={(e) =>
-                      index === 0 ? setSelectedCategory(e.target.value) : setSelectedLocation(e.target.value)
+                      index === 0
+                        ? setSelectedCategory(e.target.value)
+                        : setSelectedLocation(e.target.value)
                     }
                   >
                     <option value="">{`Todas las ${label.toLowerCase()}s`}</option>
                     {(index === 0 ? categories : locations).map((item: any) => (
                       <option
                         key={item[index === 0 ? "categoryId" : "locationId"]}
-                        value={item[index === 0 ? "categoryId" : "locationId"].toString()}
+                        value={item[
+                          index === 0 ? "categoryId" : "locationId"
+                        ].toString()}
                       >
                         {index === 0 ? item.name : item.city}
                       </option>
@@ -209,9 +251,13 @@ export const EncontraEventos = () => {
                   onClick={toggleDropdown}
                   className="w-full pl-4 pr-10 py-3 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-white transition duration-300 flex justify-between items-center"
                 >
-                  {radius === 10 ? "Eventos cercanos " : `Eventos en ${radius} km`}
+                  {radius === 10
+                    ? "Eventos cercanos "
+                    : `Eventos en ${radius} km`}
                   <svg
-                    className={`fill-current h-4 w-4 transform ${isOpen ? "rotate-180" : ""} transition-transform`}
+                    className={`fill-current h-4 w-4 transform ${
+                      isOpen ? "rotate-180" : ""
+                    } transition-transform`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                   >
@@ -245,7 +291,7 @@ export const EncontraEventos = () => {
 
           <div className="grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-[30] ">
             {filteredEvents &&
-              filteredEvents.map((event: IEvents) => {
+              filteredEvents.map((event: IEvent) => {
                 if (!event.location_id) {
                   return null;
                 }
@@ -278,7 +324,9 @@ export const EncontraEventos = () => {
                       </div>
                     </div>
                     <div className="p-6">
-                      <h3 className="text-2xl font-bold mb-3 line-clamp-2">{event.name}</h3>
+                      <h3 className="text-2xl font-bold mb-3 line-clamp-2">
+                        {event.name}
+                      </h3>
                       <div className="flex items-center text-gray-300 mb-2">
                         <Calendar className="h-5 w-5 mr-2 text-purple-400" />
                         <span>{event.date}</span>
@@ -298,7 +346,9 @@ export const EncontraEventos = () => {
 
             {filteredEvents.length === 0 && (
               <div className="flex flex-col items-center justify-center space-y-5 p-8 bg-gray-900 rounded-lg shadow-inner">
-                <p className="text-xl font-semibold text-gray-50">No se encontraron eventos</p>
+                <p className="text-xl font-semibold text-gray-50">
+                  No se encontraron eventos
+                </p>
                 <button
                   onClick={() => {
                     setSearchTerm("");
@@ -316,7 +366,12 @@ export const EncontraEventos = () => {
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    ></path>
                   </svg>
                   Limpiar filtros
                 </button>
