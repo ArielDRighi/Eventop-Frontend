@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { ILocation } from "@/interfaces/ILocations";
 import { useCreateLocation } from "@/helpers/location.helper";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 
 interface CreateLocationProps {
   setLocations: React.Dispatch<React.SetStateAction<ILocation[]>>;
@@ -27,16 +28,24 @@ const CreateLocation: React.FC<CreateLocationProps> = ({ setLocations }) => {
       ...prevLocation,
       [name]: value,
     }));
+    if (error) resetError()
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async ( e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const token = JSON.parse(Cookies.get("accessToken") || "null");
-    console.log(location);
     try {
       const res = await createLocation(location, token);
-      if (res) {
+      console.log(res);
+      if (res.city) {
+        Swal.fire({ 
+          title: "Success",
+          text: "Location created successfully",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         setLocations((prevLocations) => [...prevLocations, res]);
         setLocation({
           city: "",
@@ -61,7 +70,7 @@ const CreateLocation: React.FC<CreateLocationProps> = ({ setLocations }) => {
       <h2 className="text-3xl font-bold text-purple-500 text-center mb-8">
         Crear Ubicación
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-300">
             Ciudad
@@ -137,6 +146,7 @@ const CreateLocation: React.FC<CreateLocationProps> = ({ setLocations }) => {
       </div>
       <button
         type="submit"
+        disabled={loading}
         className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition duration-300"
       >
         {loading ? "Loading..." : "Crear Ubicación"}

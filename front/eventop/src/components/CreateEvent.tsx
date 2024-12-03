@@ -16,6 +16,7 @@ interface IFormInput extends Omit<IEventsCreate, "date" | "image"> {
 
 
 const EventForm: React.FC = () => {
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
   const {
     register,
     handleSubmit,
@@ -43,7 +44,7 @@ const EventForm: React.FC = () => {
       date: new Date(data.date), // Convertir `date` a una instancia de `Date`
       image: image ? image : "", // Incluir la propiedad `image`
     };
-
+    setLoadingSubmit(true);
     try {
       console.log(formattedData);
       console.log(image);
@@ -55,7 +56,10 @@ const EventForm: React.FC = () => {
       // router.push("/admin/events");
     } catch (error) {
       console.error("Error creando el evento:", error);
+    } finally { 
+      setLoadingSubmit(false);
     }
+     
   };
 
   const validateDate = (value) => {
@@ -356,9 +360,10 @@ const EventForm: React.FC = () => {
 
   <button
     type="submit"
+    disabled={loadingSubmit}
     className="group group-hover:before:duration-500 group-hover:after:duration-500 after:duration-500 hover:border-purple-600 hover:before:[box-shadow:_20px_20px_20px_30px_#a21caf] duration-500 before:duration-500 hover:duration-500 hover:after:-right-8 hover:before:right-12 hover:before:-bottom-8 hover:before:blur origin-left hover:decoration-2 hover:text-purple-300 relative bg-gray-900 h-16 w-64 border text-left p-4 text-purple-300 text-base font-bold rounded-lg overflow-hidden before:absolute before:w-12 before:h-12 before:content-[''] before:right-1 before:top-1 before:z-10 before:bg-violet-500 before:rounded-full before:blur-lg after:absolute after:z-10 after:w-20 after:h-20 after:content-[''] after:bg-purple-600 after:right-8 after:top-3 after:rounded-full after:blur-lg"
   >
-    Crear Evento
+     {loadingSubmit ? "Creando..." : "Crear Evento"}
   </button>
 </form>
     </div>

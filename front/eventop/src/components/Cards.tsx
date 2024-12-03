@@ -34,20 +34,11 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => (
   <Link href={`/events/${event.eventId}`} className="block">
     <div className="bg-gray-900 rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
       <div className="relative group">
-        {event.imageUrl ? (
+        {event.imageUrl && (
           <Image
             className="w-full h-56 object-cover object-center"
-            src={event.imageUrl}
+            src={event.imageUrl || "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"}
             alt={event.name}
-            loading="lazy"
-            width={500}
-            height={224}
-          />
-        ) : (
-          <Image
-            className="w-full h-56 object-cover object-center"
-            src="/images/default-event.jpg"
-            alt="Imagen predeterminada"
             loading="lazy"
             width={500}
             height={224}
@@ -60,9 +51,7 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => (
         </div>
       </div>
       <div className="p-6">
-        <h3 className="text-white text-xl font-semibold mb-4 truncate">
-          {event.name}
-        </h3>
+        <h3 className="text-white text-xl font-semibold mb-4 truncate">{event.name}</h3>
         <div className="flex items-center text-gray-300 mb-2">
           <Calendar className="h-5 w-5 mr-2 text-purple-400" />
           <span>{event.date}</span>
@@ -102,9 +91,12 @@ const Cards: React.FC = () => {
           throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
         const data: Event[] = await response.json();
-        setEvents(data);
-      } catch (error: any) {
-        setError(error.message);
+
+        const upcomingEvents = data.filter((event) => new Date(event.date) >= new Date() && event.approved === true);
+        setEvents(upcomingEvents);
+      } catch (error) {
+        setError("Error al cargar los eventos");
+        console.error("Error fetching events:", error);
       } finally {
         setLoading(false);
       }

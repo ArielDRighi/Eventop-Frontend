@@ -13,7 +13,9 @@ const UserDashboard = () => {
   const router = useRouter();
   const [userData, setUserData] = useState<IUserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { userName, role } = useUserContext();
+  const { userId, role } = useUserContext();
+  const token = Cookies.get(("accessToken") || "null");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!token) {
