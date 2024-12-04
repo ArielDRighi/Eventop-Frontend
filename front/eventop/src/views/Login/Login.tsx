@@ -17,10 +17,12 @@ export const Login = () => {
     email: "",
     password: "",
   });
-  const [touched, setTouched] = useState<{ email: boolean; password: boolean }>({
-    email: false,
-    password: false,
-  });
+  const [touched, setTouched] = useState<{ email: boolean; password: boolean }>(
+    {
+      email: false,
+      password: false,
+    }
+  );
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -53,7 +55,6 @@ export const Login = () => {
   useEffect(() => {
     const URLparams = new URLSearchParams(window.location.search);
     const token = URLparams.get("token");
-    console.log(token);
     if (token) {
       console.log(`Token: ${token}`);
       Cookies.set("accessToken", JSON.stringify(token));
@@ -63,8 +64,11 @@ export const Login = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log("userData", userData);
+
     const errors = validateLoginForm(userData);
     setErrors(errors);
+    console.log("errors", errors);
 
     // Comprobación si hay errores, incluyendo un mensaje si los campos están vacíos
     if (Object.values(errors).some((error) => error !== "")) {
@@ -75,7 +79,8 @@ export const Login = () => {
         customClass: {
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
-          confirmButton: "bg-[#D9534F] hover:bg-[#C9302C] text-white font-bold py-2 px-4 rounded",
+          confirmButton:
+            "bg-[#D9534F] hover:bg-[#C9302C] text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
       });
@@ -96,7 +101,8 @@ export const Login = () => {
         customClass: {
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
-          confirmButton: "bg-[#164E78] hover:bg-[#169978] text-white font-bold py-2 px-4 rounded",
+          confirmButton:
+            "bg-[#164E78] hover:bg-[#169978] text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
       }).then((result) => {
@@ -114,7 +120,8 @@ export const Login = () => {
         customClass: {
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
-          confirmButton: "bg-[#D9534F] hover:bg-[#C9302C] text-white font-bold py-2 px-4 rounded",
+          confirmButton:
+            "bg-[#D9534F] hover:bg-[#C9302C] text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
       });
@@ -131,7 +138,9 @@ export const Login = () => {
       <div className="relative flex flex-col m-6 space-y-8 bg-gray-900 shadow-2xl rounded-2xl md:flex-row md:space-y-0">
         <div className="flex flex-col justify-center p-8 md:p-12">
           <div className="flex flex-col p-6">
-            <h3 className="text-xl font-semibold leading-6 tracking-tighter text-slate-200">Iniciar Sesion</h3>
+            <h3 className="text-xl font-semibold leading-6 tracking-tighter text-slate-200">
+              Iniciar Sesion
+            </h3>
             <p className="mt-1.5 text-sm font-medium text-white/50">
               Bienvenido de nuevo, ingresa tus credenciales para continuar.
             </p>
@@ -155,7 +164,11 @@ export const Login = () => {
                   placeholder="Correo electrónico"
                   className="block w-full border-0 bg-transparent p-0 text-sm text-white placeholder:text-muted-foreground/90 focus:outline-none focus:ring-0 sm:leading-7 text-foreground"
                 />
-                {touched.email && error.email && <span className="text-red-500 text-sm block">{error.email}</span>}
+                {touched.email && error.email && (
+                  <span className="text-red-500 text-sm block">
+                    {error.email}
+                  </span>
+                )}
               </div>
               <div className="mt-4 group relative rounded-lg border focus-within:border-purple-200 px-3 pb-1.5 pt-2.5 duration-200 focus-within:ring focus-within:ring-sky-300/30">
                 <div className="flex justify-between">
@@ -174,23 +187,34 @@ export const Login = () => {
                     placeholder="Contraseña"
                     className="block w-full border-0 bg-transparent p-0 text-sm placeholder:text-muted-foreground/90 focus:outline-none focus:ring-0 sm:leading-7 text-foreground text-white"
                   />
-                  <button type="button" onClick={toggleShowPassword} className="ml-2 text-sm text-gray-500">
+                  <button
+                    type="button"
+                    onClick={toggleShowPassword}
+                    className="ml-2 text-sm text-gray-500"
+                  >
                     {showPassword ? <Eye /> : <EyeClosed />}
                   </button>
                 </div>
                 {touched.password && error.password && (
-                  <span className="text-red-500 text-sm block">{error.password}</span>
+                  <span className="text-red-500 text-sm block">
+                    {error.password}
+                  </span>
                 )}
               </div>
 
               <div className="flex justify-between w-full py-4 ">
                 <div>
-                  <input type="checkbox" name="remember" id="remember" className="mr-2 rounded-lg" />
+                  <input
+                    type="checkbox"
+                    name="remember"
+                    id="remember"
+                    className="mr-2 rounded-lg"
+                  />
                   <label htmlFor="remember" className="text-sm text-white py-2">
                     Recordarme
                   </label>
                 </div>
-                <a href="#" className="text-sm text-white">
+                <a href="/" className="text-sm text-white">
                   Olvidaste tu contraseña?
                 </a>
               </div>
@@ -212,7 +236,8 @@ export const Login = () => {
                 onClick={handleGoogleLogin}
                 className="mx-auto w-full rounded-lg bg-slate-200 flex flex-row items-center justify-center gap-x-2 px-4 py-3 text-sm duration-200 hover:bg-slate-300"
               >
-                Inicia Sesion con Google <Image src="google.svg" alt="google" width={20} height={20} />
+                Inicia Sesion con Google{" "}
+                <Image src="google.svg" alt="google" width={20} height={20} />
               </button>
             </div>
 
