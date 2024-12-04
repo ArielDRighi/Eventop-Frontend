@@ -224,7 +224,9 @@ function Register() {
 
         <div className="relative">
           <Image
-            src="foto-registro.jpg"
+            src="/foto-registro.jpg"
+            width={300}
+            height={300}
             alt="login"
             className="hidden md:flex rounded-r-2xl w-[400px] h-full object-cover"
           />
