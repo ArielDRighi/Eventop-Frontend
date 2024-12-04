@@ -7,6 +7,7 @@ import { login } from "@/helpers/auth.helper";
 import Cookies from "js-cookie";
 import { Eye, EyeClosed } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export const Login = () => {
   const [userData, setUserData] = useState<ILoginProps>({
@@ -218,9 +219,9 @@ export const Login = () => {
 
             <p className="text-center mt-4 text-white">
               No tienes una cuenta?{" "}
-              <a href="/register" className="text-purple-600">
+              <Link href="/register" className="text-purple-600">
                 Registrate
-              </a>
+              </Link>
             </p>
           </div>
         </div>

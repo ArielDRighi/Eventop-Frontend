@@ -97,7 +97,7 @@ const SideBarClient = () => {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/cliente"
+                  href="/client"
                   target="_blank"
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
@@ -124,7 +124,7 @@ const SideBarClient = () => {
                   <ul className="mt-2 space-y-1 px-4 animate-fadeIn">
                     <li>
                       <Link
-                        href="/cliente/create-event"
+                        href="/client/create-event"
                         target="_blank"
                         className="block py-2 pl-9 pr-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-colors duration-200"
                       >
@@ -133,6 +133,16 @@ const SideBarClient = () => {
                     </li>
                   </ul>
                 )}
+              </li>
+              <li>
+                <Link
+                  href="/client/create-location"
+                  target="_blank"
+                  className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
+                >
+                  <Pin className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform duration-200" />
+                  <span>Location</span>
+                </Link>
               </li>
               <li>
                 <Link

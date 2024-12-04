@@ -16,7 +16,6 @@ const CardEdit: React.FC<{ event: IEvent }> = ({ event }) => (
           "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"
         }
         alt={event.name}
-        layout="fill"
         objectFit="cover"
         width={500} // Añadir width
         height={300} // Añadir height

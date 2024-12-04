@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest) {
 
   if (!token) {
     // Redirige al login si el token no está presente y la ruta es protegida
-    if (req.nextUrl.pathname.startsWith('/admin') || req.nextUrl.pathname.startsWith('/cliente'))  {
+    if (req.nextUrl.pathname.startsWith('/admin') || req.nextUrl.pathname.startsWith('/client'))  {
       return NextResponse.redirect(new URL('/', req.url));
     }
     return NextResponse.next();
@@ -24,7 +24,7 @@ export async function middleware(req: NextRequest) {
     // Verifica el rol del usuario y redirige según sea necesario
     if (req.nextUrl.pathname.startsWith('/admin') && userRole !== 'admin') {
       return NextResponse.redirect(new URL('/', req.url));
-    } else if (req.nextUrl.pathname.startsWith('/cliente') && userRole !== 'client') {
+    } else if (req.nextUrl.pathname.startsWith('/client') && userRole !== 'client') {
       return NextResponse.redirect(new URL('/', req.url));
     } 
     
@@ -39,5 +39,5 @@ export async function middleware(req: NextRequest) {
 
 // Configuración del middleware para que se aplique a las rutas especificadas
 export const config = {
-  matcher: ['/admin/:path*', '/cliente/:path*'],
+  matcher: ['/admin/:path*', '/client/:path*'],
 };

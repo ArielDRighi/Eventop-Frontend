@@ -43,9 +43,14 @@ export const useCreateLocation = () => {
         body: JSON.stringify(location),
       });
       const res = await response.json();
+      console.log(res)
       if (response.status === 201) {
         setLoading(false);
         return res;
+      }
+      if (response.status === 403){
+        setLoading(false);
+        throw new Error(res.message)
       }
       if (response.status === 401) {
         setLoading(false);
