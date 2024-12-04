@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import PaymentButton from "./PaymentButton";
 import { texts } from "../helpers/texts";
 import { currencies } from "../helpers/currencies";
@@ -25,14 +25,12 @@ export default function Payments() {
   >("credit_card");
   const [language, setLanguage] = useState<Language>("es");
   const [currency, setCurrency] = useState<Currency>("USD");
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardExpiry, setCardExpiry] = useState("");
-  const [cardCVC, setCardCVC] = useState("");
-  const [savePaymentInfo, setSavePaymentInfo] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [quantityAvailable, setQuantityAvailable] = useState(0); // Estado para la cantidad de tickets disponibles
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
   const params = useParams();
+  const [quantityAvailable, setQuantityAvailable] = useState<number | null>(
+    null
+  );
+  const [isMercadoPagoSelected, setIsMercadoPagoSelected] = useState(false);
 
   const eventId = params.eventId as string;
   const email = userName; // Usa el email del usuario logueado
@@ -40,12 +38,6 @@ export default function Payments() {
   console.log("ID del evento", eventId);
   console.log("Email del usuario", email);
   console.log("quantity", quantity);
-
-  const [errors, setErrors] = useState({
-    cardNumber: false,
-    cardExpiry: false,
-    cardCVC: false,
-  });
 
   useEffect(() => {
     // Función para obtener los detalles del evento
@@ -118,35 +110,9 @@ export default function Payments() {
     setTicketCount(parseInt(e.target.value));
   };
 
-  const validateForm = () => {
-    const newErrors = {
-      cardNumber: !/^[0-9]{16}$/.test(cardNumber.replace(/\s/g, "")),
-      cardExpiry: !/^(0[1-9]|1[0-2])\/[0-9]{2}$/.test(cardExpiry),
-      cardCVC: !/^[0-9]{3,4}$/.test(cardCVC),
-    };
-    setErrors(newErrors);
-    return !Object.values(newErrors).some((error) => error);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (paymentMethod === "credit_card") {
-      if (validateForm()) {
-        setIsProcessing(true);
-        // Simulate payment processing
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        console.log(
-          "Processing payment for",
-          ticketCount,
-          "tickets. Total:",
-          total,
-          currency,
-          "Method:",
-          paymentMethod
-        );
-        setIsProcessing(false);
-      }
-    } else if (paymentMethod === "mercado_pago") {
+    if (paymentMethod === "mercado_pago") {
       // The MercadoPago button will handle the payment process
       console.log("MercadoPago payment method selected");
     }
@@ -221,7 +187,12 @@ export default function Payments() {
               id="tickets"
               onChange={handleTicketChange}
               value={ticketCount}
-              className="w-full px-3 py-2 border border-purple-500 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent bg-white transition-colors duration-200 text-gray-800"
+              disabled={paymentMethod === "mercado_pago"}
+              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-600 transition-colors duration-200 text-gray-800 ${
+                paymentMethod === "mercado_pago"
+                  ? "bg-gray-300 border-gray-500 cursor-not-allowed" // Estilos cuando está bloqueado
+                  : "bg-white border-purple-500" // Estilos cuando está habilitado
+              }`}
             >
               {[1, 2, 3, 4, 5].map((num) => (
                 <option key={num} value={num}>
@@ -240,122 +211,21 @@ export default function Payments() {
             <label className="flex items-center space-x-3 cursor-pointer">
               <input
                 type="radio"
-                id="credit_card"
-                value="credit_card"
-                checked={paymentMethod === "credit_card"}
-                onChange={() => setPaymentMethod("credit_card")}
-                className="form-radio h-5 w-5 text-purple-600 transition duration-150 ease-in-out"
-              />
-              <span className="text-sm">{t.creditCard}</span>
-            </label>
-            <label className="flex items-center space-x-3 cursor-pointer">
-              <input
-                type="radio"
                 id="mercado_pago"
                 value="mercado_pago"
-                checked={paymentMethod === "mercado_pago"}
-                onChange={() => setPaymentMethod("mercado_pago")}
+                checked={isMercadoPagoSelected}
+                onChange={() => {
+                  setIsMercadoPagoSelected(!isMercadoPagoSelected);
+                  setPaymentMethod(
+                    isMercadoPagoSelected ? "credit_card" : "mercado_pago"
+                  );
+                }}
                 className="form-radio h-5 w-5 text-purple-600 transition duration-150 ease-in-out"
               />
               <span className="text-sm">{t.mercadoPago}</span>
             </label>
           </div>
         </div>
-
-        <AnimatePresence>
-          {paymentMethod === "credit_card" && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="space-y-4 overflow-hidden"
-            >
-              <div>
-                <label
-                  htmlFor="card"
-                  className="block text-sm font-semibold mb-2"
-                >
-                  {t.cardNumber}
-                </label>
-                <input
-                  id="card"
-                  placeholder="1234 5678 9012 3456"
-                  required
-                  value={cardNumber}
-                  onChange={(e) => setCardNumber(e.target.value)}
-                  className={`w-full px-3 py-2 border ${
-                    errors.cardNumber ? "border-red-500" : "border-purple-500"
-                  } rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent bg-white transition-colors duration-200 text-gray-800`}
-                />
-                {errors.cardNumber && (
-                  <p className="text-red-500 text-xs mt-1">{t.invalidCard}</p>
-                )}
-              </div>
-              <div className="flex space-x-4">
-                <div className="flex-1">
-                  <label
-                    htmlFor="expiry"
-                    className="block text-sm font-semibold mb-2"
-                  >
-                    {t.expiry}
-                  </label>
-                  <input
-                    id="expiry"
-                    placeholder="MM/YY"
-                    required
-                    value={cardExpiry}
-                    onChange={(e) => setCardExpiry(e.target.value)}
-                    className={`w-full px-3 py-2 border ${
-                      errors.cardExpiry ? "border-red-500" : "border-purple-500"
-                    } rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent bg-white transition-colors duration-200 text-gray-800`}
-                  />
-                  {errors.cardExpiry && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {t.invalidExpiry}
-                    </p>
-                  )}
-                </div>
-                <div className="flex-1">
-                  <label
-                    htmlFor="cvc"
-                    className="block text-sm font-semibold mb-2"
-                  >
-                    {t.cvc}
-                  </label>
-                  <input
-                    id="cvc"
-                    placeholder="123"
-                    required
-                    value={cardCVC}
-                    onChange={(e) => setCardCVC(e.target.value)}
-                    className={`w-full px-3 py-2 border ${
-                      errors.cardCVC ? "border-red-500" : "border-purple-500"
-                    } rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent bg-white transition-colors duration-200 text-gray-800`}
-                  />
-                  {errors.cardCVC && (
-                    <p className="text-red-500 text-xs mt-1">{t.invalidCVC}</p>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="savePaymentInfo"
-                  checked={savePaymentInfo}
-                  onChange={(e) => setSavePaymentInfo(e.target.checked)}
-                  className="form-checkbox h-5 w-5 text-purple-600"
-                />
-                <label
-                  htmlFor="savePaymentInfo"
-                  className="ml-2 text-sm text-gray-700"
-                >
-                  {t.savePaymentInfo}
-                </label>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         <motion.div
           initial={{ opacity: 0 }}
@@ -377,13 +247,7 @@ export default function Payments() {
           {paymentMethod === "mercado_pago" && preferenceId ? (
             <PaymentButton preferenceId={preferenceId} />
           ) : (
-            <button
-              type="submit"
-              disabled={isProcessing || paymentMethod === "mercado_pago"}
-              className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-200 disabled:opacity-50"
-            >
-              {isProcessing ? t.processing : t.pay}
-            </button>
+            <p>Seleccionar método de pago</p>
           )}
         </div>
       </form>
