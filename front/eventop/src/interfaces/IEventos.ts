@@ -30,7 +30,7 @@ export interface IEvent {
     role: string;
     preferredLanguage: string;
     preferredCurrency: string;
-    imageUrl: string;,
+    imageUrl: string;
     createdAt: string,
     isBanned: boolean,
     banReason: null,

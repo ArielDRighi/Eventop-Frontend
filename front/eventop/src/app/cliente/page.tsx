@@ -1,4 +1,4 @@
-import DashboardAdminSection from "@/views/DashboardAdminSection";
+import DashboardClientSection from "@/views/UserDashboardClient/DashboardClientSection";
 
 const ClientPage = () => {
   return (

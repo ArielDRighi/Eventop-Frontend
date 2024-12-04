@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useEffect, useState } from "react";
 import { IEvent } from "@/interfaces/IEventos";
 import CardEdit from "@/components/CardEdit";
@@ -21,7 +23,7 @@ const DashboardClientSection = () => {
 
       const now = new Date();
       if (result !== null) {
-        setEvents(result.filter((event) => event.user.userId == userId));
+        setEvents(result.filter((event) => event.user.userId == Number(userId)));
         setEventsToApprove(events.filter((event) => event.approved == false));
         setApprovedEvents(
           events.filter(
