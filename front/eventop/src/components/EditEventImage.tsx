@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Pencil } from "lucide-react";
 import { changeImage as changeImageHelper } from "@/helpers/events.helper";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 
 interface EditEventImageProps {
   changeImage: React.Dispatch<React.SetStateAction<string>>;
@@ -24,7 +25,6 @@ const EditEventImage: React.FC<EditEventImageProps> = ({
     event.preventDefault();
     const token = JSON.parse(Cookies.get("accessToken") || "null");
     if (!selectedImage) {
-      console.error("No image selected");
       return;
     }
     const data = {
@@ -36,6 +36,12 @@ const EditEventImage: React.FC<EditEventImageProps> = ({
       const res = await changeImageHelper(data);
       console.log(res);
       setImage(URL.createObjectURL(selectedImage));
+      Swal.fire({
+        icon: "success",
+        title: "Imagen cambiada con éxito",
+        showConfirmButton: false,
+        timer: 1500,
+      })
       closeModal();
     } catch (error) {
       console.error("Failed to change image:", error);
