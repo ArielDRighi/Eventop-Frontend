@@ -21,6 +21,21 @@ export interface IEvent {
   quantityTotal: number;
   approved: boolean;
   currency: string;
+  user: {
+    userId: number;
+    name: string;
+    email: string;
+    password: string;
+    authProvider: string;
+    role: string;
+    preferredLanguage: string;
+    preferredCurrency: string;
+    imageUrl: string;,
+    createdAt: string,
+    isBanned: boolean,
+    banReason: null,
+    banUntil: null
+  }
 }
 
 export interface IEventsCreate {

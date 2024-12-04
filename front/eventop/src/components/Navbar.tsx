@@ -60,6 +60,13 @@ const NavBar = () => {
               </li>
             )}
             <li>
+            </li>
+            {role == "cliente" && (
+              <li>
+                <Link href={"/cliente"}>Mis Eventos</Link>
+              </li>
+            )}
+            <li>
               <details>
                 <summary>Argentina | ES</summary>
                 <ul className="p-2 text-gray-900">
@@ -114,6 +121,12 @@ const NavBar = () => {
               <Link href={"/admin"}>Admin</Link>
             </li>
           )}
+          <li></li>
+          {role == "cliente" && (
+            <li>
+              <Link href={"/cliente"}>Mis Eventos</Link>
+            </li>
+          )}
           <li>
             <details>
               <summary>Argentina | ES</summary>
@@ -133,7 +146,7 @@ const NavBar = () => {
         </ul>
       </div>
       <div className="navbar-end hidden lg:flex">
-      {role ? (
+        {role ? (
           <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
