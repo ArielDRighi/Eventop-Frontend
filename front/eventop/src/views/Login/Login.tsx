@@ -7,6 +7,7 @@ import { login } from "@/helpers/auth.helper";
 import Cookies from "js-cookie";
 import { Eye, EyeClosed } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export const Login = () => {
   const [userData, setUserData] = useState<ILoginProps>({
@@ -214,9 +215,9 @@ export const Login = () => {
                     Recordarme
                   </label>
                 </div>
-                <a href="/" className="text-sm text-white">
+                <Link href="/" className="text-sm text-white">
                   Olvidaste tu contraseña?
-                </a>
+                  </ Link>
               </div>
 
               <div className="mt-2 flex items-center justify-end gap-x-2">
