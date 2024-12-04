@@ -61,7 +61,7 @@ const NavBar = () => {
             )}
             <li>
             </li>
-            {role == "cliente" && (
+            {role == "client" && (
               <li>
                 <Link href={"/cliente"}>Mis Eventos</Link>
               </li>
@@ -114,15 +114,14 @@ const NavBar = () => {
             <Link href={"/events"}>Encuentra Eventos</Link>
           </li>
           <li>
-            <Link href={"/contact"}>Ayuda</Link>
+            <Link href={"/contacte"}>Ayuda</Link>
           </li>
           {role == "admin" && (
             <li>
               <Link href={"/admin"}>Admin</Link>
             </li>
           )}
-          <li></li>
-          {role == "cliente" && (
+          {role == "client" && (
             <li>
               <Link href={"/cliente"}>Mis Eventos</Link>
             </li>

@@ -124,7 +124,7 @@ const SideBarClient = () => {
                   <ul className="mt-2 space-y-1 px-4 animate-fadeIn">
                     <li>
                       <Link
-                        href="/client/create-event"
+                        href="/cliente/create-event"
                         target="_blank"
                         className="block py-2 pl-9 pr-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-colors duration-200"
                       >

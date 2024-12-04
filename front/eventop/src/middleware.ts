@@ -24,7 +24,7 @@ export async function middleware(req: NextRequest) {
     // Verifica el rol del usuario y redirige según sea necesario
     if (req.nextUrl.pathname.startsWith('/admin') && userRole !== 'admin') {
       return NextResponse.redirect(new URL('/', req.url));
-    } else if (req.nextUrl.pathname.startsWith('/cliente') && userRole !== 'cliente') {
+    } else if (req.nextUrl.pathname.startsWith('/cliente') && userRole !== 'client') {
       return NextResponse.redirect(new URL('/', req.url));
     } 
     

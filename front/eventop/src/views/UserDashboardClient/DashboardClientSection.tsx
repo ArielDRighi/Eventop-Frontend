@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { IEvent } from "@/interfaces/IEventos";
 import CardEdit from "@/components/CardEdit";
 import { useGetAllEvents } from "@/helpers/events.helper";
@@ -11,15 +12,15 @@ const DashboardClientSection = () => {
   const [eventsToApprove, setEventsToApprove] = useState<IEvent[]>([]);
   const [approvedEvents, setApprovedEvents] = useState<IEvent[]>([]);
   const [pastEvents, setPastEvents] = useState<IEvent[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const {userId} = useUserContext();
+  const [isLoading, setIsLoading] = useState(true);
+  const[isError, setIsError] = useState(null);
+  const { userId } = useUserContext();
+  const router = useRouter();
+  const { result, loading, error } = useGetAllEvents() as { result: IEvent[] | null; loading: boolean; error: any };
 
   useEffect(() => {
     // Fetch events from API or context
-    const fetchEvents = async () => {
       // Replace with your API call
-      const { result, loading, error } = useGetAllEvents() as { result: IEvent[] | null; loading: boolean; error: any };
 
       const now = new Date();
       if (result !== null) {
@@ -32,38 +33,40 @@ const DashboardClientSection = () => {
         );
         setPastEvents(events.filter((event) => new Date(event.date) < now));
       }
-      setLoading(loading);
-      setError(error);
-    };
-
-    fetchEvents();
-  }, [loading, error, eventsToApprove, approvedEvents, pastEvents]);
+      setIsLoading(loading);
+      setIsError(error);
+  
+  }, [loading, error, result, approvedEvents, pastEvents]);
 
   return (
-    <section className="flex flex-col gap-4">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-200 text-center mb-4">
-          Mis Eventos
-        </h1>
-      </div>
-
-      <div className="max-w-6xl mx-auto space-y-12">
+    <section className="gap-4 grid grid-cols-1 md:grid-cols-3">
+     
         <div>
-          <h3 className="text-2xl font-semibold text-slate-200 text-start">
+          <h3 className="text-2xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-center">
             Eventos por aprobar
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-8 bg-gray-900">
-            {eventsToApprove.map((event) => (
-              <CardEdit key={event.eventId} event={event} />
-            ))}
+          <div className="grid grid-cols-1 gap-8 text-center bg-gray-900">
+            {eventsToApprove.length > 0 ? (
+              eventsToApprove.map((event) => (
+                <CardEdit key={event.eventId} event={event} />
+              ))
+            ) : (
+              <div>
+              <p>No hay eventos creados</p>
+              <button 
+              onClick={() => router.push("/cliente/create-event")}
+              className="btn">
+                Crear evento</button>
+              </div>
+            )}
           </div>
         </div>
 
         <div>
-          <h3 className="text-2xl font-semibold text-slate-200 text-start">
+          <h3 className="text-2xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-center">
             Eventos aprobados
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-8 bg-gray-900">
+          <div className="grid grid-cols-1 gap-8 bg-gray-900 text-center">
             {approvedEvents.map((event) => (
               <CardEdit key={event.eventId} event={event} />
             ))}
@@ -71,16 +74,16 @@ const DashboardClientSection = () => {
         </div>
 
         <div>
-          <h3 className="text-2xl font-semibold text-slate-200 text-start">
+          <h3 className="text-2xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-center">
             Eventos pasados
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-8 bg-gray-900">
+          <div className="grid grid-cols-1  gap-8 bg-gray-900">
             {pastEvents.map((event) => (
               <CardEdit key={event.eventId} event={event} />
             ))}
           </div>
         </div>
-      </div>
+
     </section>
   );
 };
