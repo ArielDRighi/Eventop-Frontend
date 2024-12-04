@@ -38,7 +38,7 @@ export const useCreateCategory = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(category),
+        body: JSON.stringify({ name: category }),
       });
       const res = await response.json();
       if (res.statusCode === 401) {

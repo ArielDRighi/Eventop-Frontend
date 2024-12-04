@@ -7,6 +7,7 @@ import { login } from "@/helpers/auth.helper";
 import Cookies from "js-cookie";
 import { Eye, EyeClosed } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export const Login = () => {
   const [userData, setUserData] = useState<ILoginProps>({
@@ -55,7 +56,6 @@ export const Login = () => {
   useEffect(() => {
     const URLparams = new URLSearchParams(window.location.search);
     const token = URLparams.get("token");
-    console.log(token);
     if (token) {
       console.log(`Token: ${token}`);
       Cookies.set("accessToken", JSON.stringify(token));
@@ -65,8 +65,11 @@ export const Login = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log("userData", userData);
+
     const errors = validateLoginForm(userData);
     setErrors(errors);
+    console.log("errors", errors);
 
     // Comprobación si hay errores, incluyendo un mensaje si los campos están vacíos
     if (Object.values(errors).some((error) => error !== "")) {
@@ -212,9 +215,9 @@ export const Login = () => {
                     Recordarme
                   </label>
                 </div>
-                <a href="#" className="text-sm text-white">
+                <Link href="/" className="text-sm text-white">
                   Olvidaste tu contraseña?
-                </a>
+                  </ Link>
               </div>
 
               <div className="mt-2 flex items-center justify-end gap-x-2">
@@ -250,7 +253,7 @@ export const Login = () => {
 
         <div className="relative">
           <Image
-            src="window.jpg"
+            src="/window.jpg"
             alt="login"
             className="hidden md:flex rounded-r-2xl w-[400px] h-full object-cover"
             width={400} // Añadir width
