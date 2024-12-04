@@ -7,7 +7,6 @@ import { ILocation } from "@/interfaces/ILocations";
 import { useEventById } from "@/helpers/events.helper";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import DeleteButton from "@/components/DeleteButton";
 import EditEventImage from "@/components/EditEventImage";
 import Cookies from "js-cookie";
 import { editEvent } from "@/helpers/events.helper";

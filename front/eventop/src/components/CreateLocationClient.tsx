@@ -2,7 +2,7 @@
 
 // Formulario para crear una nueva locación
 import React, { useState } from "react";
-import { ILocationCreate, ILocation } from "@/interfaces/ILocations";
+import { ILocationCreate } from "@/interfaces/ILocations";
 import { useCreateLocation } from "@/helpers/location.helper";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";

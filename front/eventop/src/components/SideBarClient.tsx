@@ -8,12 +8,10 @@ import {
   LayoutDashboard,
   LogOut,
   Ticket,
-  User,
   ChevronDown,
   Calendar,
   HelpCircle,
   Pin,
-  Drama,
 } from "lucide-react";
 
 

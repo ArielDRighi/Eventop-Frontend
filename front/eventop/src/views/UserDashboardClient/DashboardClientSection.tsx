@@ -8,7 +8,6 @@ import { useGetAllEvents } from "@/helpers/events.helper";
 import { useUserContext } from "@/context/userContext";
 
 const DashboardClientSection = () => {
-  const [events, setEvents] = useState<IEvent[]>([]);
   const [eventsToApprove, setEventsToApprove] = useState<IEvent[]>([]);
   const [approvedEvents, setApprovedEvents] = useState<IEvent[]>([]);
   const [pastEvents, setPastEvents] = useState<IEvent[]>([]);
@@ -16,13 +15,13 @@ const DashboardClientSection = () => {
   const [isError, setIsError] = useState<string | null>(null);
   const { userId } = useUserContext();
   const router = useRouter();
-  const { result, loading, error } = useGetAllEvents() as { result: IEvent[] | null; loading: boolean; error: any };
+  const { result, error } = useGetAllEvents() as { result: IEvent[] | null; loading: boolean; error: any };
 
   useEffect(() => {
     if (result !== null) {
       const now = new Date();
       const userEvents = result.filter((event) => event.user.userId == Number(userId));
-      setEvents(userEvents);
+
       setEventsToApprove(userEvents.filter((event) => event.approved == false));
       setApprovedEvents(
         userEvents.filter(
