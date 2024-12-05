@@ -18,12 +18,16 @@ export const Login = () => {
     email: "",
     password: "",
   });
-  const [touched, setTouched] = useState<{ email: boolean; password: boolean }>({
-    email: false,
-    password: false,
-  });
+  const [touched, setTouched] = useState<{ email: boolean; password: boolean }>(
+    {
+      email: false,
+      password: false,
+    }
+  );
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [email, setEmail] = useState("");
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
@@ -78,7 +82,8 @@ export const Login = () => {
         customClass: {
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
-          confirmButton: "bg-[#D9534F] hover:bg-[#C9302C] text-white font-bold py-2 px-4 rounded",
+          confirmButton:
+            "bg-[#D9534F] hover:bg-[#C9302C] text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
       });
@@ -99,7 +104,8 @@ export const Login = () => {
         customClass: {
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
-          confirmButton: "bg-[#164E78] hover:bg-[#169978] text-white font-bold py-2 px-4 rounded",
+          confirmButton:
+            "bg-[#164E78] hover:bg-[#169978] text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
       }).then((result) => {
@@ -117,9 +123,53 @@ export const Login = () => {
         customClass: {
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
-          confirmButton: "bg-[#D9534F] hover:bg-[#C9302C] text-white font-bold py-2 px-4 rounded",
+          confirmButton:
+            "bg-[#D9534F] hover:bg-[#C9302C] text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
+      });
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/auth/forgot-password?email=${encodeURIComponent(email)}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        Swal.fire({
+          title: "Éxito",
+          text: "Revisa tu correo electrónico para las instrucciones de restablecimiento de contraseña.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        setIsModalOpen(false);
+      } else {
+        const errorData = await response.json();
+        Swal.fire({
+          title: "Error",
+          text: errorData.message,
+          icon: "error",
+        });
+      }
+    } catch (error: any) {
+      Swal.fire({
+        title: "Error",
+        text:
+          "Ocurrió un error. Por favor, inténtalo de nuevo más tarde." +
+          error.message,
+        icon: "error",
       });
     }
   };
@@ -134,7 +184,9 @@ export const Login = () => {
       <div className="relative flex flex-col m-6 space-y-8 bg-gray-900 shadow-2xl rounded-2xl md:flex-row md:space-y-0">
         <div className="flex flex-col justify-center p-8 md:p-12">
           <div className="flex flex-col p-6">
-            <h3 className="text-xl font-semibold leading-6 tracking-tighter text-slate-200">Iniciar Sesion</h3>
+            <h3 className="text-xl font-semibold leading-6 tracking-tighter text-slate-200">
+              Iniciar Sesion
+            </h3>
             <p className="mt-1.5 text-sm font-medium text-white/50">
               Bienvenido de nuevo, ingresa tus credenciales para continuar.
             </p>
@@ -158,7 +210,11 @@ export const Login = () => {
                   placeholder="Correo electrónico"
                   className="block w-full border-0 bg-transparent p-0 text-sm text-white placeholder:text-muted-foreground/90 focus:outline-none focus:ring-0 sm:leading-7 text-foreground"
                 />
-                {touched.email && error.email && <span className="text-red-500 text-sm block">{error.email}</span>}
+                {touched.email && error.email && (
+                  <span className="text-red-500 text-sm block">
+                    {error.email}
+                  </span>
+                )}
               </div>
               <div className="mt-4 group relative rounded-lg border focus-within:border-purple-200 px-3 pb-1.5 pt-2.5 duration-200 focus-within:ring focus-within:ring-sky-300/30">
                 <div className="flex justify-between">
@@ -177,23 +233,38 @@ export const Login = () => {
                     placeholder="Contraseña"
                     className="block w-full border-0 bg-transparent p-0 text-sm placeholder:text-muted-foreground/90 focus:outline-none focus:ring-0 sm:leading-7 text-foreground text-white"
                   />
-                  <button type="button" onClick={toggleShowPassword} className="ml-2 text-sm text-gray-500">
+                  <button
+                    type="button"
+                    onClick={toggleShowPassword}
+                    className="ml-2 text-sm text-gray-500"
+                  >
                     {showPassword ? <Eye /> : <EyeClosed />}
                   </button>
                 </div>
                 {touched.password && error.password && (
-                  <span className="text-red-500 text-sm block">{error.password}</span>
+                  <span className="text-red-500 text-sm block">
+                    {error.password}
+                  </span>
                 )}
               </div>
 
               <div className="flex justify-between w-full py-4 ">
                 <div>
-                  <input type="checkbox" name="remember" id="remember" className="mr-2 rounded-lg" />
+                  <input
+                    type="checkbox"
+                    name="remember"
+                    id="remember"
+                    className="mr-2 rounded-lg"
+                  />
                   <label htmlFor="remember" className="text-sm text-white py-2">
                     Recordarme
                   </label>
                 </div>
-                <Link href="/" className="text-sm text-white">
+                <Link
+                  href="#"
+                  className="text-sm text-white"
+                  onClick={() => setIsModalOpen(true)}
+                >
                   Olvidaste tu contraseña?
                 </Link>
               </div>
@@ -215,7 +286,8 @@ export const Login = () => {
                 onClick={handleGoogleLogin}
                 className="mx-auto w-full rounded-lg bg-slate-200 flex flex-row items-center justify-center gap-x-2 px-4 py-3 text-sm duration-200 hover:bg-slate-300"
               >
-                Inicia Sesion con Google <Image src="google.svg" alt="google" width={20} height={20} />
+                Inicia Sesion con Google{" "}
+                <Image src="google.svg" alt="google" width={20} height={20} />
               </button>
             </div>
 
@@ -238,6 +310,38 @@ export const Login = () => {
           />
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
+            <span
+              className="absolute top-2 right-2 text-gray-500 cursor-pointer"
+              onClick={() => setIsModalOpen(false)}
+            >
+              &times;
+            </span>
+            <h2 className="text-xl font-bold mb-4 text-white">
+              Recuperar Contraseña
+            </h2>
+            <form onSubmit={handleForgotPassword}>
+              <input
+                type="email"
+                className="w-full p-2 mb-4 border border-gray-700 rounded bg-gray-900 text-white"
+                placeholder="Ingresa tu correo electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+              >
+                Enviar
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
