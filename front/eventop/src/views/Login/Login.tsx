@@ -7,6 +7,7 @@ import { login } from "@/helpers/auth.helper";
 import Cookies from "js-cookie";
 import { Eye, EyeClosed } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export const Login = () => {
   const [userData, setUserData] = useState<ILoginProps>({
@@ -25,7 +26,6 @@ export const Login = () => {
   );
 
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState<string>("");
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
@@ -56,7 +56,6 @@ export const Login = () => {
   useEffect(() => {
     const URLparams = new URLSearchParams(window.location.search);
     const token = URLparams.get("token");
-    console.log(token);
     if (token) {
       console.log(`Token: ${token}`);
       Cookies.set("accessToken", JSON.stringify(token));
@@ -66,8 +65,11 @@ export const Login = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log("userData", userData);
+
     const errors = validateLoginForm(userData);
     setErrors(errors);
+    console.log("errors", errors);
 
     // Comprobación si hay errores, incluyendo un mensaje si los campos están vacíos
     if (Object.values(errors).some((error) => error !== "")) {
@@ -132,54 +134,6 @@ export const Login = () => {
     setErrors(errors);
   }, [userData]);
 
-  const handleForgotPassword = async () => {
-    if (!email) {
-      Swal.fire({
-        title: "Error",
-        text: "Por favor, ingresa tu correo electrónico.",
-        icon: "warning",
-      });
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_API_URL
-        }/auth/forgot-password?email=${encodeURIComponent(email)}`,
-        {
-          method: "PUT",
-          headers: {
-            Accept: "*/*",
-          },
-        }
-      );
-
-      console.log(response);
-
-      if (response.ok) {
-        Swal.fire({
-          title: "¡Éxito!",
-          text: "Se ha enviado un enlace para restablecer tu contraseña.",
-          icon: "success",
-        });
-      } else {
-        const errorData = await response.json();
-        console.log(errorData);
-        throw new Error(
-          errorData.message || "Error al enviar el enlace de restablecimiento."
-        );
-      }
-    } catch (error) {
-      const errorMessage = (error as Error).message;
-      Swal.fire({
-        title: "Error",
-        text: errorMessage,
-        icon: "error",
-      });
-    }
-  };
-
   return (
     <section className="flex items-center justify-center min-h-screen bg-gray-900">
       <div className="relative flex flex-col m-6 space-y-8 bg-gray-900 shadow-2xl rounded-2xl md:flex-row md:space-y-0">
@@ -205,11 +159,17 @@ export const Login = () => {
                   type="email"
                   name="email"
                   id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={userData.email}
+                  onChange={handleOnChange}
+                  onBlur={handleOnBlur}
                   placeholder="Correo electrónico"
                   className="block w-full border-0 bg-transparent p-0 text-sm text-white placeholder:text-muted-foreground/90 focus:outline-none focus:ring-0 sm:leading-7 text-foreground"
                 />
+                {touched.email && error.email && (
+                  <span className="text-red-500 text-sm block">
+                    {error.email}
+                  </span>
+                )}
               </div>
               <div className="mt-4 group relative rounded-lg border focus-within:border-purple-200 px-3 pb-1.5 pt-2.5 duration-200 focus-within:ring focus-within:ring-sky-300/30">
                 <div className="flex justify-between">
@@ -255,13 +215,9 @@ export const Login = () => {
                     Recordarme
                   </label>
                 </div>
-                <a
-                  href="#"
-                  onClick={handleForgotPassword}
-                  className="text-sm text-white"
-                >
+                <Link href="/" className="text-sm text-white">
                   Olvidaste tu contraseña?
-                </a>
+                </Link>
               </div>
 
               <div className="mt-2 flex items-center justify-end gap-x-2">
@@ -288,9 +244,9 @@ export const Login = () => {
 
             <p className="text-center mt-4 text-white">
               No tienes una cuenta?{" "}
-              <a href="/register" className="text-purple-600">
+              <Link href="/register" className="text-purple-600">
                 Registrate
-              </a>
+              </Link>
             </p>
           </div>
         </div>
