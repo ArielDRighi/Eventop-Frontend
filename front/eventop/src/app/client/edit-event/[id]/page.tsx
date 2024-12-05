@@ -8,8 +8,6 @@ import { useEventById } from "@/helpers/events.helper";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import EditEventImage from "@/components/EditEventImage";
-import ApproveButton from "@/components/ApproveButton";
-import DeleteButton from "@/components/DeleteButton";
 import Cookies from "js-cookie";
 import { editEvent } from "@/helpers/events.helper";
 import { useRouter } from "next/navigation";
@@ -27,7 +25,8 @@ interface IFormInput {
 
 const EditEventPage = () => {
   const params = useParams();
-  const eventId = parseInt(params.eventId as string, 10);
+  const eventId = parseInt(params.id as string, 10);
+
   const [imagePreview, setImagePreview] = useState<string>(
     "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"
   );
@@ -61,7 +60,7 @@ const EditEventPage = () => {
     try {
       const res = await editEvent(eventId, data, token);
       if (res) {
-        router.push("/admin/events");
+        router.push("/client");
       }
       console.log(res);
     } catch (error) {
@@ -294,7 +293,12 @@ const EditEventPage = () => {
                   type="submit"
                   name="action"
                   value="save"
-                  className="group hover:before:duration-500 hover:after:duration-500 after:duration-500 hover:border-purple-600 hover:before:[box-shadow:_20px_20px_20px_30px_#a21caf] duration-500 before:duration-500 hover:duration-500 hover:after:-right-8 hover:before:right-12 hover:before:-bottom-8 hover:before:blur origin-left hover:decoration-2 hover:text-white-50 relative bg-gray-900 h-16 w-full sm:w-38 border text-center p-3 text-white text-base font-bold rounded-lg overflow-hidden before:absolute before:w-12 before:h-12 before:content-[''] before:right-1 before:top-1 before:z-10 before:bg-violet-500 before:rounded-full before:blur-lg after:absolute after:z-10 after:w-20 after:h-20 after:content-[''] after:bg-purple-600 after:right-8 after:top-3 after:rounded-full after:blur-lg"
+                  className="group hover:before:duration-500 hover:after:duration-500 after:duration-500 hover:border-purple-600 
+                  hover:before:[box-shadow:_20px_20px_20px_30px_#a21caf] duration-500 before:duration-500 hover:duration-500 hover:after:-right-8 
+                  hover:before:right-12 hover:before:-bottom-8 hover:before:blur origin-left hover:decoration-2 hover:text-white-50 relative bg-gray-900 h-16 w-full 
+                  sm:w-38 border text-center p-3 text-white text-base font-bold rounded-lg overflow-hidden before:absolute before:w-12 before:h-12 before:content-[''] 
+                  before:right-1 before:top-1 before:z-10 before:bg-violet-500 before:rounded-full before:blur-lg after:absolute after:z-10 after:w-20 after:h-20 
+                  after:content-[''] after:bg-purple-600 after:right-8 after:top-3 after:rounded-full after:blur-lg"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -310,14 +314,9 @@ const EditEventPage = () => {
                     <path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2" />
                     <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
                     <path d="M14 4l0 4l-6 0l0 -4" />
-                  </svg>
-                </button>
+                  </svg>                </button>
               </div>
             </form>
-            <div className="flex gap-4 w-full sm:w-auto justify-center mt-4">
-              <DeleteButton eventId={event.eventId} />
-              <ApproveButton eventId={event.eventId} />
-            </div>
           </div>
         </div>
       </div>

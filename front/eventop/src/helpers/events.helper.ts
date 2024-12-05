@@ -285,6 +285,7 @@ export const approveEvent = async (id: number, token: any) => {
 
 export const changeImage = async (data: any) => {
   const { id, image, token } = data;
+  console.log(data);
   try {
     const formData = new FormData();
     formData.append("image", image);
@@ -295,6 +296,7 @@ export const changeImage = async (data: any) => {
       },
       body: formData,
     });
+    console.log(response);
     if (response.status === 200) {
       Swal.fire({
         title: "Imagen actualizada",
@@ -310,6 +312,8 @@ export const changeImage = async (data: any) => {
       });
       const res = await response.json();
       return res;
+    } else {
+      throw new Error("Error al actualizar la imagen del evento");
     }
   } catch (error: any) {
     Swal.fire({
