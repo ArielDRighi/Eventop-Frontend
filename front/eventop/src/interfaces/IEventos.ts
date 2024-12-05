@@ -2,6 +2,7 @@ export interface IEvent {
   eventId: number;
   name: string;
   date: string;
+  time: string;
   description: string;
   imageUrl: string;
   category_id: {
@@ -48,4 +49,5 @@ export interface IEventsCreate {
   currency: string;
   image: string | File; // El valor será una cadena de base64 o una URL de imagen
   quantityAvailable: number;
+  time: string;
 }
