@@ -21,6 +21,7 @@ interface IFormInput {
   currency: string;
   image: string;
   quantityAvailable: number;
+  time: string;
 }
 
 const EditEventPage = () => {
