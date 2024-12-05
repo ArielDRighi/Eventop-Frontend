@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { activeUser } from "@/helpers/users.helpers";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
