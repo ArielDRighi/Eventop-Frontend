@@ -8,7 +8,6 @@ interface SuspendButtonProps {
 }
 
 const SuspendButton: React.FC<SuspendButtonProps> = ({ userId }) => {
-  const [isPermanent, setIsPermanent] = useState(false);
 
   const handleClick = async () => {
     // Logic to suspend the user

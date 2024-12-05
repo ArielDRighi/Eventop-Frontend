@@ -2,6 +2,7 @@ import React from "react";
 import { IUser } from "@/interfaces/IUser";
 import SuspendButton from "./SuspendButton";
 import ActiveButton from "./ActiveButton";
+import Image from "next/image";
 
 interface InfoUsersAdminProps {
   userData: IUser[];
@@ -16,9 +17,11 @@ const InfoUsersAdmin: React.FC<InfoUsersAdminProps> = ({ userData }) => {
       {users.map((user) => (
         <div key={user.userId} className="bg-gray-800 p-4 rounded-lg shadow mx-auto w-[200px]">
           <div className="flex flex-col items-center">
-            <img
+            <Image
               src={user.imageUrl || "/user-placeholder.webp"}
               alt={user.name}
+              width={100}
+              height={100}
               className="w-24 h-24 bg-gray-500 rounded-full mb-4 object-cover"
             />
             <h3 className="text-white font-semibold text-lg">{user.name}</h3>
