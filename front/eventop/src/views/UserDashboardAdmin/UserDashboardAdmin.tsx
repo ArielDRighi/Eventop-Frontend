@@ -9,7 +9,8 @@ const Dashboard = () => {
   const [users, setUsers] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const limit = 10;
+  const [searchTerm, setSearchTerm] = useState("");
+  const limit = 50;
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -34,8 +35,16 @@ const Dashboard = () => {
     fetchUsers();
   }, [page]);
 
-  const bannedUsers = users.filter((user) => user.isBanned);
-  const unbannedUsers = users.filter((user) => !user.isBanned);
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredUsers = users.filter((user) =>
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const bannedUsers = filteredUsers.filter((user) => user.isBanned);
+  const unbannedUsers = filteredUsers.filter((user) => !user.isBanned);
 
   if (loading && users.length === 0) {
     return (
@@ -51,27 +60,38 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="flex flex-col items-center">
-        <h2 className="text-2xl font-semibold text-slate-200 text-center mb-4">
+      <div className="flex flex-col items-center mt-10 ">
+        <h2 className="text-4xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-center">
           Usuarios Activos
         </h2>
-        <InfoUsersAdmin userData={unbannedUsers} />
+        <input
+          type="text"
+          placeholder="Buscar por email"
+          value={searchTerm}
+          onChange={handleSearch}
+          className="p-2 mb-4 border border-gray-700 rounded bg-gray-800 text-white focus:ring-2 focus:ring-purple-500"
+        />
+        <div className="overflow-y-auto h-[600px] lg:max-w-7xl md:max-w-4xl w-full p-7 bg-gray-700 rounded">
+          <InfoUsersAdmin userData={unbannedUsers} />
+        </div>
         {loading ? (
           <div className="text-center mt-4 text-slate-300">Cargando...</div>
         ) : (
           <button
             onClick={() => setPage((prev) => prev + 1)}
-            className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-purple-500 hover:bg-purple-700 text-slate-200  font-bold py-2 px-4 rounded mt-2"
           >
             Ver más
           </button>
         )}
       </div>
-      <div>
-        <h2 className="text-2xl font-semibold text-slate-200 text-center mb-4 mt-4">
+      <div className="flex flex-col items-center mb-10">
+        <h2 className="text-3xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-center mt-10">
           Usuarios Baneados
         </h2>
-        <InfoUsersAdmin userData={bannedUsers} />
+        <div className="overflow-y-auto h-[500px] lg:max-w-7xl md:max-w-4xl w-full p-7 bg-gray-700 rounded">
+          <InfoUsersAdmin userData={bannedUsers} />
+        </div>
       </div>
     </div>
   );
