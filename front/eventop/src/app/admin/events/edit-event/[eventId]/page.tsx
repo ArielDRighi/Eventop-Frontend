@@ -23,6 +23,7 @@ interface IFormInput {
   currency: string;
   image: string;
   quantityAvailable: number;
+  time: string;
 }
 
 const EditEventPage = () => {
@@ -46,6 +47,7 @@ const EditEventPage = () => {
       setValue("name", event.name);
       setValue("description", event.description);
       setValue("date", event.date);
+      setValue("time", event.time);
       setValue("price", Number(event.price));
       setValue("location_id", event.location_id.locationId);
       setValue("category_id", event.category_id.categoryId);
@@ -169,6 +171,28 @@ const EditEventPage = () => {
                   {errors.date && (
                     <span className="text-red-400 text-sm mt-1 block">
                       {errors.date.message}
+                    </span>
+                  )}
+                </div>
+                {/* Hora */}
+                <div className="col-span-1">
+                  <label
+                    htmlFor="time"
+                    className="block text-lg font-semibold text-gray-300 mb-2"
+                  >
+                    Hora
+                  </label>
+                  <input
+                    id="time"
+                    type="time"
+                    {...register("time", {
+                      required: "La hora es obligatoria",
+                    })}
+                    className="input h-[52px] text-[15px] text-white/60 w-full bg-gray-900 text-gray-50 px-3 py-1 rounded-lg border border-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-150 ease-in-out"
+                  />
+                  {errors.time && (
+                    <span className="text-red-400 text-sm mt-1 block">
+                      {errors.time.message}
                     </span>
                   )}
                 </div>
