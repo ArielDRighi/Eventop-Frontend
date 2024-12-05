@@ -111,13 +111,14 @@ export const EncontraEventos = () => {
       const matchesRadius = radius === 10;
 
       const price = evento.price;
-      const priceFilterNumber = priceFilter === "0" ? 0 : parseInt(priceFilter);
+      const priceFilterNumber =
+        priceFilter === "0,0" ? 0 : parseInt(priceFilter);
 
       const matchesPrice =
         priceFilter === "" ||
-        (priceFilter === "0" && price == "0") ||
-        (priceFilter !== "0" &&
-          price > "0" &&
+        (priceFilter == "0,0" && price == "0,0") ||
+        (priceFilter !== "0,0" &&
+          price > "0,0" &&
           Number(price) <= priceFilterNumber);
 
       return (
@@ -239,10 +240,10 @@ export const EncontraEventos = () => {
                 >
                   <option value="">Todos los precios</option>
                   <option value="0">Gratis</option>
-                  <option value="50">Hasta 50</option>
-                  <option value="100">Hasta 100</option>
-                  <option value="500">Hasta 500</option>
-                  <option value="1000">Hasta 1000</option>
+                  <option value="2000">Hasta 2000</option>
+                  <option value="5000">Hasta 5000</option>
+                  <option value="10000">Hasta 10000</option>
+                  <option value="20000">Hasta 20000</option>
                 </select>
               </div>
 
@@ -267,7 +268,7 @@ export const EncontraEventos = () => {
                 {isOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-[101]">
                     <ul className="py-1">
-                      {[5, 10, 15, 20, 50].map((km) => (
+                      {[10, 50, 75, 100, 150].map((km) => (
                         <li key={km}>
                           <button
                             onClick={() => {

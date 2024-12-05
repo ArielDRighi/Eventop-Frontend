@@ -16,7 +16,6 @@ import {
   Drama,
 } from "lucide-react";
 
-
 const SideBar = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -112,7 +111,7 @@ const SideBar = () => {
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <User className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-200" />
-                  <span>Users</span>
+                  <span>Usuarios</span>
                 </Link>
               </li>
               <li>
@@ -122,7 +121,7 @@ const SideBar = () => {
                 >
                   <div className="flex items-center">
                     <Ticket className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform duration-200" />
-                    <span>Events</span>
+                    <span>Eventos</span>
                   </div>
                   <ChevronDown
                     className={`w-4 h-4 transition-transform duration-200 ${
@@ -138,7 +137,7 @@ const SideBar = () => {
                         target="_blank"
                         className="block py-2 pl-9 pr-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-colors duration-200"
                       >
-                        All Events
+                        Todos los eventos
                       </Link>
                     </li>
                     <li>
@@ -147,7 +146,7 @@ const SideBar = () => {
                         target="_blank"
                         className="block py-2 pl-9 pr-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-colors duration-200"
                       >
-                        Create Event
+                        Crear evento
                       </Link>
                     </li>
                   </ul>
@@ -160,7 +159,7 @@ const SideBar = () => {
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <Calendar className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform duration-200" />
-                  <span>Calendar</span>
+                  <span>Calendario</span>
                 </Link>
               </li>
               <li>
@@ -170,7 +169,7 @@ const SideBar = () => {
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <Pin className="w-5 h-5 mr-3 group-hover:bounce transition-transform duration-200" />
-                  <span>Locations</span>
+                  <span>Locaciones</span>
                 </Link>
               </li>
               <li>
@@ -180,7 +179,7 @@ const SideBar = () => {
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <Drama className="w-5 h-5 mr-3 group-hover:bounce transition-transform duration-200" />
-                  <span>Categories</span>
+                  <span>Categorias</span>
                 </Link>
               </li>
               <li>
@@ -190,7 +189,7 @@ const SideBar = () => {
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <HelpCircle className="w-5 h-5 mr-3 group-hover:bounce transition-transform duration-200" />
-                  <span>Help</span>
+                  <span>Ayuda</span>
                 </Link>
               </li>
             </ul>
@@ -202,7 +201,7 @@ const SideBar = () => {
               className="flex items-center w-full px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
             >
               <LogOut className="w-5 h-5 mr-3 group-hover:-translate-x-1 transition-transform duration-200" />
-              <span>Sign Out</span>
+              <span>Cerrar sesion</span>
             </button>
           </div>
         </div>
