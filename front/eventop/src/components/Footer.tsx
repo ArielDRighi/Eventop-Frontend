@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-      <footer className="footer   bg-gray-900 justify-around text-neutral-content p-6">
+    <footer className="footer   bg-gray-900 justify-around text-neutral-content p-6">
       <aside>
         <svg
           width="50"
@@ -16,7 +16,7 @@ const Footer = () => {
         <p>
           EvenTop.
           <br />
-          Providing reliable tech since 2024
+          Proporcionando tecnología confiable desde 2024
         </p>
       </aside>
       <nav>
