@@ -406,3 +406,20 @@ df-message {
 .nav-icon-btn:active {
   transform: translateY(0);
 }
+
+.title-loader {
+  text-align: center;
+  margin-bottom: 20px; 
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 36px; 
+  padding: 10px; 
+  border: 2px solid #7C3AED ; 
+  border-radius: 15px; 
+ 
+  background-origin: border-box; 
+  background-clip: content-box, border-box; 
+  color: white; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease; 
+}
