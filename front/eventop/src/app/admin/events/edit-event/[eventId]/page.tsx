@@ -313,32 +313,18 @@ const EditEventPage = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-8">
                 <button
                   type="submit"
                   name="action"
                   value="save"
-                  className="group hover:before:duration-500 hover:after:duration-500 after:duration-500 hover:border-purple-600 hover:before:[box-shadow:_20px_20px_20px_30px_#a21caf] duration-500 before:duration-500 hover:duration-500 hover:after:-right-8 hover:before:right-12 hover:before:-bottom-8 hover:before:blur origin-left hover:decoration-2 hover:text-white-50 relative bg-gray-900 h-16 w-full sm:w-38 border text-center p-3 text-white text-base font-bold rounded-lg overflow-hidden before:absolute before:w-12 before:h-12 before:content-[''] before:right-1 before:top-1 before:z-10 before:bg-violet-500 before:rounded-full before:blur-lg after:absolute after:z-10 after:w-20 after:h-20 after:content-[''] after:bg-purple-600 after:right-8 after:top-3 after:rounded-full after:blur-lg"
+                  className="group font-mono text-xl group-hover:before:duration-500 group-hover:after:duration-500 after:duration-500 hover:border-purple-500 hover:before:[box-shadow:_20px_20px_20px_30px_#a21caf] duration-500 before:duration-500 hover:duration-500 underline underline-offset-2 hover:after:-right-8 hover:before:right-12 hover:before:-bottom-8 hover:before:blur hover:underline hover:underline-offset-4  origin-left hover:decoration-2 hover:text-gray-50 relative bg-gray-900 h-16 w-48 border text-left p-3 text-gray-50  font-bold rounded-lg  overflow-hidden  before:absolute before:w-12 before:h-12 before:content[''] before:right-1 before:top-1 before:z-10 before:bg-violet-500 before:rounded-full before:blur-lg  after:absolute after:z-10 after:w-20 after:h-20 after:content['']  after:bg-purple-600 after:right-8 after:top-3 after:rounded-full after:blur-lg"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="42"
-                    height="42"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2" />
-                    <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                    <path d="M14 4l0 4l-6 0l0 -4" />
-                  </svg>
+                  Guardar
                 </button>
               </div>
             </form>
-            <div className="flex gap-4 w-full sm:w-auto justify-center mt-4">
+            <div className="flex flex-row gap-4   justify-center items-center mt-4">
               <DeleteButton eventId={event.eventId} />
               <ApproveButton eventId={event.eventId} />
             </div>
