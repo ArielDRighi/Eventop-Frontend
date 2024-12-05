@@ -175,9 +175,17 @@ const Cards: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 py-20 px-4 sm:px-6 lg:px-8">
       <main className="max-w-7xl mx-auto">
-        <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 text-center mb-12">
-          Proximos Eventos
-        </h1>
+      <h1 className="title-loader border border-purple-500 mb-5 border-solid">
+  <div className="loader">
+    Eventos 
+    <div className="words">
+      <span className="word">Musicales</span>
+      <span className="word">Sociales</span>
+      <span className="word">Deportivos</span>
+      <span className="word">Culturales</span>
+    </div>
+  </div>
+</h1>
         {renderContent}
       </main>
     </div>
