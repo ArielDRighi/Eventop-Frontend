@@ -1,5 +1,6 @@
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 import { IUserEdit } from "../interfaces/IUser";
+import { IDataBan } from "../interfaces/IDataBan";
 
 export const getAllUsers = async (
   token: string,
@@ -134,9 +135,27 @@ export const createUserPassword = async (
 };
 // Removed local useState declaration to avoid conflict with imported useState from React
 
-export const banUser = async (token: string, id: string) => {
+export const banUser = async (token: string, id: number, data: IDataBan) => {
   try {
     const response = await fetch(`${APIURL}/users/${id}/ban`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const res = await response.json();
+    return res;
+  } catch (error) {
+    console.log("Error en useBanUser:", error);
+    throw error;
+  }
+};
+
+export const activeUser = async (token: string, id: number) => {
+  try {
+    const response = await fetch(`${APIURL}/users/${id}/unban`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -146,7 +165,8 @@ export const banUser = async (token: string, id: string) => {
     const res = await response.json();
     return res;
   } catch (error) {
-    console.log("Error en useBanUser:", error);
+    console.log("Error en useActiveUser:", error);
     throw error;
   }
-};
+
+}
