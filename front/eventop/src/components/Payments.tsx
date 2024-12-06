@@ -5,8 +5,9 @@ import PaymentButton from "./PaymentButton";
 import { texts } from "../helpers/texts";
 import { currencies } from "../helpers/currencies";
 import * as dotenv from "dotenv";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useUserContext } from "../context/userContext";
+import Swal from "sweetalert2";
 
 dotenv.config({
   path: ".env",
@@ -28,6 +29,7 @@ export default function Payments() {
   const [currency, setCurrency] = useState<Currency>("USD");
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
   const params = useParams();
+  const router = useRouter();
   const [quantityAvailable, setQuantityAvailable] = useState<number | null>(
     null
   );
@@ -116,6 +118,44 @@ export default function Payments() {
   const handlePaymentMethodChange = () => {
     setIsMercadoPagoSelected(!isMercadoPagoSelected);
     setPaymentMethod(isMercadoPagoSelected ? null : "mercado_pago");
+  };
+
+  const handleFreePayment = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/payment/free`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ eventId, email, quantity }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al procesar la entrada gratuita");
+      }
+
+      const data = await response.json();
+      console.log("Respuesta del backend:", data);
+
+      Swal.fire({
+        title: "Éxito",
+        text: "Entrada adquirida con éxito",
+        icon: "success",
+        confirmButtonText: "OK",
+        customClass: {
+          popup: "bg-gray-800 text-white",
+          title: "text-white",
+          confirmButton: "bg-purple-500 hover:bg-purple-600",
+        },
+      }).then(() => {
+        router.push("/"); // Redirigir al home
+      });
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -209,18 +249,28 @@ export default function Payments() {
           <span className="block text-sm font-semibold mb-3">
             {t.paymentMethod}
           </span>
-          <div className="space-y-3">
-            <label className="flex items-center space-x-3 cursor-pointer">
-              <input
-                type="checkbox"
-                id="mercado_pago"
-                checked={isMercadoPagoSelected}
-                onChange={handlePaymentMethodChange}
-                className="form-checkbox h-5 w-5 text-purple-600 transition duration-150 ease-in-out"
-              />
-              <span className="text-sm">{t.mercadoPago}</span>
-            </label>
-          </div>
+          {basePrice > 0 ? (
+            <div className="space-y-3">
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="mercado_pago"
+                  checked={isMercadoPagoSelected}
+                  onChange={handlePaymentMethodChange}
+                  className="form-checkbox h-5 w-5 text-purple-600 transition duration-150 ease-in-out"
+                />
+                <span className="text-sm">{t.mercadoPago}</span>
+              </label>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={handleFreePayment}
+              className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300"
+            >
+              Adquirir Entrada
+            </button>
+          )}
         </div>
 
         <motion.div
@@ -242,9 +292,9 @@ export default function Payments() {
         <div className="flex justify-center pt-6">
           {isMercadoPagoSelected && preferenceId ? (
             <PaymentButton preferenceId={preferenceId} />
-          ) : (
+          ) : basePrice > 0 ? (
             <p>Seleccionar método de pago</p>
-          )}
+          ) : null}
         </div>
       </form>
     </div>
