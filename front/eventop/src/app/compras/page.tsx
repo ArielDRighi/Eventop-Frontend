@@ -1,23 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart as ShoppingCartIcon, CreditCard } from "lucide-react";
+import { CreditCard } from "lucide-react";
 // import { PurchaseHistoryItem } from "@/types"; // Assuming you have a type defined for PurchaseHistoryItem
 import { useRouter } from "next/navigation";
 
 interface IPurchaseHistoryItem {
-    id: string;
-    eventName: string;
-    date: string;
-    quantity: number;
-    total: number;
+  id: string;
+  eventName: string;
+  date: string;
+  quantity: number;
+  total: number;
 }
 
 const PurchaseHistoryPage = () => {
-    const router = useRouter();
-  const [purchaseHistory, setPurchaseHistory] = useState<IPurchaseHistoryItem[]>([
- // Example data, replace with actual data fetching logic
+  const router = useRouter();
+  const purchaseHistory: IPurchaseHistoryItem[] = [
+    // Example data, replace with actual data fetching logic
     {
       id: "1",
       eventName: "Summer Music Festival",
@@ -32,12 +32,14 @@ const PurchaseHistoryPage = () => {
       quantity: 1,
       total: 299.99,
     },
-  ]);
+  ];
 
   return (
-<div className="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Historial de Compras</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">
+          Historial de Compras
+        </h1>
         <div className="space-y-4">
           {purchaseHistory.map((item) => (
             <motion.div
@@ -49,20 +51,27 @@ const PurchaseHistoryPage = () => {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-semibold text-white">{item.eventName}</h2>
+                  <h2 className="text-xl font-semibold text-white">
+                    {item.eventName}
+                  </h2>
                   <p className="text-gray-400">{item.date}</p>
                   <p className="text-gray-400">Cantidad: {item.quantity}</p>
-                  <p className="text-gray-400">Total: ${item.total.toFixed(2)}</p>
+                  <p className="text-gray-400">
+                    Total: ${item.total.toFixed(2)}
+                  </p>
                 </div>
                 <CreditCard className="h-10 w-10 text-purple-500" />
               </div>
             </motion.div>
           ))}
         </div>
-      <div className="mt-4 w-full">
-        <button className="btn w-full text-center font-semibold" onClick={() => router.push("/events")}>
-          Realizar otra compra
-        </button>
+        <div className="mt-4 w-full">
+          <button
+            className="btn w-full text-center font-semibold"
+            onClick={() => router.push("/events")}
+          >
+            Realizar otra compra
+          </button>
         </div>
       </div>
     </div>
