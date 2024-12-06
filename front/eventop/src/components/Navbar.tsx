@@ -59,14 +59,13 @@ const NavBar = () => {
                 <Link href={"/admin"}>Admin</Link>
               </li>
             )}
-            <li>
-            </li>
+            <li></li>
             {role == "client" && (
               <li>
                 <Link href={"/client"}>Mis Eventos</Link>
               </li>
             )}
-            
+
             {role ? (
               <>
                 <li>
@@ -108,7 +107,6 @@ const NavBar = () => {
               <Link href={"/client"}>Mis Eventos</Link>
             </li>
           )}
-          
         </ul>
       </div>
       <div className="navbar-end hidden lg:flex">
