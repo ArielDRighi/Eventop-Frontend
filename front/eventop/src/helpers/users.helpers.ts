@@ -26,7 +26,7 @@ export const getAllUsers = async (
   }
 };
 
-export const getUserById = async (token: string, id: string) => {
+export const getUserById = async (token: string, id: any) => {
   try {
     const response = await fetch(`${APIURL}/users/${id}`, {
       headers: {
@@ -168,5 +168,4 @@ export const activeUser = async (token: string, id: number) => {
     console.log("Error en useActiveUser:", error);
     throw error;
   }
-
-}
+};
