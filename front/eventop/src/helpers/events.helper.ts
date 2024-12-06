@@ -5,11 +5,7 @@ import Swal from "sweetalert2";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
-export const createEvent = async (
-  data: IEventsCreate,
-  token: string,
-  image: File | null
-) => {
+export const createEvent = async (data: IEventsCreate, token: string, image: File | null) => {
   try {
     // Crear un FormData y agregar los datos y la imagen
     const formData = new FormData();
@@ -29,13 +25,12 @@ export const createEvent = async (
     if (res.message === "Evento creado exitosamente") {
       Swal.fire({
         title: "Evento creado",
-        text: "Gracias por unirte a nosotros",
+        text: "El evento ha sido creado exitosamente.",
         icon: "success",
         customClass: {
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
-          confirmButton:
-            "bg-[#164E78] hover:bg-[#169978] text-white font-bold py-2 px-4 rounded",
+          confirmButton: "bg-[#164E78] hover:bg-[#169978] text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
       });
@@ -44,15 +39,12 @@ export const createEvent = async (
   } catch (error: any) {
     Swal.fire({
       title: "Error",
-      text:
-        error.message ||
-        "Hubo un problema al crear el evento. Por favor, inténtalo de nuevo.",
+      text: error.message || "Hubo un problema al crear el evento. Por favor, inténtalo de nuevo.",
       icon: "error",
       customClass: {
         popup: "bg-white shadow-lg rounded-lg p-6",
         title: "text-2xl font-semibold text-gray-800",
-        confirmButton:
-          "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded",
+        confirmButton: "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded",
       },
       buttonsStyling: false,
     });
@@ -73,9 +65,7 @@ export const useGetAllEvents = () => {
         });
 
         if (!res.ok) {
-          throw new Error(
-            `Error ${res.status}: No se pudo obtener los eventos`
-          );
+          throw new Error(`Error ${res.status}: No se pudo obtener los eventos`);
         }
 
         const data = await res.json();
@@ -130,11 +120,7 @@ export const useEventById = (id: string | number) => {
         setEvent(data);
       } catch (error) {
         console.log("Error en useEventById:", error);
-        setError(
-          error instanceof Error
-            ? error.message
-            : "Error desconocido al obtener el evento"
-        );
+        setError(error instanceof Error ? error.message : "Error desconocido al obtener el evento");
       } finally {
         setLoading(false);
       }
@@ -164,8 +150,7 @@ export const deleteEvent = async (id: number, token: any) => {
         customClass: {
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
-          confirmButton:
-            "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
+          confirmButton: "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
       });
@@ -174,15 +159,12 @@ export const deleteEvent = async (id: number, token: any) => {
   } catch (error: any) {
     Swal.fire({
       title: "Error",
-      text:
-        error.message ||
-        "Hubo un problema al eliminar el evento. Por favor, inténtalo de nuevo.",
+      text: error.message || "Hubo un problema al eliminar el evento. Por favor, inténtalo de nuevo.",
       icon: "error",
       customClass: {
         popup: "bg-white shadow-lg rounded-lg p-6",
         title: "text-2xl font-semibold text-gray-800",
-        confirmButton:
-          "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded",
+        confirmButton: "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded",
       },
       buttonsStyling: false,
     });
@@ -190,11 +172,7 @@ export const deleteEvent = async (id: number, token: any) => {
   }
 };
 
-export const editEvent = async (
-  id: number,
-  data: IEventsCreate,
-  token: any
-) => {
+export const editEvent = async (id: number, data: IEventsCreate, token: any) => {
   try {
     const response = await fetch(`${APIURL}/events/${id}`, {
       method: "PUT",
@@ -212,8 +190,7 @@ export const editEvent = async (
         customClass: {
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
-          confirmButton:
-            "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
+          confirmButton: "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
       });
@@ -223,15 +200,12 @@ export const editEvent = async (
   } catch (error: any) {
     Swal.fire({
       title: "Error",
-      text:
-        error.message ||
-        "Hubo un problema al actualizar el evento. Por favor, inténtalo de nuevo.",
+      text: error.message || "Hubo un problema al actualizar el evento. Por favor, inténtalo de nuevo.",
       icon: "error",
       customClass: {
         popup: "bg-white shadow-lg rounded-lg p-6",
         title: "text-2xl font-semibold text-gray-800",
-        confirmButton:
-          "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded",
+        confirmButton: "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded",
       },
       buttonsStyling: false,
     });
@@ -255,8 +229,7 @@ export const approveEvent = async (id: number, token: any) => {
         customClass: {
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
-          confirmButton:
-            "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
+          confirmButton: "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
       });
@@ -266,15 +239,12 @@ export const approveEvent = async (id: number, token: any) => {
   } catch (error: any) {
     Swal.fire({
       title: "Error",
-      text:
-        error.message ||
-        "Hubo un problema al eliminar el evento. Por favor, inténtalo de nuevo.",
+      text: error.message || "Hubo un problema al eliminar el evento. Por favor, inténtalo de nuevo.",
       icon: "error",
       customClass: {
         popup: "bg-white shadow-lg rounded-lg p-6",
         title: "text-2xl font-semibold text-gray-800",
-        confirmButton:
-          "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded",
+        confirmButton: "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded",
       },
       buttonsStyling: false,
     });
@@ -305,8 +275,7 @@ export const changeImage = async (data: any) => {
         customClass: {
           popup: "bg-white shadow-lg rounded-lg p-6",
           title: "text-2xl font-semibold text-gray-800",
-          confirmButton:
-            "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
+          confirmButton: "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded",
         },
         buttonsStyling: false,
       });
@@ -318,33 +287,22 @@ export const changeImage = async (data: any) => {
   } catch (error: any) {
     Swal.fire({
       title: "Error",
-      text:
-        error.message ||
-        "Hubo un problema al actualizar la imagen del evento. Por favor, inténtalo de nuevo.",
+      text: error.message || "Hubo un problema al actualizar la imagen del evento. Por favor, inténtalo de nuevo.",
       icon: "error",
       customClass: {
         popup: "bg-white shadow-lg rounded-lg p-6",
         title: "text-2xl font-semibold text-gray-800",
-        confirmButton:
-          "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded",
+        confirmButton: "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded",
       },
       buttonsStyling: false,
     });
-    throw new Error(
-      error.message || "Error al actualizar la imagen del evento"
-    );
+    throw new Error(error.message || "Error al actualizar la imagen del evento");
   }
 };
 
-export const getNearbyEvents = async (
-  latitude: number,
-  longitude: number,
-  radius: number
-) => {
+export const getNearbyEvents = async (latitude: number, longitude: number, radius: number) => {
   try {
-    const res = await fetch(
-      `${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`
-    );
+    const res = await fetch(`${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`);
     if (res.ok) {
       const data = await res.json();
       return data;
