@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useUserContext } from "@/context/userContext";
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import {
@@ -18,6 +19,7 @@ import {
 
 const SideBar = () => {
   const router = useRouter();
+  const { setRole } = useUserContext();
   const [isOpen, setIsOpen] = useState(false);
   const [isEventsOpen, setIsEventsOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
@@ -42,6 +44,7 @@ const SideBar = () => {
 
   const handleSingOut = () => {
     Cookies.remove("accessToken");
+    setRole("");
     router.push("/");
   };
 

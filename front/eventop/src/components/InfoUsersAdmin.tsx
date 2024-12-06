@@ -6,17 +6,18 @@ import Image from "next/image";
 
 interface InfoUsersAdminProps {
   userData: IUser[];
+  onUpdate: () => void;
 }
 
-const InfoUsersAdmin: React.FC<InfoUsersAdminProps> = ({ userData }) => {
+const InfoUsersAdmin: React.FC<InfoUsersAdminProps> = ({ userData, onUpdate }) => {
  
   const users = userData;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
       {users.map((user) => (
-        <div key={user.userId} className="bg-gray-800 p-4 rounded-lg shadow mx-auto w-[200px]">
-          <div className="flex flex-col items-center">
+        <div key={user.userId} className="bg-gray-700 p-4 rounded-lg shadow mx-auto w-[200px]">
+          <div className="flex flex-col items-center justify-evenly">
             <Image
               src={user.imageUrl || "/user-placeholder.webp"}
               alt={user.name}
@@ -25,7 +26,7 @@ const InfoUsersAdmin: React.FC<InfoUsersAdminProps> = ({ userData }) => {
               className="w-24 h-24 bg-gray-500 rounded-full mb-4 object-cover"
             />
             <h3 className="text-white font-semibold text-lg">{user.name}</h3>
-            <p className="text-gray-300">{user.email}</p>
+            <p className="text-gray-300 text-sm">{user.email}</p>
             <p className="text-gray-400 text-sm">Rol: {user.role}</p>
             <p className="text-gray-400 text-sm">Creado: {new Date(user.createdAt).toLocaleDateString()}</p>
             <span
@@ -43,9 +44,9 @@ const InfoUsersAdmin: React.FC<InfoUsersAdminProps> = ({ userData }) => {
             </span>
             <div className="mt-4 flex space-x-2">
               {user.isBanned ? (
-                <ActiveButton userId={user.userId} />
+                <ActiveButton userId={user.userId} onUpdate={onUpdate} />
               ) : (
-                <SuspendButton userId={user.userId} />
+                <SuspendButton userId={user.userId} onUpdate={onUpdate}  />
               )}
             </div>
           </div>
