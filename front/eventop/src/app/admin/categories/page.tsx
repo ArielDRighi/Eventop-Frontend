@@ -106,9 +106,9 @@ const CategoriesPage = () => {
             placeholder="Buscar categorías..."
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-full p-4 pl-12 bg-gray-900 border-2 border-purple-500 rounded-lg focus:outline-none  transition duration-300 group-hover:border-purple-600"
+            className="w-full p-4 pl-12 bg-gray-900 border-2 border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300 group-hover:border-purple-500"
           />
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-500 group-hover:text-purple-500 transition duration-300" />
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-purple-500 transition duration-300" />
         </div>
 
         <div className="bg-gray-900 rounded-lg shadow-xl overflow-hidden mb-12 transform hover:scale-102 transition duration-300">
@@ -130,7 +130,7 @@ const CategoriesPage = () => {
               {filteredCategories?.map((category, index) => (
                 <tr
                   key={category.categoryId}
-                  className="border-b border-gray-700 hover:bg-gray-700 transition duration-300"
+                  className="border-b  border-gray-700 hover:bg-gray-700 transition duration-300"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <td className="py-4 px-6">{category.categoryId}</td>
@@ -138,9 +138,8 @@ const CategoriesPage = () => {
                   <td className="py-4 px-6 text-right">
                     <button
                       onClick={() => handleDeleteCategory(category)}
-                      className="group relative flex h-14 w-14 flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-red-800 bg-red-400 hover:bg-red-600"
+                      className="group relative inline-flex h-14 w-14 flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-red-800 bg-red-400 hover:bg-red-600"
                     >
-                      {/* Icono giratorio */}
                       <svg
                         viewBox="0 0 1.625 1.625"
                         className="absolute -top-7 fill-white delay-100 group-hover:top-6 group-hover:animate-[spin_1.4s] group-hover:duration-1000"
@@ -152,7 +151,6 @@ const CategoriesPage = () => {
                         <path d="m1.245.465-.15-.15a.02.02 0 0 0-.016-.006.023.023 0 0 0-.023.022v.108c0 .036.029.065.065.065h.107a.023.023 0 0 0 .023-.023.02.02 0 0 0-.007-.016"></path>
                       </svg>
 
-                      {/* Línea decorativa */}
                       <svg
                         width="16"
                         fill="none"
@@ -215,7 +213,7 @@ const CategoriesPage = () => {
               placeholder="Nombre de la nueva categoría..."
               value={newCategory}
               onChange={handleNewCategoryChange}
-              className="flex-grow p-4 bg-gray-900 border-2 border-purple-500 rounded-lg   focus:ring-purple-500 transition duration-300"
+              className="flex-grow p-4 bg-gray-900 border-2 border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300"
             />
             <button
               onClick={handleCreateCategory}
