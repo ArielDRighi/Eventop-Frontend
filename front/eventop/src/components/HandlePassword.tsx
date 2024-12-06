@@ -5,6 +5,7 @@ import {
   createUserPassword,
 } from "@/helpers/users.helpers";
 import { Eye, EyeClosed } from "lucide-react";
+import Swal from "sweetalert2";
 
 interface HandlePasswordProps {
   password: string;
@@ -41,9 +42,28 @@ const HandlePassword: React.FC<HandlePasswordProps> = ({ password, id }) => {
     console.log("Datos enviados:", dataPassword);
     try {
       const res = await changeUserPassword(token, id, dataPassword);
+      if (res.statusCode === 401) {
+        throw new Error("Contraseña incorrecta");
+      }
+      Swal.fire({
+        icon: "success",
+        title: "Contraseña cambiada",
+        text: "La contraseña ha sido cambiada correctamente.",
+        showConfirmButton: true,
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#6B46C1",
+      });
       console.log("Contraseña cambiada:", res);
       setError(null);
     } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error al cambiar la contraseña. Por favor, inténtelo de nuevo.",
+        showConfirmButton: true,
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#6B46C1",
+      });
       console.log("Error al cambiar la contraseña:", error);
       setError(
         "Error al cambiar la contraseña. Por favor, inténtelo de nuevo."
