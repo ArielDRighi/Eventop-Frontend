@@ -66,7 +66,7 @@ const CreateLocation: React.FC<CreateLocationProps> = ({ setLocations }) => {
       onSubmit={handleSubmit}
       className="max-w-4xl mx-auto p-8 bg-gray-900 rounded-xl shadow-2xl text-center"
     >
-      <h2 className="text-3xl font-bold text-purple-500 text-center mb-8">
+      <h2 className="text-3xl font-bold mb-12 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-center">
         Crear Ubicación
       </h2>
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
