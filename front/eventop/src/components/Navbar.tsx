@@ -76,7 +76,7 @@ const NavBar = () => {
                   <Link href={"/compras"}>Compras</Link>
                 </li>
                 <li>
-                  <button onClick={handleLogOut}>Cerrar Sesión</button>
+                  <button onClick={handleLogOut}>Cerrar Sesion</button>
                 </li>
               </>
             ) : (
