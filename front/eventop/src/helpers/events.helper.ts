@@ -29,7 +29,7 @@ export const createEvent = async (
     if (res.message === "Evento creado exitosamente") {
       Swal.fire({
         title: "Evento creado",
-        text: "Gracias por unirte a nosotros",
+        text: "El evento ha sido creado exitosamente",
         icon: "success",
         customClass: {
           popup: "bg-white shadow-lg rounded-lg p-6",
