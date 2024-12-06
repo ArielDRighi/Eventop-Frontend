@@ -2,21 +2,14 @@ const APIURL = process.env.NEXT_PUBLIC_API_URL;
 import { IUserEdit } from "../interfaces/IUser";
 import { IDataBan } from "../interfaces/IDataBan";
 
-export const getAllUsers = async (
-  token: string,
-  page: number,
-  limit: number
-) => {
+export const getAllUsers = async (token: string, page: number, limit: number) => {
   try {
-    const response = await fetch(
-      `${APIURL}/users?page=${page}&limit=${limit}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`${APIURL}/users?page=${page}&limit=${limit}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
     console.log(response);
     const res = await response.json();
     return res;
@@ -42,11 +35,7 @@ export const getUserById = async (token: string, id: any) => {
   }
 };
 
-export const updateUserImage = async (
-  token: string,
-  id: string,
-  image: File | null
-) => {
+export const updateUserImage = async (token: string, id: string, image: File | null) => {
   try {
     const formData = new FormData();
     if (image) {
@@ -68,11 +57,7 @@ export const updateUserImage = async (
   }
 };
 
-export const updateUserProfile = async (
-  token: string,
-  id: string,
-  data: IUserEdit
-) => {
+export const updateUserProfile = async (token: string, id: string, data: IUserEdit) => {
   try {
     const response = await fetch(`${APIURL}/users/${id}`, {
       method: "PUT",
@@ -169,3 +154,26 @@ export const activeUser = async (token: string, id: number) => {
     throw error;
   }
 };
+
+export const changeUserRole = async (token: string, id: number, data: { role: string }) => {
+  try {
+    const response = await fetch(`${APIURL}/users/${id}/role`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const res = await response.json();
+    return res;
+  } catch (error) {
+    console.log("Error en useChangeUserRole:", error);
+    throw error;
+  }
+};
+
+// export const sendEmail = async (token: string, id: number, data: { subject: string, message: string }) => {
+//   try {
+//     const response = await fetch(`${APIURL}/users/${id}/send-email`, {
+//       method: "POST",
