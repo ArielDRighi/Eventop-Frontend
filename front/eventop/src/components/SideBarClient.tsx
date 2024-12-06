@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import { useUserContext } from "@/context/userContext";
 import Cookies from "js-cookie";
 import {
   ArrowLeftCircleIcon,
@@ -17,6 +18,7 @@ import {
 
 const SideBarClient = () => {
   const router = useRouter();
+  const { setRole } = useUserContext();
   const [isOpen, setIsOpen] = useState(false);
   const [isEventsOpen, setIsEventsOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
@@ -41,6 +43,7 @@ const SideBarClient = () => {
 
   const handleSingOut = () => {
     Cookies.remove("accessToken");
+    setRole("")
     router.push("/");
   };
 

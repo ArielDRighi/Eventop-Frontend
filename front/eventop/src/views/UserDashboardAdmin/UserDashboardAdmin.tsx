@@ -12,26 +12,27 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const limit = 50;
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      const token = Cookies.get("accessToken");
+  const fetchUsers = async () => {
+    setLoading(true);
+    const token = Cookies.get("accessToken");
 
-      if (token) {
-        try {
-          const parsedToken = JSON.parse(token);
-          const fetchedUsers = await getAllUsers(parsedToken, page, limit);
-          setUsers((prevUsers) => [...prevUsers, ...fetchedUsers]);
-        } catch (error) {
-          console.error("Error fetching users:", error);
-        } finally {
-          setLoading(false);
-        }
-      } else {
+    if (token) {
+      try {
+        const parsedToken = JSON.parse(token);
+        const fetchedUsers = await getAllUsers(parsedToken, page, limit);
+        console.log("fetchedUsers:", fetchedUsers);
+        setUsers(fetchedUsers);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      } finally {
         setLoading(false);
       }
-    };
+    } else {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchUsers();
   }, [page]);
 
@@ -71,8 +72,8 @@ const Dashboard = () => {
           onChange={handleSearch}
           className="p-2 mb-4 border border-gray-700 rounded bg-gray-800 text-white focus:ring-2 focus:ring-purple-500"
         />
-        <div className="overflow-y-auto h-[600px] lg:max-w-7xl md:max-w-4xl w-full p-7 bg-gray-700 rounded">
-          <InfoUsersAdmin userData={unbannedUsers} />
+        <div className="overflow-y-auto h-[600px] lg:max-w-7xl md:max-w-4xl w-full p-7 bg-gray-900 shadow-xl border border-gray-700 rounded-md">
+          <InfoUsersAdmin userData={unbannedUsers} onUpdate={fetchUsers}/>
         </div>
         {loading ? (
           <div className="text-center mt-4 text-slate-300">Cargando...</div>
@@ -89,8 +90,8 @@ const Dashboard = () => {
         <h2 className="text-3xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-center mt-10">
           Usuarios Baneados
         </h2>
-        <div className="overflow-y-auto h-[500px] lg:max-w-7xl md:max-w-4xl w-full p-7 bg-gray-700 rounded">
-          <InfoUsersAdmin userData={bannedUsers} />
+        <div className="overflow-y-auto h-[600px] lg:max-w-7xl md:max-w-4xl w-full p-7 bg-gray-900 shadow-xl border border-gray-700 rounded-md">
+          <InfoUsersAdmin userData={bannedUsers} onUpdate={fetchUsers}/>
         </div>
       </div>
     </div>
