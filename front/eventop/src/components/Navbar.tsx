@@ -66,22 +66,7 @@ const NavBar = () => {
                 <Link href={"/client"}>Mis Eventos</Link>
               </li>
             )}
-            <li>
-              <details>
-                <summary>Argentina | ES</summary>
-                <ul className="p-2 text-gray-900">
-                  <li>
-                    <a>Inglés</a>
-                  </li>
-                  <li>
-                    <a>Italiano</a>
-                  </li>
-                  <li>
-                    <a>Portugués</a>
-                  </li>
-                </ul>
-              </details>
-            </li>
+            
             {role ? (
               <>
                 <li>
@@ -126,22 +111,7 @@ const NavBar = () => {
               <Link href={"/client"}>Mis Eventos</Link>
             </li>
           )}
-          <li>
-            <details>
-              <summary>Argentina | ES</summary>
-              <ul className="p-2 text-gray-900">
-                <li>
-                  <a>Inglés</a>
-                </li>
-                <li>
-                  <a>Italiano</a>
-                </li>
-                <li>
-                  <a>Portugués</a>
-                </li>
-              </ul>
-            </details>
-          </li>
+          
         </ul>
       </div>
       <div className="navbar-end hidden lg:flex">
