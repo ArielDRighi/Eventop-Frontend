@@ -313,16 +313,27 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
               </form>
 
               <div className="border-t border-purple-600 my-8"></div>
-
-              <div className="bg-gradient-to-r from-gray-900 to-gray-900 p-6 rounded-lg shadow-md">
+                {userData?.password ? (
+                  <div className="bg-gradient-to-r from-gray-900 to-gray-900 p-6 rounded-lg shadow-md">
                 <h3 className="text-2xl font-semibold text-gray-50 mb-4">
                   Cambiar Contraseña
                 </h3>
                 <HandlePassword
                   password={userData?.password || ""}
                   id={String(userData?.userId)}
-                />
+                  />
               </div>
+                ) :
+                <div className="bg-gradient-to-r from-gray-900 to-gray-900 p-6 rounded-lg shadow-md">
+                <h3 className="text-2xl font-semibold text-gray-50 mb-4">
+                  Crear Contraseña
+                </h3>
+                <HandleCreatePassword
+                  password={userData?.password || ""}
+                  id={String(userData?.userId)}
+                  />
+              </div>
+                 )}
             </div>
           </div>
         </div>
