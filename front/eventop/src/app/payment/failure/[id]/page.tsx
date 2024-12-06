@@ -1,5 +1,4 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -12,19 +11,18 @@ interface IQueryData {
 }
 
 const PaymentFailurePage = () => {
-  const router = useRouter();
-  const [queryData, setQueryData] = useState(null);
+  const [queryData, setQueryData] = useState<IQueryData | null>(null);
   const params = useParams();
 
   useEffect(() => {
     const URLparams = new URLSearchParams(window.location.search);
-    const preference_id = URLparams.get("preference_id");
-    const collection_status = URLparams.get("collection_status");
-    const payment_id = URLparams.get("payment_id");
-    const status = URLparams.get("status");
+    const preference_id = URLparams.get("preference_id") || "";
+    const collection_status = URLparams.get("collection_status") || "";
+    const payment_id = URLparams.get("payment_id") || "";
+    const status = URLparams.get("status") || "";
     const id = params.id as string;
 
-    const dataToSend = {
+    const dataToSend: IQueryData = {
       preference_id,
       collection_status,
       payment_id,
@@ -34,15 +32,15 @@ const PaymentFailurePage = () => {
 
     console.log(dataToSend);
     setQueryData(dataToSend);
-  }, []);
+  }, [params.id]);
 
   return (
     <div>
       <h1>Payment Failure</h1>
       {queryData ? (
         <div>
-          <p>Transaction ID: {queryData.transactionId}</p>
-          <p>Reason: {queryData.reason}</p>
+          <p>Transaction ID: {queryData.preference_id}</p>
+          <p>Reason: {queryData.status}</p>
         </div>
       ) : (
         <p>Loading...</p>

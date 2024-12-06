@@ -13,16 +13,22 @@ const UserDashboard = () => {
   const router = useRouter();
   const [userData, setUserData] = useState<IUserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { userId } = useUserContext();
-  console.log(userId);
   const token = Cookies.get("accessToken") || "null";
   const [error, setError] = useState<string | null>(null);
-
+  const { userId } = useUserContext();
+  
   useEffect(() => {
+    console.log(userId);
     if (!token || token === "null") {
       router.push("/login");
       return;
     }
+    
+    if (!userId) {
+      console.error("User ID not provided");
+      return;
+    }
+
 
     const fetchUser = async () => {
       try {
@@ -42,7 +48,7 @@ const UserDashboard = () => {
     };
 
     fetchUser();
-  }, [userId, router, token]);
+  }, [token, userId, router]);
 
   if (isLoading) {
     return (
