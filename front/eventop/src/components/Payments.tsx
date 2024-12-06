@@ -59,7 +59,7 @@ export default function Payments() {
   }, [eventId]);
 
   useEffect(() => {
-    const newTotal = ticketCount * basePrice * currencies[currency].rate;
+    const newTotal = ticketCount * basePrice * 1;
     setTotal(Number(newTotal.toFixed(2)));
   }, [ticketCount, currency, basePrice]);
 
