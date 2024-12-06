@@ -9,7 +9,7 @@ import { Calendar, Clock, MapPin, DollarSign } from "lucide-react";
 import Payments from "@/components/Payments";
 import { useEventById } from "@/helpers/events.helper";
 import Cookies from "js-cookie";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
 export default function DetallesEvento() {
@@ -112,7 +112,7 @@ export default function DetallesEvento() {
                     </div>
                     <div className="flex items-center text-gray-700">
                       <Clock className="h-5 w-5 mr-2 text-purple-500 flex-shrink-0" />
-                      <span className="truncate">Horario</span>
+                      <span className="truncate">{event.time}</span>
                     </div>
                     <div className="flex items-center text-gray-700">
                       <MapPin className="h-5 w-5 mr-2 text-purple-500 flex-shrink-0" />
@@ -129,7 +129,7 @@ export default function DetallesEvento() {
                     transition={{ duration: 0.5, delay: 0.2 }}
                     className="mt-auto pt-4"
                   >
-                    {!showPayment? (
+                    {!showPayment ? (
                       <button
                         onClick={handleBuyTickets}
                         className="w-full bg-purple-600 text-white py-3 px-4 rounded-md hover:bg-purple-700 font-semibold transition duration-300 transform hover:scale-105"
