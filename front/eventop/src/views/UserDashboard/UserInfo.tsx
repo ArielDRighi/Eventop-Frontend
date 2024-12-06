@@ -18,6 +18,7 @@ import {
   Mail,
 } from "lucide-react";
 import HandlePassword from "@/components/HandlePassword";
+import Swal from "sweetalert2";
 
 interface UserInfoProps {
   user: IUserProfile | null;
@@ -92,15 +93,25 @@ const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
       password: data.password || "",
     };
     try {
-      const res = await updateUserProfile(
+      await updateUserProfile(
         token as string,
         userId as string,
         dataToSend
       );
-      console.log("Perfil actualizado:", res);
+      Swal.fire({
+        icon: "success",
+        title: "Perfil actualizado",
+        showConfirmButton: false,
+        timer: 1500,
+      })
       setIsEditing(false);
-    } catch (error) {
-      console.log("Error al actualizar el perfil:", error);
+    } catch (error: any) {
+      Swal.fire({
+        icon: "error",
+        title: error.message || "Error al actualizar el perfil",
+        showConfirmButton: false,
+        timer: 1500,
+      })
     }
   };
 
