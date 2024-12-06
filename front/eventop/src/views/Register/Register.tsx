@@ -79,7 +79,15 @@ function Register() {
         },
         buttonsStyling: false,
       });
+
+      const UrlParams = new URLSearchParams(window.location.search)
+      const redirect =  UrlParams.get("redirect");
+      console.log("Redirect:", redirect);
+      if (redirect) {
+      router.push(`/login?redirect=${redirect}`);
+      } else {
       router.push("/login");
+      }
     } catch (error: any) {
       console.log("Error en el catch:", error);
       Swal.fire({
@@ -228,7 +236,7 @@ function Register() {
             width={300}
             height={300}
             alt="login"
-            className="hidden md:flex rounded-r-2xl w-[400px] h-full object-cover"
+            className="hidden md:flex rounded-r-2xl w-[400px] h-full object-fill"
           />
         </div>
       </div>

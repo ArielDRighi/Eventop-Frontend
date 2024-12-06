@@ -110,7 +110,11 @@ export const Login = () => {
         buttonsStyling: false,
       }).then((result) => {
         if (result.isConfirmed) {
-          window.location.href = "/"; // Cambia "/ruta-de-redireccion" por la ruta deseada
+          const UrlParams = new URLSearchParams(window.location.search);
+          const redirectUrl = UrlParams.get("redirect");
+          if (redirectUrl) {
+            window.location.href = `/${redirectUrl}`;
+          } else window.location.href = "/"; // Cambia "/ruta-de-redireccion" por la ruta deseada
         }
       });
     } catch (error: any) {

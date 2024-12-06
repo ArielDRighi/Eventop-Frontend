@@ -5,8 +5,9 @@ import PaymentButton from "./PaymentButton";
 import { texts } from "../helpers/texts";
 import { currencies } from "../helpers/currencies";
 import * as dotenv from "dotenv";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useUserContext } from "../context/userContext";
+import Swal from "sweetalert2";
 
 dotenv.config({
   path: ".env",
@@ -18,29 +19,26 @@ type Currency = "USD" | "EUR" | "ARS" | "BRL";
 export default function Payments() {
   const { userName } = useUserContext();
   const [ticketCount, setTicketCount] = useState(1);
-  const [basePrice, setBasePrice] = useState(0); // Inicialmente 0
+  const [basePrice, setBasePrice] = useState(0);
   const [total, setTotal] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState<
-    "credit_card" | "mercado_pago"
-  >("credit_card");
+    "credit_card" | "mercado_pago" | null
+  >(null);
+  const [isMercadoPagoSelected, setIsMercadoPagoSelected] = useState(false);
   const [language, setLanguage] = useState<Language>("es");
   const [currency, setCurrency] = useState<Currency>("USD");
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
   const params = useParams();
+  const router = useRouter();
   const [quantityAvailable, setQuantityAvailable] = useState<number | null>(
     null
   );
-  const [isMercadoPagoSelected, setIsMercadoPagoSelected] = useState(false);
 
   const eventId = params.eventId as string;
-  const email = userName; // Usa el email del usuario logueado
+  const email = userName;
   const quantity = ticketCount;
-  console.log("ID del evento", eventId);
-  console.log("Email del usuario", email);
-  console.log("quantity", quantity);
 
   useEffect(() => {
-    // Función para obtener los detalles del evento
     const fetchEventDetails = async () => {
       try {
         const response = await fetch(
@@ -51,13 +49,13 @@ export default function Payments() {
         }
         const data = await response.json();
         setBasePrice(data.price);
-        setQuantityAvailable(data.quantityAvailable); // Establecer la cantidad de tickets disponibles
+        setQuantityAvailable(data.quantityAvailable);
       } catch (error) {
         console.error("Error fetching event details:", error);
       }
     };
 
-    fetchEventDetails(); // Llama a la función para obtener los detalles del evento
+    fetchEventDetails();
   }, [eventId]);
 
   useEffect(() => {
@@ -65,12 +63,12 @@ export default function Payments() {
     setTotal(Number(newTotal.toFixed(2)));
   }, [ticketCount, currency, basePrice]);
 
-  // efecto para crear la preferencia de pago
   useEffect(() => {
     const createPreference = async () => {
-      if (paymentMethod !== "mercado_pago") return;
-      console.log("ID de evento:", eventId, typeof eventId);
-      console.log("email:", email);
+      if (!isMercadoPagoSelected) {
+        setPreferenceId(null);
+        return;
+      }
 
       try {
         const response = await fetch(
@@ -80,7 +78,7 @@ export default function Payments() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ eventId, email, quantity }), // Incluir el correo electrónico en el cuerpo de la solicitud
+            body: JSON.stringify({ eventId, email, quantity }),
           }
         );
 
@@ -104,16 +102,65 @@ export default function Payments() {
     };
 
     createPreference();
-  }, [paymentMethod, total, eventId, email, quantity]);
+  }, [isMercadoPagoSelected, total, eventId, email, quantity]);
 
   const handleTicketChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTicketCount(parseInt(e.target.value));
+    const newTicketCount = parseInt(e.target.value);
+    setTicketCount(newTicketCount);
+
+    // Si MercadoPago está seleccionado, actualiza la preferencia
+    if (isMercadoPagoSelected) {
+      setIsMercadoPagoSelected(false);
+      setTimeout(() => setIsMercadoPagoSelected(true), 0);
+    }
+  };
+
+  const handlePaymentMethodChange = () => {
+    setIsMercadoPagoSelected(!isMercadoPagoSelected);
+    setPaymentMethod(isMercadoPagoSelected ? null : "mercado_pago");
+  };
+
+  const handleFreePayment = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/payment/free`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ eventId, email, quantity }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al procesar la entrada gratuita");
+      }
+
+      const data = await response.json();
+      console.log("Respuesta del backend:", data);
+
+      Swal.fire({
+        title: "Éxito",
+        text: "Entrada adquirida con éxito",
+        icon: "success",
+        confirmButtonText: "OK",
+        customClass: {
+          popup: "bg-gray-800 text-white",
+          title: "text-white",
+          confirmButton: "bg-purple-500 hover:bg-purple-600",
+        },
+      }).then(() => {
+        router.push("/"); // Redirigir al home
+      });
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (paymentMethod === "mercado_pago") {
-      // The MercadoPago button will handle the payment process
       console.log("MercadoPago payment method selected");
     }
   };
@@ -187,12 +234,7 @@ export default function Payments() {
               id="tickets"
               onChange={handleTicketChange}
               value={ticketCount}
-              disabled={paymentMethod === "mercado_pago"}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-600 transition-colors duration-200 text-gray-800 ${
-                paymentMethod === "mercado_pago"
-                  ? "bg-gray-300 border-gray-500 cursor-not-allowed" // Estilos cuando está bloqueado
-                  : "bg-white border-purple-500" // Estilos cuando está habilitado
-              }`}
+              className="w-full px-3 py-2 border border-purple-500 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent bg-white transition-colors duration-200 text-gray-800"
             >
               {[1, 2, 3, 4, 5].map((num) => (
                 <option key={num} value={num}>
@@ -207,24 +249,28 @@ export default function Payments() {
           <span className="block text-sm font-semibold mb-3">
             {t.paymentMethod}
           </span>
-          <div className="space-y-3">
-            <label className="flex items-center space-x-3 cursor-pointer">
-              <input
-                type="radio"
-                id="mercado_pago"
-                value="mercado_pago"
-                checked={isMercadoPagoSelected}
-                onChange={() => {
-                  setIsMercadoPagoSelected(!isMercadoPagoSelected);
-                  setPaymentMethod(
-                    isMercadoPagoSelected ? "credit_card" : "mercado_pago"
-                  );
-                }}
-                className="form-radio h-5 w-5 text-purple-600 transition duration-150 ease-in-out"
-              />
-              <span className="text-sm">{t.mercadoPago}</span>
-            </label>
-          </div>
+          {basePrice > 0 ? (
+            <div className="space-y-3">
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="mercado_pago"
+                  checked={isMercadoPagoSelected}
+                  onChange={handlePaymentMethodChange}
+                  className="form-checkbox h-5 w-5 text-purple-600 transition duration-150 ease-in-out"
+                />
+                <span className="text-sm">{t.mercadoPago}</span>
+              </label>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={handleFreePayment}
+              className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300"
+            >
+              Adquirir Entrada
+            </button>
+          )}
         </div>
 
         <motion.div
@@ -244,11 +290,11 @@ export default function Payments() {
         </motion.div>
 
         <div className="flex justify-center pt-6">
-          {paymentMethod === "mercado_pago" && preferenceId ? (
+          {isMercadoPagoSelected && preferenceId ? (
             <PaymentButton preferenceId={preferenceId} />
-          ) : (
+          ) : basePrice > 0 ? (
             <p>Seleccionar método de pago</p>
-          )}
+          ) : null}
         </div>
       </form>
     </div>
