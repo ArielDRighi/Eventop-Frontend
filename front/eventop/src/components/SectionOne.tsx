@@ -46,7 +46,7 @@ const LandingPage = () => {
             >
               Descubre Eventos Increíbles en{" "}
               <motion.strong
-                className="text-indigo-500"
+                className="text-purple-500"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
@@ -77,7 +77,7 @@ const LandingPage = () => {
               {!role && (
                 <Link
                   href="/login"
-                  className="inline-flex items-center bg-purple-700 hover:bg-purple-900 text-white font-bold py-3 px-6 rounded-md"
+                  className="inline-flex items-center bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-md"
                 >
                   <Ticket className="mr-2 h-5 w-5" />
                   Crear Cuenta
@@ -115,7 +115,7 @@ const LandingPage = () => {
             className="bg-gray-900 mt-10 rounded-lg p-6 shadow-lg"
           >
             <div className="flex flex-col items-center">
-              <feature.icon className="h-10 w-10 text-indigo-500 mb-2" />
+              <feature.icon className="h-10 w-10 text-purple-500 mb-2" />
               <h3 className="text-lg font-semibold">{feature.title}</h3>
               <p className="text-sm text-gray-400 text-center mt-2">
                 {feature.description}
