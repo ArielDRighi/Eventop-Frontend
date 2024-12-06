@@ -11,7 +11,7 @@ const Home = () => {
     <div className="bg-gray-900">
       <SectionOne />
       <Cards />
-      <EventsPassed />
+      {/* <EventsPassed /> */}
       <BlogTwo />
       <Opinions />
       <Blog />

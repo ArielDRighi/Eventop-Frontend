@@ -8,7 +8,7 @@ import InfoUsersAdmin from "@/components/InfoUsersAdmin";
 const Dashboard = () => {
   const [users, setUsers] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
+ const page = 1;
   const [searchTerm, setSearchTerm] = useState("");
   const limit = 50;
 
@@ -75,7 +75,7 @@ const Dashboard = () => {
         <div className="overflow-y-auto h-[600px] lg:max-w-7xl md:max-w-4xl w-full p-7 bg-gray-900 shadow-xl border border-gray-700 rounded-md">
           <InfoUsersAdmin userData={unbannedUsers} onUpdate={fetchUsers}/>
         </div>
-        {loading ? (
+        {/* {loading ? (
           <div className="text-center mt-4 text-slate-300">Cargando...</div>
         ) : (
           <button
@@ -84,7 +84,7 @@ const Dashboard = () => {
           >
             Ver más
           </button>
-        )}
+        )} */}
       </div>
       <div className="flex flex-col items-center mb-10">
         <h2 className="text-3xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-center mt-10">

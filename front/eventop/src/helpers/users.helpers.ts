@@ -170,3 +170,27 @@ export const activeUser = async (token: string, id: number) => {
   }
 
 }
+
+export const changeUserRole = async (token: string, id: number, data: {role: string} ) => {
+  try {
+    const response = await fetch(`${APIURL}/users/${id}/role`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const res = await response.json();
+    return res;
+  } catch (error) {
+    console.log("Error en useChangeUserRole:", error);
+    throw error;
+  }
+
+}
+
+// export const sendEmail = async (token: string, id: number, data: { subject: string, message: string }) => {
+//   try {
+//     const response = await fetch(`${APIURL}/users/${id}/send-email`, {
+//       method: "POST",   
