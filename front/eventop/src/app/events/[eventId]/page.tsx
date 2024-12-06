@@ -8,15 +8,40 @@ import { motion } from "framer-motion";
 import { Calendar, Clock, MapPin, DollarSign } from "lucide-react";
 import Payments from "@/components/Payments";
 import { useEventById } from "@/helpers/events.helper";
+import Cookies from "js-cookie";
+import {useRouter} from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function DetallesEvento() {
   const [showPayment, setShowPayment] = useState(false);
+  const router = useRouter();
 
   const params = useParams();
   const eventId = params.eventId as string;
 
   const { event, loading, error } = useEventById(eventId);
 
+  const handleBuyTickets = () => {
+    const token = Cookies.get("accessToken");
+    if (!token) {
+      Swal.fire({
+        title: "No estás logueado",
+        text: "¿Quieres iniciar sesión?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Iniciar sesión",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push("/login");
+        } else {
+          setShowPayment(false);
+        }
+      });
+    } else {
+      setShowPayment(true);
+    }
+  };
   if (loading) {
     return (
       <div className="flex items-center justify-center space-x-2">
@@ -104,9 +129,9 @@ export default function DetallesEvento() {
                     transition={{ duration: 0.5, delay: 0.2 }}
                     className="mt-auto pt-4"
                   >
-                    {!showPayment ? (
+                    {!showPayment? (
                       <button
-                        onClick={() => setShowPayment(true)}
+                        onClick={handleBuyTickets}
                         className="w-full bg-purple-600 text-white py-3 px-4 rounded-md hover:bg-purple-700 font-semibold transition duration-300 transform hover:scale-105"
                       >
                         Comprar Entradas

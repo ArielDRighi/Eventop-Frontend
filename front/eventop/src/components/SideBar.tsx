@@ -97,7 +97,6 @@ const SideBar = () => {
               <li>
                 <Link
                   href="/admin"
-                  target="_blank"
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <LayoutDashboard className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform duration-200" />
@@ -107,7 +106,6 @@ const SideBar = () => {
               <li>
                 <Link
                   href="/admin/users"
-                  target="_blank"
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <User className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-200" />
@@ -134,7 +132,6 @@ const SideBar = () => {
                     <li>
                       <Link
                         href="/admin/events"
-                        target="_blank"
                         className="block py-2 pl-9 pr-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-colors duration-200"
                       >
                         Todos los eventos
@@ -143,7 +140,6 @@ const SideBar = () => {
                     <li>
                       <Link
                         href="/admin/events/create-event"
-                        target="_blank"
                         className="block py-2 pl-9 pr-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-colors duration-200"
                       >
                         Crear evento
@@ -155,7 +151,6 @@ const SideBar = () => {
               <li>
                 <Link
                   href="https://calendar.google.com/calendar/u/0/r?pli=1"
-                  target="_blank"
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <Calendar className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform duration-200" />
@@ -165,7 +160,6 @@ const SideBar = () => {
               <li>
                 <Link
                   href="/admin/locations"
-                  target="_blank"
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <Pin className="w-5 h-5 mr-3 group-hover:bounce transition-transform duration-200" />
@@ -175,7 +169,6 @@ const SideBar = () => {
               <li>
                 <Link
                   href="/admin/categories"
-                  target="_blank"
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <Drama className="w-5 h-5 mr-3 group-hover:bounce transition-transform duration-200" />
@@ -185,7 +178,6 @@ const SideBar = () => {
               <li>
                 <Link
                   href="/contact"
-                  target="_blank"
                   className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all duration-200 group"
                 >
                   <HelpCircle className="w-5 h-5 mr-3 group-hover:bounce transition-transform duration-200" />

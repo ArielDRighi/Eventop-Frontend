@@ -50,7 +50,9 @@ export const EncontraEventos = () => {
   ) => {
     try {
       const res = await fetch(
-        `${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${radius}`
+        `${APIURL}/events/nearby?latitude=${latitude}&longitude=${longitude}&radius=${
+          radius * 1000
+        }`
       );
       if (res.ok) {
         const data = await res.json();

@@ -76,9 +76,6 @@ const NavBar = () => {
                   <Link href={"/compras"}>Compras</Link>
                 </li>
                 <li>
-                  <Link href={"/notificaciones"}>Notificaciones</Link>
-                </li>
-                <li>
                   <button onClick={handleLogOut}>Cerrar Sesión</button>
                 </li>
               </>
@@ -133,9 +130,6 @@ const NavBar = () => {
               </li>
               <li>
                 <Link href={"/compras"}>Compras</Link>
-              </li>
-              <li>
-                <Link href={"/notificaciones"}>Notificaciones</Link>
               </li>
               <li>
                 <button onClick={handleLogOut}>Cerrar Sesión</button>

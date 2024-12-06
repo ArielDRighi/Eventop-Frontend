@@ -10,6 +10,7 @@ import { ILocation } from "@/interfaces/ILocations";
 
 interface IFormInput extends Omit<IEventsCreate, "date" | "image"> {
   date: string;
+  time: string;
   quantityAvailable: number;
 }
 
@@ -40,6 +41,7 @@ const EventForm: React.FC = () => {
     const formattedData: IEventsCreate = {
       ...data,
       date: new Date(data.date), // Convertir `date` a una instancia de `Date`
+      time: data.time, // Mantener `time` como string
       image: image ? image : "", // Incluir la propiedad `image`
     };
     setLoadingSubmit(true);
@@ -127,6 +129,67 @@ const EventForm: React.FC = () => {
             {errors.date && (
               <span className="text-red-400 text-sm mt-1 block">
                 {errors.date.message}
+              </span>
+            )}
+          </div>
+
+          {/* Hora */}
+          <div className="col-span-1">
+            <label
+              htmlFor="time"
+              className="block text-lg font-semibold text-gray-300 mb-2"
+            >
+              Hora
+            </label>
+            <input
+              id="time"
+              type="time"
+              {...register("time", {
+                required: "La hora es obligatoria",
+              })}
+              className="input h-[52px] text-[15px] text-white/60 w-full bg-gray-900 text-gray-50 px-3 py-1 rounded-lg border border-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500  transition-all duration-150 ease-in-out"
+            />
+            {errors.time && (
+              <span className="text-red-400 text-sm mt-1 block">
+                {errors.time.message}
+              </span>
+            )}
+          </div>
+
+          {/* Ubicación */}
+          <div className="col-span-1">
+            <label
+              htmlFor="location_id"
+              className="block text-lg font-semibold text-gray-300 mb-2"
+            >
+              Ubicación
+            </label>
+            {loading ? (
+              <p className="text-gray-400 italic">Cargando ubicaciones...</p>
+            ) : (
+              <select
+                id="location_id"
+                {...register("location_id", {
+                  required: "La ubicación es obligatoria",
+                  valueAsNumber: true,
+                })}
+                className="input h-[52px] text-[15px] text-white/60 w-full bg-gray-900 text-gray-50 px-3 py-1 rounded-lg border border-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500  transition-all duration-150 ease-in-out"
+              >
+                <option value="">Selecciona una ubicación</option>
+                {locations !== null &&
+                  locations.map((location: ILocation) => (
+                    <option
+                      key={location.locationId}
+                      value={location.locationId}
+                    >
+                      {location.city}, {location.state}, {location.country}
+                    </option>
+                  ))}
+              </select>
+            )}
+            {errors.location_id && (
+              <span className="text-red-400 text-sm mt-1 block">
+                {errors.location_id.message}
               </span>
             )}
           </div>
@@ -256,44 +319,6 @@ const EventForm: React.FC = () => {
             {errors.category_id && (
               <span className="text-red-400 text-sm mt-1 block">
                 {errors.category_id.message}
-              </span>
-            )}
-          </div>
-
-          {/* Ubicación */}
-          <div className="col-span-1">
-            <label
-              htmlFor="location_id"
-              className="block text-lg font-semibold text-gray-300 mb-2"
-            >
-              Ubicación
-            </label>
-            {loading ? (
-              <p className="text-gray-400 italic">Cargando ubicaciones...</p>
-            ) : (
-              <select
-                id="location_id"
-                {...register("location_id", {
-                  required: "La ubicación es obligatoria",
-                  valueAsNumber: true,
-                })}
-                className="input h-[52px] text-[15px] text-white/60 w-full bg-gray-900 text-gray-50 px-3 py-1 rounded-lg border border-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500  transition-all duration-150 ease-in-out"
-              >
-                <option value="">Selecciona una ubicación</option>
-                {locations !== null &&
-                  locations.map((location: ILocation) => (
-                    <option
-                      key={location.locationId}
-                      value={location.locationId}
-                    >
-                      {location.city}, {location.state}, {location.country}
-                    </option>
-                  ))}
-              </select>
-            )}
-            {errors.location_id && (
-              <span className="text-red-400 text-sm mt-1 block">
-                {errors.location_id.message}
               </span>
             )}
           </div>
