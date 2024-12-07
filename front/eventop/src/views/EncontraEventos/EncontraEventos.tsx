@@ -24,6 +24,7 @@ export const EncontraEventos = () => {
   const [locations, setLocations] = useState<ILocation[]>([]);
   const [radius, setRadius] = useState<number>(10);
   const [isOpen, setIsOpen] = useState(false);
+  const [visibleEvents, setVisibleEvents] = useState<number>(6);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => {
@@ -178,6 +179,10 @@ export const EncontraEventos = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const loadMoreEvents = () => {
+    setVisibleEvents((prev) => prev + 6);
+  };
+
   return (
     <div>
       <section className="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-16 px-4 sm:px-6 lg:px-8 min-h-screen">
@@ -293,59 +298,58 @@ export const EncontraEventos = () => {
           </div>
 
           <div className="grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-[30] ">
-            {filteredEvents &&
-              filteredEvents.map((event: IEvent) => {
-                if (!event.location_id) {
-                  return null;
-                }
-                return (
-                  <motion.div
-                    key={event.eventId}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="bg-gray-900 bg-opacity-50 rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl"
-                  >
-                    <div className="relative h-56">
-                      <Image
-                        src={
-                          event.imageUrl ||
-                          "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"
-                        }
-                        alt={event.name}
-                        layout="fill"
-                        objectFit="cover"
-                        className="transition-transform duration-500 transform hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-start p-4">
-                        <Link
-                          href={`/events/${event.eventId}`}
-                          className="bg-purple-600 text-white font-semibold px-6 py-2 rounded-xl hover:bg-purple-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-                        >
-                          Ver Detalles
-                        </Link>
-                      </div>
+            {filteredEvents.slice(0, visibleEvents).map((event: IEvent) => {
+              if (!event.location_id) {
+                return null;
+              }
+              return (
+                <motion.div
+                  key={event.eventId}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-gray-900 bg-opacity-50 rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl"
+                >
+                  <div className="relative h-56">
+                    <Image
+                      src={
+                        event.imageUrl ||
+                        "https://i.pinimg.com/control2/736x/b4/42/77/b44277e3fa916b86b3b0bf49d9945f8b.jpg"
+                      }
+                      alt={event.name}
+                      layout="fill"
+                      objectFit="cover"
+                      className="transition-transform duration-500 transform hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-start p-4">
+                      <Link
+                        href={`/events/${event.eventId}`}
+                        className="bg-purple-600 text-white font-semibold px-6 py-2 rounded-xl hover:bg-purple-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+                      >
+                        Ver Detalles
+                      </Link>
                     </div>
-                    <div className="p-6">
-                      <h3 className="text-2xl font-bold mb-3 line-clamp-2">
-                        {event.name}
-                      </h3>
-                      <div className="flex items-center text-gray-300 mb-2">
-                        <Calendar className="h-5 w-5 mr-2 text-purple-400" />
-                        <span>{event.date}</span>
-                      </div>
-                      <div className="flex items-center text-gray-300">
-                        <MapPin className="h-5 w-5 mr-2 text-purple-400" />
-                        <span>{event.location_id.city}</span>
-                      </div>
-                      <div className="flex items-center text-gray-300">
-                        <DollarSign className="h-5 w-5 mr-2 text-purple-400" />
-                        <span>{event.price}</span>
-                      </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-2xl font-bold mb-3 line-clamp-2">
+                      {event.name}
+                    </h3>
+                    <div className="flex items-center text-gray-300 mb-2">
+                      <Calendar className="h-5 w-5 mr-2 text-purple-400" />
+                      <span>{event.date}</span>
                     </div>
-                  </motion.div>
-                );
-              })}
+                    <div className="flex items-center text-gray-300">
+                      <MapPin className="h-5 w-5 mr-2 text-purple-400" />
+                      <span>{event.location_id.city}</span>
+                    </div>
+                    <div className="flex items-center text-gray-300">
+                      <DollarSign className="h-5 w-5 mr-2 text-purple-400" />
+                      <span>{event.price}</span>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
 
             {filteredEvents.length === 0 && (
               <div className="flex flex-col items-center justify-center space-y-5 p-8 bg-gray-900 rounded-lg shadow-inner">
@@ -381,6 +385,17 @@ export const EncontraEventos = () => {
               </div>
             )}
           </div>
+
+          {visibleEvents < filteredEvents.length && (
+            <div className="flex justify-center mt-8">
+              <button
+                onClick={loadMoreEvents}
+                className="px-6 py-3 bg-purple-600 text-white font-medium text-base rounded-full hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-100 transition-all duration-300 transform hover:scale-105"
+              >
+                Cargar más eventos
+              </button>
+            </div>
+          )}
         </div>
       </section>
     </div>
