@@ -1,43 +1,59 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Star, ChevronDown, ChevronUp } from "lucide-react";
 import Image from "next/image";
-// This is example data. Replace with your actual data.
-const reviews = [
-  {
-    id: 1,
-    name: "Ana García",
-    rating: 5,
-    comment: "Increíble experiencia, lo recomiendo totalmente!",
-  },
-  {
-    id: 2,
-    name: "Carlos Rodríguez",
-    rating: 4,
-    comment: "Muy buen evento, aunque la cola para entrar fue un poco larga.",
-  },
-  {
-    id: 3,
-    name: "Laura Martínez",
-    rating: 5,
-    comment:
-      "El mejor concierto al que he asistido. La organización fue perfecta.",
-  },
-  {
-    id: 4,
-    name: "Miguel Sánchez",
-    rating: 3,
-    comment: "El evento estuvo bien, pero esperaba más variedad en la comida.",
-  },
-];
+
 export default function Component() {
+  interface Review {
+    id: number;
+    text: string;
+    user: User;
+    rating: number;
+  }
+
+  interface User {
+    id: number;
+    name: string;
+  }
+
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [expandedReview, setExpandedReview] = useState<number | null>(null);
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [policyExpanded, setPolicyExpanded] = useState(false);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/users/comments`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch comments");
+        }
+        const data = await response.json();
+        const reviews = data.comments;
+        console.log("data", data);
+        console.log("reviews", reviews);
+
+        if (Array.isArray(reviews)) {
+          setReviews(reviews);
+        } else {
+          console.error("Expected an array of comments");
+        }
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
   const toggleReview = (id: number) => {
     setExpandedReview(expandedReview === id ? null : id);
   };
+
   const visibleReviews = showAllReviews ? reviews : reviews.slice(0, 2);
+
   return (
     <div className="bg-gray-900 min-h-screen -mt-12  px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto space-y-12">
@@ -82,14 +98,14 @@ export default function Component() {
                           expandedReview === review.id ? "" : "line-clamp-2"
                         }`}
                       >
-                        {review.comment}
+                        {review.text}
                       </p>
                     </div>
                     <div className="mt-auto">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
                           <Image
-                            alt={review.name}
+                            alt={review.user.name}
                             src={
                               "http://i.pinimg.com/736x/8b/87/8f/8b878f4e4a303bb30e2c4a31c2e6a6aa.jpg"
                             }
@@ -99,16 +115,14 @@ export default function Component() {
                           />
                           <span className="flex-grow flex flex-col pl-4">
                             <span className="font-medium text-white text-lg">
-                              {review.name}
+                              {review.user.name}
                             </span>
                             <div className="flex items-center mt-1 gap-1">
                               {[...Array(5)].map((_, i) => (
                                 <Star
                                   key={i}
                                   className={`h-4 w-4 ${
-                                    i < review.rating
-                                      ? "text-yellow-400"
-                                      : "text-gray-600"
+                                    i < 5 ? "text-yellow-400" : "text-gray-600"
                                   }`}
                                   fill="currentColor"
                                 />
